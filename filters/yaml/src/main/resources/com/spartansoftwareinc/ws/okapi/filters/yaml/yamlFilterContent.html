@@ -1,0 +1,74 @@
+<table border="0" cellpadding="3" cellspacing="1">
+    <tbody>
+    <tr>
+        <td colspan="4" class="prop_table_section" align="center">General Options</td>
+    </tr>
+    <tr>
+        <td class="prop_table_left_side">Non-Translatable YAML Keys</td>
+        <td class="prop_table_right_side">
+            <table border="0" cellpadding="0" cellspacing="0">
+
+                <tbody>
+                <tr>
+                    <td colspan="3">
+                        <div id="yaml_keys_edit_list_error_separator" style="display: none">
+                            <p><img src="images/common/error.sign.gif" title="Error" alt="Error" border="0">
+                                &nbsp;<span class="page_error">Values must not contain ,.</span></p>
+
+                            <p>
+                            </p></div>
+                        <div id="yaml_keys_edit_list_error_dupe" style="display: none">
+                            <p><img src="images/common/error.sign.gif" title="Error" alt="Error" border="0">
+                                &nbsp;<span class="page_error">Duplicate Value.</span></p>
+
+                            <p>
+                            </p></div>
+                        <div id="yaml_keys_edit_list_error_invalid_path" style="display: none">
+                            <p><img src="images/common/error.sign.gif" title="Error" alt="Error" border="0">
+                                &nbsp;<span class="page_error">This is an invalid path on Windows.</span></p>
+
+                            <p>
+                            </p></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input maxlength="255" style="width: 200px;" name="yaml_keys_item" value=""
+                               onkeyup="getDocElement('yaml_keys_addBtn').disabled=(value == '')"
+                               onkeypress="if(isInputEnterKeyPressed(event)) {handleEditListAdd(yaml_keys, yaml_keys_item, yaml_keys_res, false, ',', false, true); yaml_keys_item.focus()}"
+                               type="text">
+                    </td>
+                    <td height="5" width="5"></td>
+                    <td valign="top">
+                        <input disabled="" id="yaml_keys_addBtn" style="width: 100px" name="add_item" value="Add"
+                               onclick="handleEditListAdd(yaml_keys, yaml_keys_item, yaml_keys_res, false, ',', false, true); yaml_keys_item.focus()"
+                               type="button">
+                    </td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td height="5" width="5"></td>
+                    <td valign="top"></td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <select name="yaml_keys" multiple="" id="yaml_keys" style="width: 200px; min-height: 150px;"
+                                onchange="getDocElement('yaml_keys_remBtn').disabled=(value == '')" size="8">
+                            %s
+                        </select></td>
+                    <td height="5" width="5"></td>
+                    <td valign="top">
+                        <input id="yaml_keys_remBtn" style="width: 100px" name="remove_item" value="Remove"
+                               onclick="handleEditListRemove(yaml_keys, yaml_keys_item, yaml_keys_res, ',')"
+                               disabled="true" type="button">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <input name="yaml_keys_res" value="%s" type="hidden">
+        </td>
+    </tr>
+    </tbody>
+</table>

@@ -1,0 +1,41 @@
+# LANGUAGE translation of PROJECT
+# Copyright (c) YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-01-26 14:17-0800\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: test1
+msgctxt "test1"
+msgid "[Test One] [Test:two]"
+msgstr "[Test One] [Test:two]"
+
+#: test2
+msgctxt "test2"
+msgid ""
+"Hello [field:name],\r\n"
+"\r\n"
+"Something has happened [some:where]\r\n"
+"\r\n"
+"- - -\r\n"
+"Thanks, [field:name2]"
+msgstr "こんにちは[field:name],\r\n\r\n何かが起こりました[some:where]\r\n\r\n- - -\r\nありがとう[field:name2]"
+
+
+#: test3
+msgctxt "test3"
+msgid ""
+"You are confirmed for "
+"[field:name].\r\n"
+"\r\n"
+"Thank you! look forward to seeing you.\r\n"
+msgstr "あなたがのために確認されています[field:name].\r\n\r\nありがとう！ご参加をお待ちしております。\r\n"
+

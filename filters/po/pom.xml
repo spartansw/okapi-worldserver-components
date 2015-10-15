@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <url>http://maven.apache.org</url>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+    <artifactId>okapi-ws-filters</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.spartansoftwareinc.ws.okapi.filters.po</groupId>
+  <artifactId>okapi-ws-filters-po</artifactId>
+  <name>Okapi PO Filter for WorldServer</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+      <artifactId>okapi-ws-filters-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.okapi.filters</groupId>
+      <artifactId>okapi-filter-po</artifactId>
+      <version>${okapi.version}</version>
+    </dependency>
+    <!-- Testing -->
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+      <artifactId>okapi-ws-filters-base</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.okapi</groupId>
+      <artifactId>okapi-core</artifactId>
+      <version>${okapi.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.1</version>
+        <configuration>
+          <createDependencyReducedPom>true</createDependencyReducedPom>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

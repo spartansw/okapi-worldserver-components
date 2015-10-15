@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <url>http://maven.apache.org</url>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.spartansoftwareinc.ws.okapi</groupId>
+    <artifactId>okapi-ws-components</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>okapi-ws-base</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Okapi Common Components for WorldServer</name>
+
+  <properties>
+    <mainPackage>com.spartansoftwareinc.ws.okapi</mainPackage>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>net.mgorski.quicktag</groupId>
+        <artifactId>quicktag</artifactId>
+        <version>2.1.5</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>quicktag</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputPackage>${mainPackage}</outputPackage>
+        </configuration>
+      </plugin>
+      <!-- Allow export of test code via test-jar as well -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>net.mgorski.quicktag</groupId>
+                    <artifactId>quicktag</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>quicktag</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore/>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+</project>

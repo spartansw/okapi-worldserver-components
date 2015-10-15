@@ -1,0 +1,61 @@
+<tr>
+    <td class="prop_table_left_side">${label}</td>
+    <td class="prop_table_right_side">
+        <table border="0" cellpadding="0" cellspacing="0">
+
+            <tbody>
+            <tr>
+                <td colspan="3">
+                    <div id="${inputName}_keys_edit_list_error_separator" style="display: none">
+                        <p><img src="images/common/error.sign.gif" title="Error" alt="Error" border="0">
+                            &nbsp;<span class="page_error">Values must not contain ,.</span></p>
+
+                        <p>
+                        </p></div>
+                    <div id="${inputName}_keys_edit_list_error_dupe" style="display: none">
+                        <p><img src="images/common/error.sign.gif" title="Error" alt="Error" border="0">
+                            &nbsp;<span class="page_error">Duplicate Value.</span></p>
+
+                        <p>
+                        </p></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <input maxlength="255" style="width: 200px" name="${inputName}_keys_item" value=""
+                           onkeyup="getDocElement('${inputName}_keys_addBtn').disabled=(value == '')"
+                           onkeypress="if(isInputEnterKeyPressed(event)) {handleEditListAdd(${inputName}_keys, ${inputName}_keys_item, ${inputName}_keys_res, false, ',', false, true); ${inputName}_keys_item.focus()}"
+                           type="text">
+                </td>
+                <td height="5" width="5"></td>
+                <td valign="top">
+                    <input disabled="" id="${inputName}_keys_addBtn" style="width: 100px" name="add_item" value="Add"
+                           onclick="handleEditListAdd(${inputName}_keys, ${inputName}_keys_item, ${inputName}_keys_res, false, ',', false, true); ${inputName}_keys_item.focus()"
+                           type="button">
+                </td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td height="5" width="5"></td>
+                <td valign="top"></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <select name="${inputName}_keys" multiple="" id="${inputName}_keys" style="width: 200px; min-height: 150px;"
+                            onchange="getDocElement('${inputName}_keys_remBtn').disabled=(value == '')" size="8">
+                        %s </select></td>
+                <td height="5" width="5"></td>
+                <td valign="top">
+                    <input id="${inputName}_keys_remBtn" style="width: 100px" name="remove_item" value="Remove"
+                           onclick="handleEditListRemove(${inputName}_keys, ${inputName}_keys_item, ${inputName}_keys_res, ',')"
+                           disabled="true" type="button">
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <input name="${inputName}_keys_res" value="%s" type="hidden">
+    </td>
+</tr>

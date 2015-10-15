@@ -1,0 +1,16 @@
+{"menu": {
+  "value": "File",
+  "popup": {
+    "menuitem": [
+      {"value": "New"},
+      {"value": "Open"},
+      {"value": "Close"}
+    ]
+  },
+  "placeholders" : {
+    "ph" : "The :colon attribute should be a :1 placeholder since it's :alpha1"
+  },
+  "html" : "Test <b>HTML</b> entity &amp; escaping"
+},
+  "field" : "Test"
+}

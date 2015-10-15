@@ -1,0 +1,13 @@
+en:
+  activerecord:
+    errors:
+      template:
+        header: 
+          one: "Failed to execute {{model}}: an error occurred"
+          other: "Failed to execute {{model}}: {{count}} errors occurred."
+        body: "Please verify the following:"
+      messages:
+        inclusion: "This item is included"
+        exclusion: "This item is excluded"
+        invalid: "This item is invalid"
+        confirmation: "This item requires confirmation"

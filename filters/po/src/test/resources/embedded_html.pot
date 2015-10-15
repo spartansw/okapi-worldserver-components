@@ -1,0 +1,41 @@
+# LANGUAGE translation of PROJECT
+# Copyright (c) YEAR NAME <EMAIL@ADDRESS>
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-01-26 14:19-0800\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: html:test:one
+msgctxt "test:one"
+msgid ""
+"<div class=\"required-info\"><strong>*</strong> Field is "
+"required.</div>"
+msgstr ""
+
+#: html:test:two
+msgctxt "test:two"
+msgid ""
+"<div class=\"header\"><p>Let’s stay in touch. We’ve got news and "
+"announcements coming.</p></div>"
+msgstr ""
+
+#: html:test:three
+msgctxt "test:three"
+msgid "<p>Sign up for upcoming news.</p>"
+msgstr ""
+
+#: html:test:four
+msgctxt "test:four"
+msgid ""
+"<div class=\"header\"><p>Fill out the form:</p><div class=\"fields-required "
+"light\">* All fields required</div></div>"
+msgstr ""
+
