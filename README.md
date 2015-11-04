@@ -126,4 +126,5 @@ discussion lists:
 * [okapitools](https://groups.yahoo.com/neo/groups/okapitools/conversations/messages), for user discussions
 * [okapi-devel](https://groups.google.com/forum/#!forum/okapi-devel), for developer discussions
 
-
+Additional documentation can be found on the
+[wiki](https://github.com/spartansw/okapi-worldserver-components/wiki).
