@@ -7,9 +7,9 @@ import com.idiominc.wssdk.component.WSComponentConfigurationData;
 import com.spartansoftwareinc.ws.okapi.base.ui.UICheckbox;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITable;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIUtil;
-import com.spartansoftwareinc.ws.okapi.filters.ui.OkapiWsFilterUI;
+import com.spartansoftwareinc.ws.okapi.filters.ui.WSOkapiFilterUI;
 
-public class POFilterConfigurationUI extends OkapiWsFilterUI {
+public class POFilterConfigurationUI extends WSOkapiFilterUI {
 
     @Override
     public String render(WSContext context, HttpServletRequest request,

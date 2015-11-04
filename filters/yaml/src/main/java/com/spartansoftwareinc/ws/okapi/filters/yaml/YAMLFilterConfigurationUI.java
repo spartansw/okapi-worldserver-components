@@ -9,9 +9,9 @@ import com.idiominc.wssdk.component.WSComponentConfigurationData;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITable;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIMultiValueInput;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIUtil;
-import com.spartansoftwareinc.ws.okapi.filters.ui.OkapiWsFilterUI;
+import com.spartansoftwareinc.ws.okapi.filters.ui.WSOkapiFilterUI;
 
-public class YAMLFilterConfigurationUI extends OkapiWsFilterUI {
+public class YAMLFilterConfigurationUI extends WSOkapiFilterUI {
 
     public YAMLFilterConfigurationUI() {
     }

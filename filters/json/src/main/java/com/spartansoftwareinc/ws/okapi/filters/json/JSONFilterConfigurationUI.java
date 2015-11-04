@@ -14,11 +14,11 @@ import com.idiominc.wssdk.component.WSComponentConfigurationData;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITable;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIMultiValueInput;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIUtil;
-import com.spartansoftwareinc.ws.okapi.filters.ui.OkapiWsFilterUI;
+import com.spartansoftwareinc.ws.okapi.filters.ui.WSOkapiFilterUI;
 
 import net.sf.okapi.filters.json.Parameters;
 
-public class JSONFilterConfigurationUI extends OkapiWsFilterUI {
+public class JSONFilterConfigurationUI extends WSOkapiFilterUI {
 
     public JSONFilterConfigurationUI() {
     }
