@@ -51,7 +51,7 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
                 newDocumentBuilder().newDocument();
             Node top = doc.createElement("params");
             Node okapiParams = top.appendChild(doc.createElement("okapi"));
-            okapiParams.appendChild(doc.createTextNode(serializedParams));
+            okapiParams.appendChild(doc.createCDATASection(serializedParams));
             saveAdditionalConfiguration(doc, top);
             return top;
         }
