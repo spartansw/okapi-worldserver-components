@@ -1,0 +1,6 @@
+<components>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.json.JSONWSOkapiFilter"/>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.yaml.YAMLWSOkapiFilter"/>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.po.PoWSOkapiFilter"/>
+    <mt_adapter class="com.spartansoftwareinc.ws.okapi.mt.mshub.WSMicrosoftMTAdapter" />
+</components>
