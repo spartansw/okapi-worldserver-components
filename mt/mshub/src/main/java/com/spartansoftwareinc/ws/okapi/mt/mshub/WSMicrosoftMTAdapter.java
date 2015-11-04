@@ -11,12 +11,15 @@ import com.idiominc.wssdk.linguistic.WSLanguagePair;
 import com.idiominc.wssdk.linguistic.WSLinguisticManager;
 import com.idiominc.wssdk.mt.WSMTResult;
 import com.spartansoftwareinc.ws.okapi.Version;
+
 import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.query.QueryResult;
 import net.sf.okapi.common.resource.TextFragment;
 import net.sf.okapi.connectors.microsoft.MicrosoftMTConnector;
 import net.sf.okapi.connectors.microsoft.Parameters;
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +30,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     private static final String ADAPTER_NAME = "MS Translation Hub Adapter";
     private static final String ADAPTER_DESCRIPTION = "MT Adapter for Microsoft Translation Hub";
 
-    private static Logger log = Logger.getLogger(WSMicrosoftMTAdapter.class);
+    private static final Logger log = LoggerFactory.getLogger(WSMicrosoftMTAdapter.class);
 
     private WSMTAdapterConfigurationData configurationData;
 
@@ -40,7 +43,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
             final Locale tgtLocale = tgtLanguage.getLocale();
             LocaleId srcLocaleId = new LocaleId(srcLocale.getLanguage(), srcLocale.getCountry());
             LocaleId tgtLocaleId = new LocaleId(tgtLocale.getLanguage(), tgtLocale.getCountry());
-            log.warn("srcLocale = " + srcLanguage.getDisplayString() + "=>" + srcLocaleId.toBCP47() +
+            log.info("srcLocale = " + srcLanguage.getDisplayString() + "=>" + srcLocaleId.toBCP47() +
                      ", tgtLocale=" + tgtLanguage.getDisplayString() + "=>" + tgtLocaleId.toBCP47());
             mtConnector.setLanguages(srcLocaleId, tgtLocaleId);
 
