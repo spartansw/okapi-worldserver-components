@@ -1,14 +1,9 @@
 package com.spartansoftwareinc.ws.okapi.filters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
 
 import com.idiominc.wssdk.WSRuntimeException;
 import com.idiominc.wssdk.component.filter.WSFilterConfigurationData;
@@ -40,7 +35,9 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
 
     public T getParameters() {
         T params = getDefaultParameters();
-        params.fromString(serializedParams);
+        if (serializedParams != null) {
+            params.fromString(serializedParams);
+        }
         return params;
     }
 
@@ -51,6 +48,11 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
                 newDocumentBuilder().newDocument();
             Node top = doc.createElement("params");
             Node okapiParams = top.appendChild(doc.createElement("okapi"));
+            // Guard against config corruption, which has happened in dev but
+            // is probably impossible in the real world
+            if (serializedParams == null) {
+                serializedParams = getDefaultParameters().toString();
+            }
             okapiParams.appendChild(doc.createCDATASection(serializedParams));
             saveAdditionalConfiguration(doc, top);
             return top;

@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 import com.spartansoftwareinc.ws.okapi.filters.WSOkapiFilterConfigurationData;
 
@@ -36,7 +37,10 @@ public class YAMLFilterConfigurationData extends WSOkapiFilterConfigurationData<
         Node excludes = parent.appendChild(doc.createElement("excludedKeys"));
         for (String key : excludedKeys) {
             Node keyNode = excludes.appendChild(doc.createElement("key"));
-            keyNode.appendChild(doc.createTextNode(key));
+            if (key != null) {
+                Text t = doc.createTextNode(key);
+                keyNode.appendChild(t);
+            }
         }
     }
 
