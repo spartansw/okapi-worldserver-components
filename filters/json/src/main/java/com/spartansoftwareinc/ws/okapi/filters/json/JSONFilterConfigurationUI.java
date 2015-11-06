@@ -16,8 +16,6 @@ import com.spartansoftwareinc.ws.okapi.base.ui.UIMultiValueInput;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIUtil;
 import com.spartansoftwareinc.ws.okapi.filters.ui.WSOkapiFilterUI;
 
-import net.sf.okapi.filters.json.Parameters;
-
 public class JSONFilterConfigurationUI extends WSOkapiFilterUI {
 
     public JSONFilterConfigurationUI() {
@@ -43,9 +41,7 @@ public class JSONFilterConfigurationUI extends WSOkapiFilterUI {
     public WSComponentConfigurationData save(WSContext context, HttpServletRequest request,
                                              WSComponentConfigurationData config) {
         JSONFilterConfigurationData configData = getConfigData(config);
-        Parameters params = configData.getParameters();
-        JSONFilterConfigurationData.setExcludedKeys(params, UIUtil.getOptionValues(request, "json_keys_res"));
-        configData.setParameters(params);
+        configData.setExcludedKeys(UIUtil.getOptionValues(request, "json_keys_res"));
         return configData;
     }
 

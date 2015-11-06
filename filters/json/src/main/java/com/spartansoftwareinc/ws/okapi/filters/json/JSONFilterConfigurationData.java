@@ -18,7 +18,8 @@ public class JSONFilterConfigurationData extends WSOkapiFilterConfigurationData<
         return parameters;
     }
 
-    public static void setExcludedKeys(Parameters parameters, List<String> excludedKeys) {
+    public void setExcludedKeys(List<String> excludedKeys) {
+        Parameters params = getParameters();
         StringBuilder sb = new StringBuilder("^(");
         boolean first = true;
         for (String key : excludedKeys) {
@@ -31,7 +32,8 @@ public class JSONFilterConfigurationData extends WSOkapiFilterConfigurationData<
             appendExcludedKey(sb, key);
         }
         sb.append(")$");
-        parameters.setExceptions(sb.toString());
+        params.setExceptions(sb.toString());
+        setParameters(params);
     }
     
     private static StringBuilder appendExcludedKey(StringBuilder builder, String key) {

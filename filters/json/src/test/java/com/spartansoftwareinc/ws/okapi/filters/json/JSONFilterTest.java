@@ -72,9 +72,7 @@ public class JSONFilterTest {
         private JSONFilterConfigurationData testData = new JSONFilterConfigurationData();
 
         public TestJsonWSOkapiFilter(String... exceptions) {
-            Parameters params = testData.getParameters();
-            JSONFilterConfigurationData.setExcludedKeys(params, Arrays.asList(exceptions));
-            testData.setParameters(params);
+            testData.setExcludedKeys(Arrays.asList(exceptions));
         }
 
         @Override

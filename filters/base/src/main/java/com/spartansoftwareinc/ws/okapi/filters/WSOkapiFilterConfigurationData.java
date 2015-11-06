@@ -68,7 +68,10 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
         for (int i = 0; i < nl.getLength(); i++) {
             Node n = nl.item(i);
             if (n.getNodeName().equals("okapi")) {
-                this.serializedParams = n.getNodeValue();
+                Node cdata = n.getFirstChild();
+                if (cdata.getNodeType() == Node.CDATA_SECTION_NODE) {
+                    this.serializedParams = cdata.getNodeValue();
+                }
             }
             else {
                 loadAdditionalConfiguration(n);
