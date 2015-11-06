@@ -6,7 +6,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 import com.spartansoftwareinc.ws.okapi.filters.ConfigTestUtils;
 
-public class YAMLFIlterConfigurationDataTest {
+public class YAMLFilterConfigurationDataTest {
 
     private final static String CONFIG_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><params><okapi><![CDATA[#v1\n" +
             "useCodeFinder.b=true\n" +
