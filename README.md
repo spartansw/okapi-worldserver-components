@@ -128,3 +128,5 @@ discussion lists:
 
 Additional documentation can be found on the
 [wiki](https://github.com/spartansw/okapi-worldserver-components/wiki).
+
+Questions or comments can also be sent to [opensource@spartansoftwareinc.com](mailto:opensource@spartansoftwareinc.com).
