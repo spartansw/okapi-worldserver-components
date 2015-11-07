@@ -11,8 +11,6 @@ import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 
-import net.sf.okapi.filters.json.Parameters;
-
 @RunWith(DataProviderRunner.class)
 public class JSONFilterTest {
     
