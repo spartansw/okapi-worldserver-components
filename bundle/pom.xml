@@ -33,7 +33,7 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>2.4.1</version>
         <configuration>
-          <createDependencyReducedPom>true</createDependencyReducedPom>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
         </configuration>
         <executions>
           <execution>
@@ -42,6 +42,22 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <filters>
+                <filter>
+                  <artifact>com.spartansoftwareinc.ws.okapi.filters:okapi-ws-filters-bundle</artifact>
+                  <excludes>
+                    <exclude>net/sf/okapi/common/**</exclude>
+                    <exclude>org/slf4j/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.spartansoftwareinc.ws.okapi.mt.mshub:okapi-ws-mt-mshub</artifact>
+                  <excludes>
+                    <exclude>net/sf/okapi/common/**</exclude>
+                    <exclude>org/slf4j/**</exclude>
+                  </excludes>
+                </filter>
+              </filters>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
