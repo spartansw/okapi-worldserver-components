@@ -66,6 +66,12 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
                 batch.process(mtConnector);
             }
 
+            // LOGGING
+            for (WSMTRequest r : wsmtRequests) {
+                log.warn("Source [" + r.getSource() + "] -> Target [" + r.getMTResults()[0].getTranslation() +
+                         "], score=" + r.getMTResults()[0].getFuzzyScore());
+            }
+
             mtConnector.close();
         }
     }
@@ -133,12 +139,17 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return mtConnector;
     }
 
+    private int getScore(QueryResult result) {
+        WSMTAdapterConfigurationData config = getConfiguration();
+        return config.useCustomScoring() ? config.getMatchScore() : result.getCombinedScore();
+    }
+
     // Facilitate composition of the batch queries to MS Translation Hub
     // We need to deal with the following MS Translation Hub restrictions:
     //  - maximum number of segments that can be sent within one batch - 10
     //  - total amount of characters for all segments in the batch <= 10.000
     // details at https://msdn.microsoft.com/en-us/library/ff512418.aspx
-    private static class BatchData {
+    private class BatchData {
         // maximum number of segments in a batch query
         public static final int MAX_BATCH_ITEMS = 10;
 
@@ -223,7 +234,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         private WSMTResult[] convert(String source, List<QueryResult> queryResults) {
             List<WSMTResult> results = new ArrayList<WSMTResult>();
             for (QueryResult queryResult : queryResults) {
-                results.add(new WSMTResult(source, queryResult.target.getCodedText(), queryResult.getCombinedScore()));
+                results.add(new WSMTResult(source, queryResult.target.getCodedText(), getScore(queryResult)));
             }
             return results.toArray(new WSMTResult[results.size()]);
         }
@@ -231,15 +242,18 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         private WSMTResult[] joinChunkedResults(String source, List<List<QueryResult>> batchResults) {
             // since we do not configure Okapi connector to request multiple results for a single
             // segment we can safely ignore QueryResults with index greater than 0
-            int combinedScore = 100;
+            int combinedScore = getConfiguration().useCustomScoring() ?
+                                        getConfiguration().getMatchScore() : 100;
             StringBuilder sb = new StringBuilder();
             for (List<QueryResult> chunkResults : batchResults) {
                 if (!chunkResults.isEmpty()) {
                     final QueryResult queryResult = chunkResults.get(0);
                     sb.append(queryResult.target.getCodedText());
 
-                    if (queryResult.getCombinedScore() < combinedScore) {
-                        combinedScore = queryResult.getCombinedScore();
+                    if (!getConfiguration().useCustomScoring()) {
+                        if (queryResult.getCombinedScore() < combinedScore) {
+                            combinedScore = queryResult.getCombinedScore();
+                        }
                     }
                 }
             }
