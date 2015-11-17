@@ -59,7 +59,9 @@ public abstract class WSOkapiFilter extends WSFilter{
     @Override
     public void save(WSContext context, WSNode targetContent, WSSegmentReader segmentReader) {
         File tempSourceFile = null;
-        try (OutputStream targetFile = targetContent.getOutputStream()) {
+        OutputStream targetFile = null;
+        try {
+            targetFile = targetContent.getOutputStream();
             LocaleId targetOkapiLocale = FilterUtil.getOkapiLocaleId(targetContent);
 
             IFilter filter = getConfiguredFilter();
@@ -87,6 +89,14 @@ public abstract class WSOkapiFilter extends WSFilter{
             if (tempSourceFile != null) {
                 //noinspection ResultOfMethodCallIgnored
                 tempSourceFile.delete();
+            }
+            if (targetFile != null) {
+                try {
+                    targetFile.close();
+                }
+                catch (IOException e) {
+                    throw new WSAssetSegmentationException(e);
+                }
             }
         }
     }

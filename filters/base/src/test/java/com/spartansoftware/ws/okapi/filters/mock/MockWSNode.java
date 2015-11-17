@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
@@ -23,6 +22,7 @@ import com.idiominc.wssdk.ais.WSSystemPropertyKey;
 import com.idiominc.wssdk.security.acl.WSAcl;
 import com.idiominc.wssdk.user.WSLocale;
 import com.idiominc.wssdk.user.WSUser;
+import com.spartansoftwareinc.ws.okapi.filters.utils.FilterUtil;
 
 /**
  * Mock WSNode; many methods are unimplemented.
@@ -157,7 +157,7 @@ public abstract class MockWSNode implements WSNode {
     @Override
     public void copyTo(File dest) throws WSAisException {
         try {
-            Files.copy(getInputStream(), dest.toPath());
+            FilterUtil.copy(getInputStream(), dest);
         }
         catch (IOException e) {
             throw new WSAisException(e);

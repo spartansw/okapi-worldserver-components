@@ -1,7 +1,5 @@
 package com.spartansoftware.ws.okapi.filters.mock;
 
-import java.util.Objects;
-
 import com.idiominc.wssdk.asset.WSMarkupInfo;
 import com.idiominc.wssdk.asset.WSTextSegmentPlaceholder;
 
@@ -39,11 +37,11 @@ public class MockWSTextSegmentPlaceholder implements WSTextSegmentPlaceholder {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || !(obj instanceof MockWSTextSegmentPlaceholder)) return false;
-        return Objects.equals(placeholderText, ((MockWSTextSegmentPlaceholder)obj).placeholderText);
+        return placeholderText.equals(((MockWSTextSegmentPlaceholder)obj).placeholderText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(placeholderText);
+        return placeholderText.hashCode();
     }
 }

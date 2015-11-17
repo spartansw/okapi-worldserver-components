@@ -54,7 +54,7 @@ public class MockWSSegmentWriter implements WSSegmentWriter {
         assertTrue(next instanceof WSTextSegment);
         WSTextSegment text = (WSTextSegment)next;
         assertEquals(text.getContent(), encodedText);
-        List<WSTextSegmentPlaceholder> testPhs = new ArrayList<>();
+        List<WSTextSegmentPlaceholder> testPhs = new ArrayList<WSTextSegmentPlaceholder>();
         for (String s : placeholders) {
             testPhs.add(new MockWSTextSegmentPlaceholder(s));
         }

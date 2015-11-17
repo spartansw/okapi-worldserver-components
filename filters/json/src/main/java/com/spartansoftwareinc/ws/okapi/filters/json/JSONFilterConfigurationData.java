@@ -50,7 +50,7 @@ public class JSONFilterConfigurationData extends WSOkapiFilterConfigurationData<
         String htmlRules[] = getHtmlCodeFinderRules(numRules);
         numRules += htmlRules.length;
 
-        List<String> codeFinderData = new ArrayList<>();
+        List<String> codeFinderData = new ArrayList<String>();
         codeFinderData.add("useAllRulesWhenTesting.b=true");
         codeFinderData.add("count.i="+numRules);
         codeFinderData.add(FilterUtil.join(colonLabelRule, "\n"));

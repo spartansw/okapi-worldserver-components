@@ -98,7 +98,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     }
 
     private WSLanguagePair[] composeLanguagePairs(WSLanguage[] languages) {
-        ArrayList<WSLanguagePair> pairs = new ArrayList<>();
+        ArrayList<WSLanguagePair> pairs = new ArrayList<WSLanguagePair>();
 
         for (int i = 0; i < languages.length; i++) {
             for (int j = 0; j < languages.length; j++) {

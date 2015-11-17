@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public class UIMultiValueInput implements UIElement {
-    private Collection<String> options = new ArrayList<>();
-    private Collection<String> selected = new ArrayList<>();
+    private Collection<String> options = new ArrayList<String>();
+    private Collection<String> selected = new ArrayList<String>();
     private String label, inputName;
 
     public UIMultiValueInput(String label, String inputName, Collection<String> options, Collection<String> selected) {

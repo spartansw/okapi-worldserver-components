@@ -1,6 +1,6 @@
 package com.spartansoftwareinc.ws.okapi.filters.yaml;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashSet;
 import org.junit.Test;
@@ -35,14 +35,14 @@ public class YAMLFilterTest {
     @UseDataProvider("testParsingSegmentsResults")
     public void testParsingSegments(SegmentInfoHolder[] expected) throws Exception {
         FilterTestHarness harness = new FilterTestHarness(new TestYamlWSOkapiFilter());
-        harness.extractAndExpectSegments("/TestFile.yml", StandardCharsets.UTF_8, expected);
+        harness.extractAndExpectSegments("/TestFile.yml", Charset.forName("UTF-8"), expected);
     }
 
     @Test
     @UseDataProvider("testParsingSegmentsResults")
     public void testParsingExcludeEmptyString(SegmentInfoHolder[] expected) throws Exception {
         FilterTestHarness harness = new FilterTestHarness(new TestYamlWSOkapiFilter(""));
-        harness.extractAndExpectSegments("/TestFile.yml", StandardCharsets.UTF_8, expected);
+        harness.extractAndExpectSegments("/TestFile.yml", Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider
@@ -62,7 +62,7 @@ public class YAMLFilterTest {
     @UseDataProvider("testParsingExcludeKeysResults")
     public  void testParsingExcludeKeys(SegmentInfoHolder[] expected) throws Exception {
         FilterTestHarness harness = new FilterTestHarness(new TestYamlWSOkapiFilter("other", "body"));
-        harness.extractAndExpectSegments("/TestFile.yml", StandardCharsets.UTF_8, expected);
+        harness.extractAndExpectSegments("/TestFile.yml", Charset.forName("UTF-8"), expected);
     }
 
     class TestYamlWSOkapiFilter extends YAMLWSOkapiFilter {

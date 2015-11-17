@@ -1,10 +1,10 @@
 package com.spartansoftwareinc.ws.okapi.filters.utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 
 import com.idiominc.wssdk.WSContext;
@@ -57,9 +57,23 @@ public class FilterUtil {
 
     public static File convertAisContentIntoFile(WSNode aisContent) throws IOException,
             WSAisException {
-        Path tempFile = Files.createTempFile("wsokapi", getFileExtension(aisContent.getName()));
-        Files.copy(aisContent.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
-        return tempFile.toFile();
+        File tempFile = File.createTempFile("wsokapi", getFileExtension(aisContent.getName()));
+        copy(aisContent.getInputStream(), tempFile);
+        return tempFile;
+    }
+
+    public static void copy(InputStream is, File outputFile) throws IOException {
+        OutputStream os = new FileOutputStream(outputFile);
+        try {
+            byte[] buf = new byte[4096];
+            for (int i = is.read(buf); i != -1; i = is.read(buf)) {
+                os.write(buf, 0, i);
+            }
+        }
+        finally {
+            is.close();
+            os.close();
+        }
     }
 
     private static String getFileExtension(String path) {

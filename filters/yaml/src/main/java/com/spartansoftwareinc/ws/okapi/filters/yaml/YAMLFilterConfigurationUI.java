@@ -36,7 +36,7 @@ public class YAMLFilterConfigurationUI extends WSOkapiFilterUI {
     public WSComponentConfigurationData save(WSContext context, HttpServletRequest request,
                                              WSComponentConfigurationData config) {
         YAMLFilterConfigurationData configData = getConfigData(config);
-        configData.setExcludedKeys(new LinkedHashSet<>(UIUtil.getOptionValues(request, "yaml_keys_res")));
+        configData.setExcludedKeys(new LinkedHashSet<String>(UIUtil.getOptionValues(request, "yaml_keys_res")));
         return configData;
     }
 }

@@ -50,7 +50,7 @@ public class FilterTestHarness {
     public void extractAndExpectSegments(String resourceToTest, Charset charset, SegmentInfoHolder[] expected)
                                             throws IOException {
         WSNode srcNode = new ResourceMockWSNode(resourceToTest, charset, MockWSLocale.ENGLISH);
-        List<WSSegment> list = new ArrayList<>();
+        List<WSSegment> list = new ArrayList<WSSegment>();
         list.add(new MockWSMarkupSegment(resourceToTest));
         for (SegmentInfoHolder holder : expected) {
             list.add(new MockWSTextSegment(holder.getEncodedText(), holder.getPlaceholders()));
@@ -66,15 +66,15 @@ public class FilterTestHarness {
         MockWSSegmentReader segReader = prepareSegmentReader(sourceResource, translatedSegmentContent);
         File temp = File.createTempFile("merge", ".tmp");
         WSNode tgtNode = new FileMockWSNode(temp, charset, MockWSLocale.FRENCH);
-        Map<String, WSNode> sourceAisMapping = new HashMap<>();
+        Map<String, WSNode> sourceAisMapping = new HashMap<String, WSNode>();
         sourceAisMapping.put(sourceResource, new ResourceMockWSNode(sourceResource, charset, MockWSLocale.ENGLISH));
         filter.save(mockContext(mockAisManager(sourceAisMapping)), tgtNode, segReader);
         System.out.println("SourceFile: " + sourceResource + ", Temp file: " + temp);
 
-        try (FileInputStream fis = new FileInputStream(temp)) {
-            assertTrue(new FileCompare().filesExactlyTheSame(
-                    getClass().getResourceAsStream(mergedGoldResource), fis));
-        }
+        FileInputStream fis = new FileInputStream(temp);
+        assertTrue(new FileCompare().filesExactlyTheSame(
+                getClass().getResourceAsStream(mergedGoldResource), fis));
+        fis.close();
         assertTrue(temp.delete());
     }
 

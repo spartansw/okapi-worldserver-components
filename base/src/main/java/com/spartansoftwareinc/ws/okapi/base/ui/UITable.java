@@ -6,7 +6,7 @@ import java.util.List;
 import com.idiominc.wssdk.WSRuntimeException;
 
 public class UITable {
-    private List<UIElement> elements = new ArrayList<>();
+    private List<UIElement> elements = new ArrayList<UIElement>();
 
     public UITable() {
     }

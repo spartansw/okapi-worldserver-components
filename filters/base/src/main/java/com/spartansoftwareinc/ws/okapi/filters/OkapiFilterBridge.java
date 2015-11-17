@@ -112,7 +112,7 @@ public class OkapiFilterBridge {
         TextContainer textContainer = textUnit.getSource().clone();
 
         WSSegment wsSegment = segmentReader.read();
-        List<WSTextSegment> wsTextSegments = new ArrayList<>();
+        List<WSTextSegment> wsTextSegments = new ArrayList<WSTextSegment>();
         for (; wsSegment instanceof WSTextSegment; wsSegment = segmentReader.read()) {
             wsTextSegments.add((WSTextSegment)wsSegment);
         }

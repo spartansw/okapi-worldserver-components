@@ -1,7 +1,7 @@
 package com.spartansoftwareinc.ws.okapi.filters.po;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.junit.Before;
@@ -47,7 +47,7 @@ public class TestPoWSOkapiFilter {
     @Test
     @UseDataProvider("testInlineFieldParseResults")
     public void testInlineField(SegmentInfoHolder[] expected) throws IOException {
-        testHarness.extractAndExpectSegments("/inline_fields.pot", StandardCharsets.UTF_8, expected);
+        testHarness.extractAndExpectSegments("/inline_fields.pot", Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider
@@ -69,7 +69,7 @@ public class TestPoWSOkapiFilter {
     @Test
     @UseDataProvider("testInlineFieldMergeResults")
     public void testInlineFieldMerge(SegmentInfoHolder[] translations) throws IOException {
-        testHarness.mergeAndVerifyOutput("/inline_fields.pot", "/translated_inline_fields.po", StandardCharsets.UTF_8,
+        testHarness.mergeAndVerifyOutput("/inline_fields.pot", "/translated_inline_fields.po", Charset.forName("UTF-8"),
                              Arrays.asList(translations));
     }
 
@@ -98,7 +98,7 @@ public class TestPoWSOkapiFilter {
     @Test
     @UseDataProvider("testEmbeddedHtmlParseResults")
     public void testEmbeddedHtml(SegmentInfoHolder[] expected) throws IOException {
-        testHarness.extractAndExpectSegments("/embedded_html.pot", StandardCharsets.UTF_8, expected);
+        testHarness.extractAndExpectSegments("/embedded_html.pot", Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider
@@ -121,7 +121,7 @@ public class TestPoWSOkapiFilter {
     @Test
     @UseDataProvider("testEmbeddedHtmlMergeResults")
     public void testEmbeddedHtmlMerge(SegmentInfoHolder[] translations) throws IOException {
-        testHarness.mergeAndVerifyOutput("/embedded_html.pot", "/translated_embedded_html.po", StandardCharsets.UTF_8,
+        testHarness.mergeAndVerifyOutput("/embedded_html.pot", "/translated_embedded_html.po", Charset.forName("UTF-8"),
                              Arrays.asList(translations));
     }
 
@@ -151,7 +151,7 @@ public class TestPoWSOkapiFilter {
     @Test
     @UseDataProvider("testLineBreakParseResults")
     public void testLineBreak(SegmentInfoHolder[] expected) throws IOException {
-        testHarness.extractAndExpectSegments("/line_breaks.pot", StandardCharsets.UTF_8, expected);
+        testHarness.extractAndExpectSegments("/line_breaks.pot", Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider
@@ -178,7 +178,7 @@ public class TestPoWSOkapiFilter {
     @Test
     @UseDataProvider("testLineBreakMergeResults")
     public void testLineBreakMerge(SegmentInfoHolder[] translations) throws IOException {
-        testHarness.mergeAndVerifyOutput("/line_breaks.pot", "/translated_line_breaks.po", StandardCharsets.UTF_8,
+        testHarness.mergeAndVerifyOutput("/line_breaks.pot", "/translated_line_breaks.po", Charset.forName("UTF-8"),
                              Arrays.asList(translations));
     }
 }

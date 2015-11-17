@@ -1,6 +1,6 @@
 package com.spartansoftwareinc.ws.okapi.filters;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class TestBaseFilter {
     @UseDataProvider("testParseResults")
     public void testParse(SegmentInfoHolder[] expected) throws Exception {
         new FilterTestHarness(new DummyWSOkapiFilter())
-            .extractAndExpectSegments("/test.properties", StandardCharsets.UTF_8, expected);
+            .extractAndExpectSegments("/test.properties", Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider
@@ -46,7 +46,7 @@ public class TestBaseFilter {
     @UseDataProvider("translations")
     public void testMerge(SegmentInfoHolder[] translations) throws Exception {
         new FilterTestHarness(new DummyWSOkapiFilter())
-            .mergeAndVerifyOutput("/test.properties", "/out.properties", StandardCharsets.UTF_8,
+            .mergeAndVerifyOutput("/test.properties", "/out.properties", Charset.forName("UTF-8"),
                                   Arrays.asList(translations));
     }
 }

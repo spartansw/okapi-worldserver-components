@@ -2,7 +2,6 @@ package com.spartansoftwareinc.ws.okapi.base.ui;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,13 +34,21 @@ public class UIUtil {
 
     public static String loadResourceAsString(String htmlContentResourceName) throws IOException {
         StringBuilder sb = new StringBuilder();
-        try (InputStreamReader reader = new InputStreamReader(
-                UIUtil.class.getResourceAsStream(htmlContentResourceName), StandardCharsets.UTF_8)) {
+        InputStreamReader reader = null;
+        try {
+            reader = new InputStreamReader(
+                UIUtil.class.getResourceAsStream(htmlContentResourceName), "UTF-8");
             char[] buf = new char[4096];
             for (int i = reader.read(buf); i != -1; i = reader.read(buf)) {
                 sb.append(new String(buf, 0, i));
             }
             return sb.toString();
+        }
+        catch (IOException e) {
+            if (reader != null) {
+                reader.close();
+            }
+            throw e;
         }
     }
 

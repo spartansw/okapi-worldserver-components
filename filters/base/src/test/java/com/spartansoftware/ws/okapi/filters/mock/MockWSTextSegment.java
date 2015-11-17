@@ -13,7 +13,7 @@ import com.idiominc.wssdk.asset.WSTextSegmentPlaceholder;
  */
 public class MockWSTextSegment implements WSTextSegment {
     private final String content;
-    private final List<MockWSTextSegmentPlaceholder> placeholders = new ArrayList<>();
+    private final List<MockWSTextSegmentPlaceholder> placeholders = new ArrayList<MockWSTextSegmentPlaceholder>();
 
     public MockWSTextSegment(String content, String[] placeholders) {
         this.content = content;

@@ -1,6 +1,6 @@
 package com.spartansoftwareinc.ws.okapi.filters.json;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class JSONFilterTest {
     @UseDataProvider("testParsingAllTranslatableKeysResults")
     public void testParsingAllTranslatableKeys(SegmentInfoHolder[] expected) throws Exception {
         FilterTestHarness harness = new FilterTestHarness(new TestJsonWSOkapiFilter());
-        harness.extractAndExpectSegments("/TestFile.json", StandardCharsets.UTF_8, expected);
+        harness.extractAndExpectSegments("/TestFile.json", Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider
@@ -56,14 +56,14 @@ public class JSONFilterTest {
     @UseDataProvider("testParsingWithExcludedKeysResults")
     public void testParsingWithExcludedKeys(SegmentInfoHolder[] expected) throws Exception {
         FilterTestHarness harness = new FilterTestHarness(new TestJsonWSOkapiFilter("value", "html"));
-        harness.extractAndExpectSegments("/TestFile.json", StandardCharsets.UTF_8, expected);
+        harness.extractAndExpectSegments("/TestFile.json", Charset.forName("UTF-8"), expected);
     }
 
     @Test
     public void testParseExcludeEverything() throws Exception {
         FilterTestHarness harness = new FilterTestHarness(
                 new TestJsonWSOkapiFilter("value", "html", "ph", "field"));
-        harness.extractAndExpectSegments("/TestFile.json", StandardCharsets.UTF_8, new SegmentInfoHolder[0]);
+        harness.extractAndExpectSegments("/TestFile.json", Charset.forName("UTF-8"), new SegmentInfoHolder[0]);
     }
 
     class TestJsonWSOkapiFilter extends JSONWSOkapiFilter {
