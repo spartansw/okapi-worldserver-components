@@ -66,12 +66,6 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
                 batch.process(mtConnector);
             }
 
-            // LOGGING
-            for (WSMTRequest r : wsmtRequests) {
-                log.warn("Source [" + r.getSource() + "] -> Target [" + r.getMTResults()[0].getTranslation() +
-                         "], score=" + r.getMTResults()[0].getFuzzyScore());
-            }
-
             mtConnector.close();
         }
     }
