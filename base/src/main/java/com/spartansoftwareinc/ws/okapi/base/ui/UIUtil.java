@@ -44,11 +44,13 @@ public class UIUtil {
             }
             return sb.toString();
         }
-        catch (IOException e) {
+        finally {
             if (reader != null) {
-                reader.close();
+                try {
+                    reader.close();
+                }
+                catch (IOException e) { }
             }
-            throw e;
         }
     }
 
