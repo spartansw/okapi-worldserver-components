@@ -37,7 +37,7 @@ public abstract class WSOkapiFilter extends WSFilter{
 
             IFilter filter = getConfiguredFilter();
             FilterUtil.writeSourceAisPathSegment(srcContent, wsSegmentWriter);
-            filterBridge.writeWsSegments(filter, srcRawDocument, wsSegmentWriter);
+            filterBridge.writeWsSegments(filter, srcRawDocument, wsSegmentWriter, isApplyingSegmentation());
 
         } catch (IOException ex) {
             getLoggerWithContext().error("File IO failure when parsing WSNode content", ex);
@@ -54,6 +54,15 @@ public abstract class WSOkapiFilter extends WSFilter{
                 tempSourceFile.delete();
             }
         }
+    }
+
+    /**
+     * Indicates if WorldServer segmentation should be applied.  This returns false
+     * by default, but may be overridden by subclasses.
+     * @return true if segmentation should be applied by WorldServer
+     */
+    protected boolean isApplyingSegmentation() {
+        return false;
     }
 
     @Override
