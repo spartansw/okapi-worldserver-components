@@ -7,7 +7,7 @@ import com.spartansoftwareinc.ws.okapi.filters.WSOkapiFilter;
 
 import net.sf.okapi.common.Event;
 import net.sf.okapi.common.resource.ITextUnit;
-import net.sf.okapi.filters.railsyaml.RailsYamlFilter;
+import net.sf.okapi.filters.yaml.YamlFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ public class YAMLWSOkapiFilter extends WSOkapiFilter {
                 (YAMLFilterConfigurationData)config : new YAMLFilterConfigurationData();
     }
 
-    private class ConfiguredYAMLFilter extends RailsYamlFilter {
+    private class ConfiguredYAMLFilter extends YamlFilter {
         private Set<String> excludedKeys = new LinkedHashSet<String>();
 
         public void setExcludedKeys(Set<String> excludedKeys) {

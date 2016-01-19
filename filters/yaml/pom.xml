@@ -21,7 +21,7 @@
     </dependency>
     <dependency>
       <groupId>net.sf.okapi.filters</groupId>
-      <artifactId>okapi-filter-railsyaml</artifactId>
+      <artifactId>okapi-filter-yaml</artifactId>
       <version>${okapi.version}</version>
     </dependency>
     <dependency>

@@ -9,8 +9,14 @@ import com.spartansoftwareinc.ws.okapi.filters.ConfigTestUtils;
 public class YAMLFilterConfigurationDataTest {
 
     private final static String CONFIG_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><params><okapi><![CDATA[#v1\n" +
+            "extractIsolatedStrings.b=false\n" +
+            "extractAllPairs.b=true\n" +
+            "exceptions=\n" +
+            "useKeyAsName.b=true\n" +
+            "useFullKeyPath.b=true\n" +
             "useCodeFinder.b=true\n" +
             "escapeNonAscii.b=false\n" +
+            "wrap.b=true\n" +
             "codeFinderRules.count.i=3\n" +
             "codeFinderRules.rule0=%(([-0+#]?)[-0+#]?)((\\d\\$)?)(([\\d\\*]*)(\\.[\\d\\*]*)?)[dioxXucsfeEgGpnYyBbHhSMmAZ]\n" +
             "codeFinderRules.rule1=(\\\\r\\\\n)|\\\\a|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|\\\\v\n" +
