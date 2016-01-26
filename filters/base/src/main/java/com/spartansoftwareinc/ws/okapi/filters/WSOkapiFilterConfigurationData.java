@@ -17,7 +17,10 @@ import net.sf.okapi.common.IParameters;
 public abstract class WSOkapiFilterConfigurationData<T extends IParameters> extends WSFilterConfigurationData {
     private static final long serialVersionUID = 1L;
 
+    static final boolean DEFAULT_APPLY_SEGMENTATION = false;
+
     private String serializedParams;
+    private boolean applyWSSegmentation = DEFAULT_APPLY_SEGMENTATION;
 
     protected abstract T getDefaultParameters();
 
@@ -39,6 +42,14 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
             params.fromString(serializedParams);
         }
         return params;
+    }
+
+    public boolean getApplySegmentation() {
+        return applyWSSegmentation;
+    }
+
+    public void setApplySegmentation(boolean applyWSSegmentation) {
+        this.applyWSSegmentation = applyWSSegmentation;
     }
 
     @Override

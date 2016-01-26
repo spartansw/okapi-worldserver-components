@@ -11,6 +11,7 @@ import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.asset.WSAssetSegmentationException;
 import com.idiominc.wssdk.component.filter.WSFilter;
+import com.idiominc.wssdk.component.filter.WSFilterConfigurationData;
 import com.idiominc.wssdk.component.filter.WSSegmentReader;
 import com.idiominc.wssdk.component.filter.WSSegmentWriter;
 import com.spartansoftwareinc.ws.okapi.filters.utils.FilterUtil;
@@ -62,7 +63,10 @@ public abstract class WSOkapiFilter extends WSFilter{
      * @return true if segmentation should be applied by WorldServer
      */
     protected boolean isApplyingSegmentation() {
-        return false;
+        WSFilterConfigurationData config = getConfiguration();
+        return (config != null && config instanceof WSOkapiFilterConfigurationData<?>) ?
+                ((WSOkapiFilterConfigurationData<?>)config).getApplySegmentation() :
+                WSOkapiFilterConfigurationData.DEFAULT_APPLY_SEGMENTATION;
     }
 
     @Override
