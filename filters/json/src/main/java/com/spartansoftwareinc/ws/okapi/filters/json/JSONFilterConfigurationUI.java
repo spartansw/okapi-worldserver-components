@@ -16,31 +16,32 @@ import com.spartansoftwareinc.ws.okapi.base.ui.UIMultiValueInput;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIUtil;
 import com.spartansoftwareinc.ws.okapi.filters.ui.WSOkapiFilterUI;
 
-public class JSONFilterConfigurationUI extends WSOkapiFilterUI {
+public class JSONFilterConfigurationUI extends WSOkapiFilterUI<JSONFilterConfigurationData> {
 
     public JSONFilterConfigurationUI() {
     }
 
-    private JSONFilterConfigurationData getConfigData(WSComponentConfigurationData config) {
+    @Override
+    protected JSONFilterConfigurationData getConfigurationData(WSComponentConfigurationData config) {
         return (config != null && config instanceof JSONFilterConfigurationData) ?
             (JSONFilterConfigurationData)config : new JSONFilterConfigurationData();
     }
 
     @Override
-    public String render(WSContext context, HttpServletRequest request,
-                         WSComponentConfigurationData config) {
-        JSONFilterConfigurationData configData = getConfigData(config);
+    protected UITable buildConfigurationTable(WSContext context, HttpServletRequest request,
+                                WSComponentConfigurationData config) {
+        JSONFilterConfigurationData configData = getConfigurationData(config);
         Collection<String> excludedKeys = getExcludedKeys(configData);
         UITable table = new UITable();
         table.add(new UIMultiValueInput("Non-Translatable JSON Keys", "json",
                   excludedKeys, excludedKeys));
-        return table.render();
+        return table;
     }
 
     @Override
-    public WSComponentConfigurationData save(WSContext context, HttpServletRequest request,
-                                             WSComponentConfigurationData config) {
-        JSONFilterConfigurationData configData = getConfigData(config);
+    protected JSONFilterConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
+            WSComponentConfigurationData config) {
+        JSONFilterConfigurationData configData = getConfigurationData(config);
         configData.setExcludedKeys(UIUtil.getOptionValues(request, "json_keys_res"));
         return configData;
     }
