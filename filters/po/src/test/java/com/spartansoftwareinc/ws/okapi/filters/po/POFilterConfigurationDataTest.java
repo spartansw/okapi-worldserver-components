@@ -21,7 +21,10 @@ public class POFilterConfigurationDataTest {
                     "codeFinderRules.rule4=\\[\\[.+?\\]\\]\n" +
                     "codeFinderRules.rule5=\\[.+?\\]\n" +
                     "codeFinderRules.sample=%s, %d, {1}, \\n, \\r, \\t, etc.\n" +
-                    "codeFinderRules.useAllRulesWhenTesting.b=true]]></okapi><copyTargetToPO>true</copyTargetToPO></params>";
+                    "codeFinderRules.useAllRulesWhenTesting.b=true]]></okapi>" +
+                    "<applySentenceBreaking>false</applySentenceBreaking>" +
+                    "<copyTargetToPO>true</copyTargetToPO>" +
+                    "</params>";
 
     @Test
     public void testToXML() throws Exception {

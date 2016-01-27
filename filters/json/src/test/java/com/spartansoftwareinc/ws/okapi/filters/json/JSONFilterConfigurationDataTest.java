@@ -32,7 +32,9 @@ public class JSONFilterConfigurationDataTest {
                 "codeFinderRules.rule7=%[a-zA-Z]+\n" +
                 "codeFinderRules.rule8=&[a-zA-Z]+;\n" +
                 "codeFinderRules.sample=\n" +
-                "codeFinderRules.useAllRulesWhenTesting.b=true]]></okapi></params>";
+                "codeFinderRules.useAllRulesWhenTesting.b=true]]></okapi>" +
+                "<applySentenceBreaking>false</applySentenceBreaking>" +
+                "</params>";
 
     @Test
     public void testToXML() throws Exception {

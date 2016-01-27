@@ -22,10 +22,13 @@ public class YAMLFilterConfigurationDataTest {
             "codeFinderRules.rule1=(\\\\r\\\\n)|\\\\a|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|\\\\v\n" +
             "codeFinderRules.rule2=\\{\\{\\w.*?\\}\\}\n" +
             "codeFinderRules.sample=%s, %d, {1}, \\n, \\r, \\t, {{var}} etc.\n" +
-            "codeFinderRules.useAllRulesWhenTesting.b=true]]></okapi><excludedKeys><key>hello</key></excludedKeys></params>";
+            "codeFinderRules.useAllRulesWhenTesting.b=true]]></okapi>" +
+            "<applySentenceBreaking>true</applySentenceBreaking>" +
+            "<excludedKeys><key>hello</key></excludedKeys></params>";
     @Test
     public void testToXML() throws Exception {
         YAMLFilterConfigurationData data = new YAMLFilterConfigurationData();
+        data.setApplySegmentation(true);
         data.setExcludedKeys(Collections.singleton("hello"));
         assertEquals(CONFIG_XML, ConfigTestUtils.toXML(data));
     }
@@ -33,9 +36,11 @@ public class YAMLFilterConfigurationDataTest {
     @Test
     public void testFromXML() throws Exception {
         YAMLFilterConfigurationData data = new YAMLFilterConfigurationData();
+        assertFalse(data.getApplySegmentation());
         assertEquals(Collections.emptySet(), data.getExcludedKeys());
         ConfigTestUtils.fromXML(data, CONFIG_XML);
         assertEquals(Collections.singleton("hello"), data.getExcludedKeys());
+        assertTrue(data.getApplySegmentation());
     }
 
 }

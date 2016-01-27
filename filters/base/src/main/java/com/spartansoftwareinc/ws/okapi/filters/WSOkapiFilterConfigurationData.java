@@ -65,6 +65,9 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
                 serializedParams = getDefaultParameters().toString();
             }
             okapiParams.appendChild(doc.createCDATASection(serializedParams));
+            Node node = doc.createElement("applySentenceBreaking");
+            node.appendChild(doc.createTextNode(Boolean.toString(applyWSSegmentation)));
+            top.appendChild(node);
             saveAdditionalConfiguration(doc, top);
             return top;
         }
@@ -83,6 +86,9 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
                 if (cdata.getNodeType() == Node.CDATA_SECTION_NODE) {
                     this.serializedParams = cdata.getNodeValue();
                 }
+            }
+            else if (n.getNodeName().equals("applySentenceBreaking")) {
+                applyWSSegmentation = Boolean.valueOf(n.getTextContent());
             }
             else {
                 loadAdditionalConfiguration(n);
