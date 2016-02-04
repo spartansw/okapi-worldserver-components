@@ -18,6 +18,12 @@ import com.idiominc.wssdk.attribute.WSStringAttributeValue;
 import com.idiominc.wssdk.attribute.WSUrlAttributeValue;
 import com.idiominc.wssdk.attribute.WSUserAttributeValue;
 
+/**
+ * Static methods to simplify fetching typed WSAttributeValue instances
+ * from a WSAttributable object.  These methods are rarely called
+ * directly; accessing them indirectly through {@link AttributesWrapper}
+ * is usually preferable.
+ */
 public class Attributes {
     public static WSStringAttributeValue getStringValue(WSAttributable attributable, String attributeName,
                     AttributeErrorHandler<WSStringAttributeValue> errorHandler) {
@@ -40,13 +46,14 @@ public class Attributes {
     /**
      * Fetch the WSBooleanAttributeValue instance for the specified object and attribute name,
      * handling errors as specified.
-     * <b>WARNING</b>: due to a bug in the WSSDK, calling <tt>getValue()</tt> on WSBooleanAttributeValue
+     * <p>
+     * <b>WARNING</b>: due to a bug in the WSSDK, calling <code>getValue()</code> on WSBooleanAttributeValue
      * instances will throw an exception if no value is set in WorldServer.  The recommended idiom for
-     * checking a WSBooleanAttributeValue instance is:
-     * <code>
+     * checking a <code>WSBooleanAttributeValue</code> instance is:
+     * <pre>
      * WSBooleanAttributeValue value = ...;
      * Boolean b = Boolean.parseBoolean(value.toString());
-     * </code>
+     * </pre>
      *
      * @param attributable
      * @param attributeName
