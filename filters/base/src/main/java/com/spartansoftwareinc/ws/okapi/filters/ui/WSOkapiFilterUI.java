@@ -46,9 +46,24 @@ public abstract class WSOkapiFilterUI<T extends WSOkapiFilterConfigurationData<?
      */
     protected abstract T getConfigurationData(WSComponentConfigurationData config);
 
-    protected abstract UITable buildConfigurationTable(WSContext context, HttpServletRequest request,
-                                               WSComponentConfigurationData config);
+    /**
+     * Provide the table of options that is used to build the filter UI.  By default,
+     * this returns an empty table, to which common options (such as sentence-breaking)
+     * are added.  Override this method to supply your own {@link UITable} containing
+     * options for the specific filter.
+     */
+    protected UITable buildConfigurationTable(WSContext context, HttpServletRequest request,
+                                              WSComponentConfigurationData config) {
+        return new UITable();
+    }
 
-    protected abstract WSComponentConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
-                                                WSComponentConfigurationData config);
+    /**
+     * Update the configuration object with any filter parameters that are set in the request.
+     * The default implementation simply returns the config object.  Common options (such as
+     * sentence-breaking) will be updated by the framework.
+     */
+    protected WSComponentConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
+                                                WSComponentConfigurationData config) {
+        return config;
+    }
 }
