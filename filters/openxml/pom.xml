@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>okapi-ws-filters</artifactId>
+        <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+        <version>1.2-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.spartansoftwareinc.ws.okapi.filters.openxml</groupId>
+    <artifactId>okapi-ws-filters-openxml</artifactId>
+    <name>Okapi OpenXML Filter for WorldServer</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+            <artifactId>okapi-ws-filters-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>okapi-filter-openxml</artifactId>
+            <groupId>net.sf.okapi.filters</groupId>
+            <version>${okapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+            <artifactId>okapi-ws-filters-base</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.okapi</groupId>
+            <artifactId>okapi-core</artifactId>
+            <version>${okapi.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,3 @@
+<components>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.openxml.OpenXMLWSOkapiFilter"/>
+</components>

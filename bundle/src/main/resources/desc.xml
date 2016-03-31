@@ -2,6 +2,7 @@
     <filter class="com.spartansoftwareinc.ws.okapi.filters.json.JSONWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.yaml.YAMLWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.po.PoWSOkapiFilter"/>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.openxml.OpenXMLWSOkapiFilter"/>
     <mt_adapter class="com.spartansoftwareinc.ws.okapi.mt.mshub.WSMicrosoftMTAdapter" />
     <auto_action class="com.spartansoftwareinc.ws.autoactions.hubmt.HubMTAutomaticAction"/>
 </components>

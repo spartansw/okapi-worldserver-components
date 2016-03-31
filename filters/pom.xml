@@ -20,6 +20,7 @@
     <module>json</module>
     <module>po</module>
     <module>yaml</module>
+    <module>openxml</module>
     <module>bundle</module>
   </modules>
 </project>

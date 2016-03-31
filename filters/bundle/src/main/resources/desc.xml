@@ -2,4 +2,5 @@
     <filter class="com.spartansoftwareinc.ws.okapi.filters.json.JSONWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.yaml.YAMLWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.po.PoWSOkapiFilter"/>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.openxml.OpenXMLWSOkapiFilter"/>
 </components>

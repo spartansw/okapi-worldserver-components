@@ -34,6 +34,11 @@
       <artifactId>okapi-ws-filters-yaml</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters.openxml</groupId>
+      <artifactId>okapi-ws-filters-openxml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -69,6 +74,13 @@
                 </filter>
                 <filter>
                   <artifact>com.spartansoftwareinc.ws.okapi.filters.yaml:okapi-ws-filters-yaml</artifact>
+                  <excludes>
+                    <exclude>net/sf/okapi/common/**</exclude>
+                    <exclude>org/slf4j/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.spartansoftwareinc.ws.okapi.filters.yaml:okapi-ws-filters-openxml</artifact>
                   <excludes>
                     <exclude>net/sf/okapi/common/**</exclude>
                     <exclude>org/slf4j/**</exclude>
