@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OpenXMLWSOkapiFilter extends WSOkapiFilter {
-    //TODO ?
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenXMLWSOkapiFilter.class);
+
     private static final String FILTER_NAME = "Okapi OpenXML Filter";
     private static final String FILTER_DESCRIPTION = "World Server OpenXML com";
     private static final String DEFAULT_ENCODING = "UTF-8";
