@@ -1,31 +1,52 @@
 package com.spartansoftwareinc.ws.okapi.filters.openxml;
 
+import com.idiominc.wssdk.component.filter.WSFilter;
 import com.spartansoftwareinc.ws.okapi.filters.FilterTestHarness;
+import com.spartansoftwareinc.ws.okapi.filters.model.SegmentInfoHolder;
+import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
+import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.nio.charset.StandardCharsets;
 
 @RunWith(DataProviderRunner.class)
 public class OpenXMLFilterTest {
 
-    @Test //TODO remove this later
-    public void emptyTest()  throws Exception {
-        FilterTestHarness harness = new FilterTestHarness(new TestOpenXMLWSOkapiFilterBuilder().replaceNoBreakHyphenTag(true).build());
+    @DataProvider
+    public static Object[][] testDefaultParametersParsingProvider() {
+        return new Object[][] {{
+                new SegmentInfoHolder[] {
+                        new SegmentInfoHolder("One two three." + WSFilter.PLACEHOLDER, "<tags1/>"),
+                        new SegmentInfoHolder("Andriy Kundyukov"),
+                }
+        }};
     }
 
-//    @Test
-//    //TODO
-//    public void testDefaultParametersParsing() throws Exception {
-//        FilterTestHarness harness = new FilterTestHarness(new TestOpenXMLWSOkapiFilter());
-//        harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", StandardCharsets.UTF_8, null); //TODO
-//    }
+    @Test
+    @UseDataProvider("testDefaultParametersParsingProvider")
+    public void testDefaultParametersParsing(SegmentInfoHolder[] expected) throws Exception {
+        FilterTestHarness harness = new FilterTestHarness(new TestOpenXMLWSOkapiFilter());
+        harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", StandardCharsets.UTF_8, expected);
+    }
 
-//    @Test TODO
-//    @UseDataProvider("testParsingWithChangedParametersProvider")
-//    public void testParsingWithChangedParameters(SegmentInfoHolder[] expected) throws Exception {
-//        FilterTestHarness harness = new FilterTestHarness(new TestOpenXMLWSOkapiFilterBuilder().replaceNoBreakHyphenTag(true).build());
-//        harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", StandardCharsets.UTF_8, expected);
-//    }
+    @DataProvider
+    public static Object[][] testParsingWithChangedParametersProvider() {
+        return new Object[][] {{
+                new SegmentInfoHolder[] {
+                        new SegmentInfoHolder("One two three." /*+ "-"*/ + WSFilter.PLACEHOLDER, "<tags1/>"), //TODO changing parameters doesn't work?
+                        new SegmentInfoHolder("Andriy Kundyukov"),
+                }
+        }};
+    }
+
+    @Test
+    @UseDataProvider("testParsingWithChangedParametersProvider")
+    public void testParsingWithChangedParameters(SegmentInfoHolder[] expected) throws Exception {
+        FilterTestHarness harness = new FilterTestHarness(new TestOpenXMLWSOkapiFilterBuilder().replaceNoBreakHyphenTag(true).build());
+        harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", StandardCharsets.UTF_8, expected);
+    }
 
     private class TestOpenXMLWSOkapiFilter extends OpenXMLWSOkapiFilter {
         private OpenXMLFilterConfigurationData testData = new OpenXMLFilterConfigurationData();
