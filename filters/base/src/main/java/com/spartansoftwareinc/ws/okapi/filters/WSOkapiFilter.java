@@ -22,7 +22,6 @@ import net.sf.okapi.common.filterwriter.IFilterWriter;
 import net.sf.okapi.common.resource.RawDocument;
 
 public abstract class WSOkapiFilter extends WSFilter{
-
     protected OkapiFilterBridge filterBridge = new OkapiFilterBridge();
 
     @Override
@@ -52,7 +51,10 @@ public abstract class WSOkapiFilter extends WSFilter{
         } finally {
             if (tempSourceFile != null) {
                 //noinspection ResultOfMethodCallIgnored
-                tempSourceFile.delete();
+                if (!tempSourceFile.delete()) {
+                    getLoggerWithContext().warn("Couldn't delete temp file " + tempSourceFile + " for filter source node"
+                             + srcContent.getPath());
+                }
             }
         }
     }

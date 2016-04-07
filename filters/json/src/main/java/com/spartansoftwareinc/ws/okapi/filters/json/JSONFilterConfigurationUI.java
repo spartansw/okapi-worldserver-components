@@ -12,9 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.component.WSComponentConfigurationData;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITable;
+import com.spartansoftwareinc.ws.okapi.base.ui.UICheckbox;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIMultiValueInput;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIUtil;
 import com.spartansoftwareinc.ws.okapi.filters.ui.WSOkapiFilterUI;
+
+import net.sf.okapi.filters.json.Parameters;
 
 public class JSONFilterConfigurationUI extends WSOkapiFilterUI<JSONFilterConfigurationData> {
 
@@ -35,6 +38,8 @@ public class JSONFilterConfigurationUI extends WSOkapiFilterUI<JSONFilterConfigu
         UITable table = new UITable();
         table.add(new UIMultiValueInput("Non-Translatable JSON Keys", "json",
                   excludedKeys, excludedKeys));
+        table.add(new UICheckbox("Extract Standalone Keys", "extractIsolated",
+                configData.getParameters().getExtractStandalone()));
         return table;
     }
 
@@ -43,6 +48,9 @@ public class JSONFilterConfigurationUI extends WSOkapiFilterUI<JSONFilterConfigu
             WSComponentConfigurationData config) {
         JSONFilterConfigurationData configData = getConfigurationData(config);
         configData.setExcludedKeys(UIUtil.getOptionValues(request, "json_keys_res"));
+        Parameters params = configData.getParameters();
+        params.setExtractStandalone(UIUtil.getBoolean(request, "extractIsolated"));
+        configData.setParameters(params);
         return configData;
     }
 
