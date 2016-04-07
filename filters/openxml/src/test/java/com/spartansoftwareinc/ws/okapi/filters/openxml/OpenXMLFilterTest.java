@@ -27,8 +27,10 @@ public class OpenXMLFilterTest {
     @Test
     @UseDataProvider("testDefaultParametersParsingProvider")
     public void testDefaultParametersParsing(SegmentInfoHolder[] expected) throws Exception {
-        FilterTestHarness harness = new FilterTestHarness(new TestOpenXMLWSOkapiFilter());
-        harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", StandardCharsets.UTF_8, expected);
+        TestOpenXMLWSOkapiFilter filter = new TestOpenXMLWSOkapiFilter();
+        FilterTestHarness harness = new FilterTestHarness(filter);
+        harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", filter.getOkapiFilterConfiguration(),
+                                         StandardCharsets.UTF_8, expected);
     }
 
     @DataProvider
@@ -44,15 +46,17 @@ public class OpenXMLFilterTest {
     @Test
     @UseDataProvider("testParsingWithChangedParametersProvider")
     public void testParsingWithChangedParameters(SegmentInfoHolder[] expected) throws Exception { //TODO why it works differently without Test filter?
-        FilterTestHarness harness = new FilterTestHarness(new TestOpenXMLWSOkapiFilterBuilder().replaceNoBreakHyphenTag(true).build());
-        harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", StandardCharsets.UTF_8, expected);
+        TestOpenXMLWSOkapiFilter filter = new TestOpenXMLWSOkapiFilterBuilder().replaceNoBreakHyphenTag(true).build();
+        FilterTestHarness harness = new FilterTestHarness(filter);
+        harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", filter.getOkapiFilterConfiguration(),
+                                         StandardCharsets.UTF_8, expected);
     }
 
     private class TestOpenXMLWSOkapiFilter extends OpenXMLWSOkapiFilter {
         private OpenXMLFilterConfigurationData testData = new OpenXMLFilterConfigurationData();
 
         @Override
-        protected OpenXMLFilterConfigurationData getOpenXMLFilterConfiguration() {
+        protected OpenXMLFilterConfigurationData getOkapiFilterConfiguration() {
             return testData;
         }
     }
@@ -65,12 +69,12 @@ public class OpenXMLFilterTest {
         }
 
         TestOpenXMLWSOkapiFilterBuilder replaceNoBreakHyphenTag(boolean param) {
-            this.filter.getOpenXMLFilterConfiguration().setReplaceNoBreakHyphenTag(param);
+            this.filter.getOkapiFilterConfiguration().setReplaceNoBreakHyphenTag(param);
             return this;
         }
 
         TestOpenXMLWSOkapiFilterBuilder automaticallyAcceptRevisions(boolean param) {
-            this.filter.getOpenXMLFilterConfiguration().setAutomaticallyAcceptRevisions(param);
+            this.filter.getOkapiFilterConfiguration().setAutomaticallyAcceptRevisions(param);
             return this;
         }
     }

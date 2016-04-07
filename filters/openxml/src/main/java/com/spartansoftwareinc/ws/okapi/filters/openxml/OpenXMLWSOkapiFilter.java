@@ -9,7 +9,7 @@ import net.sf.okapi.filters.openxml.OpenXMLFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OpenXMLWSOkapiFilter extends WSOkapiFilter {
+public class OpenXMLWSOkapiFilter extends WSOkapiFilter<OpenXMLFilterConfigurationData> {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenXMLWSOkapiFilter.class);
 
@@ -48,16 +48,17 @@ public class OpenXMLWSOkapiFilter extends WSOkapiFilter {
     }
 
     @Override
-    public OpenXMLFilter getConfiguredFilter() {
+    public OpenXMLFilter getConfiguredFilter(OpenXMLFilterConfigurationData config) {
         OpenXMLFilter filter = new OpenXMLFilter();
-        filter.setParameters(getOpenXMLFilterConfiguration().getParameters());
+        filter.setParameters(config.getParameters());
         filter.getParameters().setAutomaticallyAcceptRevisions(true);
         return filter;
     }
 
-    protected OpenXMLFilterConfigurationData getOpenXMLFilterConfiguration() {
+    protected OpenXMLFilterConfigurationData getOkapiFilterConfiguration() {
         WSFilterConfigurationData config = getConfiguration();
         return (config != null && config instanceof OpenXMLFilterConfigurationData) ?
                 (OpenXMLFilterConfigurationData)config : new OpenXMLFilterConfigurationData();
     }
+
 }
