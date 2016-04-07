@@ -35,7 +35,7 @@ public class OpenXMLFilterTest {
     public static Object[][] testParsingWithChangedParametersProvider() {
         return new Object[][] {{
                 new SegmentInfoHolder[] {
-                        new SegmentInfoHolder("One two three." /*+ "-"*/ + WSFilter.PLACEHOLDER, "<tags1/>"), //TODO changing parameters doesn't work?
+                        new SegmentInfoHolder("One two three." + "-"),
                         new SegmentInfoHolder("Andriy Kundyukov"),
                 }
         }};
@@ -43,7 +43,7 @@ public class OpenXMLFilterTest {
 
     @Test
     @UseDataProvider("testParsingWithChangedParametersProvider")
-    public void testParsingWithChangedParameters(SegmentInfoHolder[] expected) throws Exception {
+    public void testParsingWithChangedParameters(SegmentInfoHolder[] expected) throws Exception { //TODO why it works differently without Test filter?
         FilterTestHarness harness = new FilterTestHarness(new TestOpenXMLWSOkapiFilterBuilder().replaceNoBreakHyphenTag(true).build());
         harness.extractAndExpectSegments("/TestDocWithNoBreakHyphen.docx", StandardCharsets.UTF_8, expected);
     }
@@ -66,6 +66,11 @@ public class OpenXMLFilterTest {
 
         TestOpenXMLWSOkapiFilterBuilder replaceNoBreakHyphenTag(boolean param) {
             this.filter.getOpenXMLFilterConfiguration().setReplaceNoBreakHyphenTag(param);
+            return this;
+        }
+
+        TestOpenXMLWSOkapiFilterBuilder automaticallyAcceptRevisions(boolean param) {
+            this.filter.getOpenXMLFilterConfiguration().setAutomaticallyAcceptRevisions(param);
             return this;
         }
     }

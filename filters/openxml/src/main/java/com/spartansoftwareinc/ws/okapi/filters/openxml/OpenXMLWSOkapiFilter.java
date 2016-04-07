@@ -43,15 +43,16 @@ public class OpenXMLWSOkapiFilter extends WSOkapiFilter {
     }
 
     @Override
-    public OpenXMLFilter getConfiguredFilter() {
-        OpenXMLFilter filter = new OpenXMLFilter();
-        filter.setParameters(getOpenXMLFilterConfiguration().getParameters());
-        return filter;
+    protected String getDefaultEncoding() {
+        return DEFAULT_ENCODING;
     }
 
     @Override
-    protected String getDefaultEncoding() {
-        return DEFAULT_ENCODING;
+    public OpenXMLFilter getConfiguredFilter() {
+        OpenXMLFilter filter = new OpenXMLFilter();
+        filter.setParameters(getOpenXMLFilterConfiguration().getParameters());
+        filter.getParameters().setAutomaticallyAcceptRevisions(true);
+        return filter;
     }
 
     protected OpenXMLFilterConfigurationData getOpenXMLFilterConfiguration() {

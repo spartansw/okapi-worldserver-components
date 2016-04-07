@@ -20,10 +20,16 @@
             <artifactId>okapi-ws-filters-base</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency> <!-- TODO check if it's the right way. Added because 0.30-SNAPSHOT version of this is needed for compiling stuff on WS -->
+            <artifactId>okapi-core</artifactId>
+            <groupId>net.sf.okapi</groupId>
+            <version>0.30-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <artifactId>okapi-filter-openxml</artifactId>
             <groupId>net.sf.okapi.filters</groupId>
-            <version>${okapi.version}</version>
+            <!--<version>${okapi.version}</version>-->
+            <version>0.30-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
@@ -32,13 +38,14 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>net.sf.okapi</groupId>
             <artifactId>okapi-core</artifactId>
-            <version>${okapi.version}</version>
+            -<version>${okapi.version}</version>-
+            <version>0.30-SNAPSHOT</version>
             <type>test-jar</type>
             <scope>test</scope>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
     <build>

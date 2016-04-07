@@ -21,28 +21,16 @@ public class OpenXMLFilterConfigurationDataTest {
                     "bPreferenceTranslateExcelExcludeColors.b=false\n" +
                     "bPreferenceTranslateExcelExcludeColumns.b=false\n" +
                     "bPreferenceAddLineSeparatorAsCharacter.b=false\n" +
-                    "bPreferenceReplaceNoBreakHyphenTag.b=false\n" +
+                    "bPreferenceReplaceNoBreakHyphenTag.b=true\n" +
                     "bPreferenceIgnoreSoftHyphenTag.b=false\n" +
                     "bPreferenceAddTabAsCharacter.b=false\n" +
                     "bPreferenceAggressiveCleanup.b=false\n" +
+                    "bPreferenceAutomaticallyAcceptRevisions.b=true\n" +
                     "tsExcelExcludedColors.i=0\n" +
                     "tsExcelExcludedColumns.i=0\n" +
                     "tsExcludeWordStyles.i=0]]></okapi>" +
                     "<applySentenceBreaking>false</applySentenceBreaking>" +
-                    "<translateDocProperties>true</translateDocProperties>" +
-                    "<translateComments>true</translateComments>" +
-                    "<aggressiveCleanup>false</aggressiveCleanup>" +
-                    "<automaticallyAcceptRevisions>true</automaticallyAcceptRevisions>" +
-                    "<translatePowerpointNotes>true</translatePowerpointNotes>" +
-                    "<translatePowerpointMasters>true</translatePowerpointMasters>" +
-                    "<translateWordHeadersFooters>true</translateWordHeadersFooters>" +
-                    "<translateWordHidden>false</translateWordHidden>" +
-                    "<translateWordExcludeGraphicMetaData>false</translateWordExcludeGraphicMetaData>" +
-                    "<translateExcelHidden>false</translateExcelHidden>" +
-                    "<addTabAsCharacter>false</addTabAsCharacter>" +
-                    "<addLineSeparatorAsCharacter>false</addLineSeparatorAsCharacter>" +
-                    "<replaceNoBreakHyphenTag>true</replaceNoBreakHyphenTag>" +
-                    "<ignoreSoftHyphenTag>false</ignoreSoftHyphenTag></params>";
+                    "</params>";
 
     @Test
     public void testToXML() throws Exception {
@@ -56,7 +44,7 @@ public class OpenXMLFilterConfigurationDataTest {
         OpenXMLFilterConfigurationData data = new OpenXMLFilterConfigurationData();
         ConfigTestUtils.fromXML(data, CONFIG_XML);
         ConditionalParameters params = data.getParameters();
-        assertEquals(false/*true*/, params.getReplaceNoBreakHyphenTag()); //TODO fix ConfigData. should be "true"!
+        assertEquals(true, params.getReplaceNoBreakHyphenTag());
     }
 
 }
