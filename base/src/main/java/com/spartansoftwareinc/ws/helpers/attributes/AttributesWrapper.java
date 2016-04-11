@@ -35,20 +35,34 @@ import com.idiominc.wssdk.user.WSUser;
  *   wrapper.setString("attribute_2", "my_value");
  * </pre>
  */
-public class AttributesWrapper {
+public class AttributesWrapper<T extends WSAttributable> {
     private static final Logger LOG = Logger.getLogger(AttributesWrapper.class);
-    private WSAttributable attributable;
+    private T attributable;
     private AttributeErrorHandlerFactory errorHandlerFactory;
 
-    public AttributesWrapper(WSAttributable attributable) {
+    public AttributesWrapper(T attributable) {
         this(attributable, new ExceptionThrowingAttributeErrorHandlerFactory(LOG));
     }
 
-    public AttributesWrapper(WSAttributable attributable, AttributeErrorHandlerFactory errorHandlerFactory) {
+    public AttributesWrapper(T attributable, AttributeErrorHandlerFactory errorHandlerFactory) {
         this.attributable = attributable;
         this.errorHandlerFactory = errorHandlerFactory;
     }
 
+    /**
+     * Return the wrapped instance.
+     * @return
+     */
+    public T get() {
+        return attributable;
+    }
+
+    /**
+     * Return the value of the Boolean attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public Boolean getBoolean(String attributeName) {
         // There is a bug in the WSSDK (as of 10.x) - if a boolean attribute value is
         // unassigned, calling WSBooleanAttribute#getValue() will crash with a
@@ -63,6 +77,12 @@ public class AttributesWrapper {
         Attributes.getBooleanValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the value of the String attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String getString(String attributeName) {
         AttributeErrorHandler<WSStringAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getStringValue(attributable, attributeName, errorHandler).getValue();
@@ -73,6 +93,12 @@ public class AttributesWrapper {
         Attributes.getStringValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the value of the Integer attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public Integer getInteger(String attributeName) {
         AttributeErrorHandler<WSIntegerAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getIntegerValue(attributable, attributeName, errorHandler).getValue();
@@ -83,11 +109,23 @@ public class AttributesWrapper {
         Attributes.getIntegerValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the text value of the URL attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String getUrl(String attributeName) {
         AttributeErrorHandler<WSUrlAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getUrlValue(attributable, attributeName, errorHandler).getValue();
     }
 
+    /**
+     * Return the address value of the URL attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String getUrlAdress(String attributeName) {
         AttributeErrorHandler<WSUrlAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getUrlValue(attributable, attributeName, errorHandler).getAddress();
@@ -98,6 +136,12 @@ public class AttributesWrapper {
         Attributes.getUrlValue(attributable, attributeName, errorHandler).setValue(text, address);
     }
 
+    /**
+     * Return the value of the Comment attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String getComment(String attributeName) {
         AttributeErrorHandler<WSCommentAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getCommentValue(attributable, attributeName, errorHandler).getValue();
@@ -108,6 +152,12 @@ public class AttributesWrapper {
         Attributes.getCommentValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the value of the Date attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public Date getDate(String attributeName) {
         AttributeErrorHandler<WSDateAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getDateValue(attributable, attributeName, errorHandler).getValue();
@@ -118,6 +168,12 @@ public class AttributesWrapper {
         Attributes.getDateValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the value(s) of the File attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public File[] getFiles(String attributeName) {
         AttributeErrorHandler<WSFileAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getFileValue(attributable, attributeName, errorHandler).getValues();
@@ -128,6 +184,12 @@ public class AttributesWrapper {
         Attributes.getFileValue(attributable, attributeName, errorHandler).setValues(values);
     }
 
+    /**
+     * Return a single value of the File attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public File getFile(String attributeName) {
         AttributeErrorHandler<WSFileAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getFileValue(attributable, attributeName, errorHandler).getValue();
@@ -138,6 +200,12 @@ public class AttributesWrapper {
         Attributes.getFileValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the value of the HTML attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String getHtml(String attributeName) {
         AttributeErrorHandler<WSHtmlAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getHtmlValue(attributable, attributeName, errorHandler).getValue();
@@ -148,6 +216,12 @@ public class AttributesWrapper {
         Attributes.getHtmlValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the value of the Image attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public File getImage(String attributeName) {
         AttributeErrorHandler<WSImageAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getImageValue(attributable, attributeName, errorHandler).getValue();
@@ -158,6 +232,12 @@ public class AttributesWrapper {
         Attributes.getImageValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the value of the Large String attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String getLargeString(String attributeName) {
         AttributeErrorHandler<WSLargeStringAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getLargeStringValue(attributable, attributeName, errorHandler).getValue();
@@ -168,6 +248,12 @@ public class AttributesWrapper {
         Attributes.getLargeStringValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the values of the List attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String[] getList(String attributeName) {
         AttributeErrorHandler<WSListAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getListValue(attributable, attributeName, errorHandler).getValues();
@@ -178,6 +264,12 @@ public class AttributesWrapper {
         Attributes.getListValue(attributable, attributeName, errorHandler).setValues(values);
     }
 
+    /**
+     * Return the values of the MultiSelect attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String[] getMultiSelectString(String attributeName) {
         AttributeErrorHandler<WSMultiSelectStringAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getMultiSelectStringValue(attributable, attributeName, errorHandler).getValues();
@@ -188,6 +280,12 @@ public class AttributesWrapper {
         Attributes.getMultiSelectStringValue(attributable, attributeName, errorHandler).setValues(values);
     }
 
+    /**
+     * Return the value of the Select String attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public String getSelectString(String attributeName) {
         AttributeErrorHandler<WSSelectStringAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getSelectStringValue(attributable, attributeName, errorHandler).getValue();
@@ -198,6 +296,12 @@ public class AttributesWrapper {
         Attributes.getSelectStringValue(attributable, attributeName, errorHandler).setValue(value);
     }
 
+    /**
+     * Return the value of the User attribute with the specified name. If the attribute
+     * does not exist or is the wrong type, raise an error with the registered error handler.
+     * @param attributeName
+     * @return boolean attribute value
+     */
     public WSUser getUser(String attributeName) {
         AttributeErrorHandler<WSUserAttributeValue> errorHandler = errorHandlerFactory.newInstance();
         return Attributes.getUserValue(attributable, attributeName, errorHandler).getValue();
