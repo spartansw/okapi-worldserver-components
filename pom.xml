@@ -20,7 +20,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <ws.version>10.4.3.195</ws.version>
-    <okapi.version>0.29</okapi.version>
+    <okapi.version>0.30-SNAPSHOT</okapi.version>
     <mainPackage>com.spartansoftwareinc.ws.okapi</mainPackage>
   </properties>
 
