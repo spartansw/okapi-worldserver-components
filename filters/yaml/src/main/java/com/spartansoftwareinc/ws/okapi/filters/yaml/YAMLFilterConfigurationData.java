@@ -11,7 +11,7 @@ import org.w3c.dom.Text;
 
 import com.spartansoftwareinc.ws.okapi.filters.WSOkapiFilterConfigurationData;
 
-import net.sf.okapi.filters.railsyaml.Parameters;
+import net.sf.okapi.filters.yaml.Parameters;
 
 public class YAMLFilterConfigurationData extends WSOkapiFilterConfigurationData<Parameters>{
     private static final long serialVersionUID = 1L;

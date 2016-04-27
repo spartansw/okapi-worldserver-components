@@ -34,7 +34,8 @@ public class OkapiFilterBridge {
 
     public static final String SEGMENT_SEPARATOR = "[SEGMENT SEPARATOR]";
 
-    public void writeWsSegments(IFilter filter, RawDocument srcRawDocument, WSSegmentWriter wsSegmentWriter) {
+    public void writeWsSegments(IFilter filter, RawDocument srcRawDocument, WSSegmentWriter wsSegmentWriter,
+                                boolean breakSentences) {
         filter.open(srcRawDocument);
         try {
             while (filter.hasNext()) {
@@ -42,7 +43,7 @@ public class OkapiFilterBridge {
                 if (event.isTextUnit()) {
                     ITextUnit textUnit = event.getTextUnit();
                     if (textUnit.isTranslatable()) {
-                        processTextUnit(wsSegmentWriter, textUnit);
+                        processTextUnit(wsSegmentWriter, textUnit, breakSentences);
                     }
                 }
             }
@@ -70,11 +71,11 @@ public class OkapiFilterBridge {
         }
     }
 
-    private void processTextUnit(WSSegmentWriter wsSegmentWriter, ITextUnit textUnit) {
+    private void processTextUnit(WSSegmentWriter wsSegmentWriter, ITextUnit textUnit, boolean breakSentences) {
         for (Segment segment : textUnit.getSourceSegments()) {
             SegmentInfoHolder filterSegment = convertToCustomSegment(segment);
             wsSegmentWriter.writeTextSegment(filterSegment.getEncodedText(),
-                    filterSegment.getPlaceholders(), false);
+                    filterSegment.getPlaceholders(), breakSentences);
             LOG.info("Writing WS segment '{}'", filterSegment.getEncodedText());
             wsSegmentWriter.writeMarkupSegment(SEGMENT_SEPARATOR);
         }

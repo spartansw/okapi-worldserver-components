@@ -9,27 +9,27 @@ import com.spartansoftwareinc.ws.okapi.base.ui.UITable;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIUtil;
 import com.spartansoftwareinc.ws.okapi.filters.ui.WSOkapiFilterUI;
 
-public class POFilterConfigurationUI extends WSOkapiFilterUI {
-
+public class POFilterConfigurationUI extends WSOkapiFilterUI<POFilterConfigurationData> {
     @Override
-    public String render(WSContext context, HttpServletRequest request,
-            WSComponentConfigurationData config) {
-        POFilterConfigurationData poConfig = getConfigData(config);
+    protected UITable buildConfigurationTable(WSContext context, HttpServletRequest request,
+                                WSComponentConfigurationData config) {
+        POFilterConfigurationData poConfig = getConfigurationData(config);
 
         UITable table = new UITable();
         table.add(new UICheckbox("Copy Target Content to PO File", "copyTarget", poConfig.getCopyToPO()));
-        return table.render();
+        return table;
     }
 
     @Override
-    public WSComponentConfigurationData save(WSContext context,
-            HttpServletRequest request, WSComponentConfigurationData config) {
-        POFilterConfigurationData poConfig = getConfigData(config);
+    protected POFilterConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
+            WSComponentConfigurationData config) {
+        POFilterConfigurationData poConfig = getConfigurationData(config);
         poConfig.setCopyToPO(UIUtil.getBoolean(request, "copyTarget"));
         return poConfig;
     }
 
-    private POFilterConfigurationData getConfigData(WSComponentConfigurationData config) {
+    @Override
+    protected POFilterConfigurationData getConfigurationData(WSComponentConfigurationData config) {
         return (config != null && config instanceof POFilterConfigurationData) ?
             (POFilterConfigurationData)config : new POFilterConfigurationData();
     }

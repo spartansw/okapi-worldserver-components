@@ -11,6 +11,7 @@ import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.asset.WSAssetSegmentationException;
 import com.idiominc.wssdk.component.filter.WSFilter;
+import com.idiominc.wssdk.component.filter.WSFilterConfigurationData;
 import com.idiominc.wssdk.component.filter.WSSegmentReader;
 import com.idiominc.wssdk.component.filter.WSSegmentWriter;
 import com.spartansoftwareinc.ws.okapi.filters.utils.FilterUtil;
@@ -21,7 +22,6 @@ import net.sf.okapi.common.filterwriter.IFilterWriter;
 import net.sf.okapi.common.resource.RawDocument;
 
 public abstract class WSOkapiFilter extends WSFilter{
-
     protected OkapiFilterBridge filterBridge = new OkapiFilterBridge();
 
     @Override
@@ -37,7 +37,7 @@ public abstract class WSOkapiFilter extends WSFilter{
 
             IFilter filter = getConfiguredFilter();
             FilterUtil.writeSourceAisPathSegment(srcContent, wsSegmentWriter);
-            filterBridge.writeWsSegments(filter, srcRawDocument, wsSegmentWriter);
+            filterBridge.writeWsSegments(filter, srcRawDocument, wsSegmentWriter, isApplyingSegmentation());
 
         } catch (IOException ex) {
             getLoggerWithContext().error("File IO failure when parsing WSNode content", ex);
@@ -51,9 +51,24 @@ public abstract class WSOkapiFilter extends WSFilter{
         } finally {
             if (tempSourceFile != null) {
                 //noinspection ResultOfMethodCallIgnored
-                tempSourceFile.delete();
+                if (!tempSourceFile.delete()) {
+                    getLoggerWithContext().warn("Couldn't delete temp file " + tempSourceFile + " for filter source node"
+                             + srcContent.getPath());
+                }
             }
         }
+    }
+
+    /**
+     * Indicates if WorldServer segmentation should be applied.  This returns false
+     * by default, but may be overridden by subclasses.
+     * @return true if segmentation should be applied by WorldServer
+     */
+    protected boolean isApplyingSegmentation() {
+        WSFilterConfigurationData config = getConfiguration();
+        return (config != null && config instanceof WSOkapiFilterConfigurationData<?>) ?
+                ((WSOkapiFilterConfigurationData<?>)config).getApplySegmentation() :
+                WSOkapiFilterConfigurationData.DEFAULT_APPLY_SEGMENTATION;
     }
 
     @Override

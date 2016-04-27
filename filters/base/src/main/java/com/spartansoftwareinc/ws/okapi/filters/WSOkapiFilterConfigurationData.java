@@ -17,7 +17,10 @@ import net.sf.okapi.common.IParameters;
 public abstract class WSOkapiFilterConfigurationData<T extends IParameters> extends WSFilterConfigurationData {
     private static final long serialVersionUID = 1L;
 
+    static final boolean DEFAULT_APPLY_SEGMENTATION = false;
+
     private String serializedParams;
+    private boolean applyWSSegmentation = DEFAULT_APPLY_SEGMENTATION;
 
     protected abstract T getDefaultParameters();
 
@@ -41,6 +44,14 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
         return params;
     }
 
+    public boolean getApplySegmentation() {
+        return applyWSSegmentation;
+    }
+
+    public void setApplySegmentation(boolean applyWSSegmentation) {
+        this.applyWSSegmentation = applyWSSegmentation;
+    }
+
     @Override
     public Node toXML() {
         try {
@@ -54,6 +65,9 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
                 serializedParams = getDefaultParameters().toString();
             }
             okapiParams.appendChild(doc.createCDATASection(serializedParams));
+            Node node = doc.createElement("applySentenceBreaking");
+            node.appendChild(doc.createTextNode(Boolean.toString(applyWSSegmentation)));
+            top.appendChild(node);
             saveAdditionalConfiguration(doc, top);
             return top;
         }
@@ -72,6 +86,9 @@ public abstract class WSOkapiFilterConfigurationData<T extends IParameters> exte
                 if (cdata.getNodeType() == Node.CDATA_SECTION_NODE) {
                     this.serializedParams = cdata.getNodeValue();
                 }
+            }
+            else if (n.getNodeName().equals("applySentenceBreaking")) {
+                applyWSSegmentation = Boolean.valueOf(n.getTextContent());
             }
             else {
                 loadAdditionalConfiguration(n);
