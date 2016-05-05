@@ -7,16 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 
-import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.ais.WSSystemPropertyKey;
 import com.idiominc.wssdk.asset.WSMarkupSegment;
 import com.idiominc.wssdk.asset.WSSegment;
 import com.idiominc.wssdk.component.filter.WSSegmentReader;
-import com.idiominc.wssdk.component.filter.WSSegmentWriter;
 import com.idiominc.wssdk.user.WSLocale;
-
 import net.sf.okapi.common.LocaleId;
 
 public class FilterUtil {
@@ -38,21 +35,17 @@ public class FilterUtil {
     }
 
     /**
-     * Retrieve the original source AIS content to export the same PO/JSON/YAML metadata when exporting the
-     * translations.
+     * Read the next segment from a segment reader and return it as a WSMarkupSegment.
      *
-     * @param context       - context
      * @param segmentReader - WorldServer segments
      * @return original source AIS content
-     * @throws IllegalStateException, WSAisException, IOException
      */
-    public static WSNode parseSourceAisPathSegment(WSContext context, WSSegmentReader segmentReader)
-                        throws IllegalStateException, WSAisException, IOException {
+    public static WSMarkupSegment expectMarkupSegment(WSSegmentReader segmentReader) {
         WSSegment srcAisSegment = segmentReader.read();
         if (srcAisSegment == null || !(srcAisSegment instanceof WSMarkupSegment)) {
-            throw new IllegalStateException("Missing Source AIS segment for writing file");
+            throw new IllegalStateException("Expected markup segment, found " + srcAisSegment);
         }
-        return context.getAisManager().getNode(srcAisSegment.getContent());
+        return (WSMarkupSegment)srcAisSegment;
     }
 
     public static File convertAisContentIntoFile(WSNode aisContent) throws IOException,
@@ -69,19 +62,6 @@ public class FilterUtil {
         }
         return path.substring(i);
     }
-
-    /**
-     * During import into WorldServer, we keep track of the source AIS path to use during export to preserve any
-     * metadata in the PO file by writing a markup segment containing the AIS path. We will later reparse this during
-     * export.
-     *
-     * @param srcContent    - AIS content
-     * @param segmentWriter - Writer to communicate with WorldServer
-     */
-    public static void writeSourceAisPathSegment(WSNode srcContent, WSSegmentWriter segmentWriter) {
-        segmentWriter.writeMarkupSegment(srcContent.getPath());
-    }
-
 
     public static String join(String[] array, String delimiter) {
         StringBuilder sb = new StringBuilder();

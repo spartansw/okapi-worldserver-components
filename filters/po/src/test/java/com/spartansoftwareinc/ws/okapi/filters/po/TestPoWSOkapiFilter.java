@@ -46,8 +46,9 @@ public class TestPoWSOkapiFilter {
 
     @Test
     @UseDataProvider("testInlineFieldParseResults")
-    public void testInlineField(SegmentInfoHolder[] expected) throws IOException {
-        testHarness.extractAndExpectSegments("/inline_fields.pot", StandardCharsets.UTF_8, expected);
+    public void testInlineField(SegmentInfoHolder[] expected) throws Exception {
+        testHarness.extractAndExpectSegments("/inline_fields.pot", new POFilterConfigurationData(),
+                    StandardCharsets.UTF_8, expected);
     }
 
     @DataProvider
@@ -97,8 +98,9 @@ public class TestPoWSOkapiFilter {
 
     @Test
     @UseDataProvider("testEmbeddedHtmlParseResults")
-    public void testEmbeddedHtml(SegmentInfoHolder[] expected) throws IOException {
-        testHarness.extractAndExpectSegments("/embedded_html.pot", StandardCharsets.UTF_8, expected);
+    public void testEmbeddedHtml(SegmentInfoHolder[] expected) throws Exception {
+        testHarness.extractAndExpectSegments("/embedded_html.pot", new POFilterConfigurationData(),
+                StandardCharsets.UTF_8, expected);
     }
 
     @DataProvider
@@ -150,8 +152,9 @@ public class TestPoWSOkapiFilter {
 
     @Test
     @UseDataProvider("testLineBreakParseResults")
-    public void testLineBreak(SegmentInfoHolder[] expected) throws IOException {
-        testHarness.extractAndExpectSegments("/line_breaks.pot", StandardCharsets.UTF_8, expected);
+    public void testLineBreak(SegmentInfoHolder[] expected) throws Exception {
+        testHarness.extractAndExpectSegments("/line_breaks.pot", new POFilterConfigurationData(),
+                StandardCharsets.UTF_8, expected);
     }
 
     @DataProvider

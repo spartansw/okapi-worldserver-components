@@ -7,9 +7,11 @@ import java.io.OutputStream;
 import org.slf4j.Logger;
 
 import com.idiominc.wssdk.WSContext;
+import com.idiominc.wssdk.WSRuntimeException;
 import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.asset.WSAssetSegmentationException;
+import com.idiominc.wssdk.asset.WSMarkupSegment;
 import com.idiominc.wssdk.component.filter.WSFilter;
 import com.idiominc.wssdk.component.filter.WSFilterConfigurationData;
 import com.idiominc.wssdk.component.filter.WSSegmentReader;
@@ -21,7 +23,7 @@ import net.sf.okapi.common.filters.IFilter;
 import net.sf.okapi.common.filterwriter.IFilterWriter;
 import net.sf.okapi.common.resource.RawDocument;
 
-public abstract class WSOkapiFilter extends WSFilter{
+public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>> extends WSFilter{
     protected OkapiFilterBridge filterBridge = new OkapiFilterBridge();
 
     @Override
@@ -35,8 +37,8 @@ public abstract class WSOkapiFilter extends WSFilter{
                     FilterUtil.detectEncoding(srcContent, getDefaultEncoding()), okapiLocale);
             srcRawDocument.setTargetLocale(okapiLocale);
 
-            IFilter filter = getConfiguredFilter();
-            FilterUtil.writeSourceAisPathSegment(srcContent, wsSegmentWriter);
+            IFilter filter = getConfiguredFilter(getOkapiFilterConfiguration());
+            writeSourceAisPathSegment(srcContent, getOkapiFilterConfiguration(), wsSegmentWriter);
             filterBridge.writeWsSegments(filter, srcRawDocument, wsSegmentWriter, isApplyingSegmentation());
 
         } catch (IOException ex) {
@@ -60,6 +62,12 @@ public abstract class WSOkapiFilter extends WSFilter{
     }
 
     /**
+     * Cast the result of getConfiguration() to the appropriate subclass for this filter.
+     * @return
+     */
+    protected abstract T getOkapiFilterConfiguration();
+
+    /**
      * Indicates if WorldServer segmentation should be applied.  This returns false
      * by default, but may be overridden by subclasses.
      * @return true if segmentation should be applied by WorldServer
@@ -77,12 +85,17 @@ public abstract class WSOkapiFilter extends WSFilter{
         try (OutputStream targetFile = targetContent.getOutputStream()) {
             LocaleId targetOkapiLocale = FilterUtil.getOkapiLocaleId(targetContent);
 
-            IFilter filter = getConfiguredFilter();
+            // TODO split out into a sub function that gets the segment from the segmentReader
+            T configData = getOkapiFilterConfiguration();
+            WSMarkupSegment segment = FilterUtil.expectMarkupSegment(segmentReader);
+            MarkupSegmentMetadata<T> meta = MarkupSegmentMetadata.fromSegment(segment, configData);
+            WSNode srcContent = context.getAisManager().getNode(meta.getAsset());
+
+            IFilter filter = getConfiguredFilter(meta.getConfig());
             IFilterWriter filterWriter = filter.createFilterWriter();
             filterWriter.setOutput(targetFile);
             filterWriter.setOptions(targetOkapiLocale, FilterUtil.detectEncoding(targetContent, getDefaultEncoding()));
 
-            WSNode srcContent = FilterUtil.parseSourceAisPathSegment(context, segmentReader);
             tempSourceFile = FilterUtil.convertAisContentIntoFile(srcContent);
             LocaleId srcOkapiLocale = FilterUtil.getOkapiLocaleId(srcContent);
 
@@ -108,8 +121,27 @@ public abstract class WSOkapiFilter extends WSFilter{
 
     protected abstract Logger getLoggerWithContext();
 
-    protected abstract IFilter getConfiguredFilter();
+    protected abstract IFilter getConfiguredFilter(T configData);
 
     protected abstract String getDefaultEncoding();
 
+    /**
+     * During import into WorldServer, we keep track of the source AIS path to use during export to preserve any
+     * metadata in the PO file by writing a markup segment containing the AIS path. We will later reparse this during
+     * export.
+     *
+     * @param srcContent    - AIS content
+     * @param configData    - filter configuration used to filter the asset
+     * @param segmentWriter - Writer to communicate with WorldServer
+     */
+    protected void writeSourceAisPathSegment(WSNode srcContent, T configData, WSSegmentWriter segmentWriter) {
+        try {
+            MarkupSegmentMetadata<T> meta = MarkupSegmentMetadata.fromAsset(srcContent, configData);
+            segmentWriter.writeMarkupSegment(meta.toXML());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new WSRuntimeException("Error serializing filter metadata", e);
+        }
+    }
 }

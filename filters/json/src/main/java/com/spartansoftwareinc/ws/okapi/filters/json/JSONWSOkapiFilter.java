@@ -9,7 +9,7 @@ import net.sf.okapi.filters.json.JSONFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JSONWSOkapiFilter extends WSOkapiFilter {
+public class JSONWSOkapiFilter extends WSOkapiFilter<JSONFilterConfigurationData> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JSONWSOkapiFilter.class);
     private static final String FILTER_NAME = "Okapi JSON Filter";
@@ -42,9 +42,9 @@ public class JSONWSOkapiFilter extends WSOkapiFilter {
     }
 
     @Override
-    public JSONFilter getConfiguredFilter() {
+    public JSONFilter getConfiguredFilter(JSONFilterConfigurationData config) {
         JSONFilter filter = new JSONFilter();
-        filter.setParameters(getJSONFilterConfiguration().getParameters());
+        filter.setParameters(config.getParameters());
         return filter;
     }
 
@@ -53,7 +53,8 @@ public class JSONWSOkapiFilter extends WSOkapiFilter {
         return DEFAULT_ENCODING;
     }
 
-    protected JSONFilterConfigurationData getJSONFilterConfiguration() {
+    @Override
+    protected JSONFilterConfigurationData getOkapiFilterConfiguration() {
         WSFilterConfigurationData config = getConfiguration();
         return (config != null && config instanceof JSONFilterConfigurationData) ?
                 (JSONFilterConfigurationData)config : new JSONFilterConfigurationData();

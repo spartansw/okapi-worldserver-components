@@ -10,7 +10,7 @@ import net.sf.okapi.filters.properties.PropertiesFilter;
 
 // Dummy filter (an unconfigured properties filter) so that we can
 // exercise the base code.
-public class DummyWSOkapiFilter extends WSOkapiFilter {
+public class DummyWSOkapiFilter extends WSOkapiFilter<DummyConfigData> {
     private static final Logger LOG = LoggerFactory.getLogger(DummyWSOkapiFilter.class);
 
     @Override
@@ -37,12 +37,17 @@ public class DummyWSOkapiFilter extends WSOkapiFilter {
     }
 
     @Override
-    protected IFilter getConfiguredFilter() {
+    protected IFilter getConfiguredFilter(DummyConfigData configData) {
         return new PropertiesFilter();
     }
 
     @Override
     protected String getDefaultEncoding() {
         return "UTF-8";
+    }
+
+    @Override
+    protected DummyConfigData getOkapiFilterConfiguration() {
+        return new DummyConfigData();
     }
 }

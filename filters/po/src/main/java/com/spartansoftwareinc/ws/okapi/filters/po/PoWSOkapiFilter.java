@@ -15,7 +15,7 @@ import net.sf.okapi.filters.po.POFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PoWSOkapiFilter extends WSOkapiFilter {
+public class PoWSOkapiFilter extends WSOkapiFilter<POFilterConfigurationData> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PoWSOkapiFilter.class);
     private static final String FILTER_NAME = "Okapi PO Filter";
@@ -46,7 +46,7 @@ public class PoWSOkapiFilter extends WSOkapiFilter {
     @Override
     public void save(WSContext context, WSNode targetContent, WSSegmentReader segmentReader) {
         super.save(context, targetContent, segmentReader);
-        if (getPOFilterConfiguration().getCopyToPO()) {
+        if (getOkapiFilterConfiguration().getCopyToPO()) {
             copyTargetToPOFile(context, targetContent);
         }
     }
@@ -57,13 +57,14 @@ public class PoWSOkapiFilter extends WSOkapiFilter {
     }
 
     @Override
-    protected POFilter getConfiguredFilter() {
+    protected POFilter getConfiguredFilter(POFilterConfigurationData config) {
         POFilter filter = new POFilter();
-        filter.setParameters(getPOFilterConfiguration().getParameters());
+        filter.setParameters(config.getParameters());
         return filter;
     }
 
-    protected POFilterConfigurationData getPOFilterConfiguration() {
+    @Override
+    protected POFilterConfigurationData getOkapiFilterConfiguration() {
         WSFilterConfigurationData config = getConfiguration();
         return (config != null && config instanceof POFilterConfigurationData) ?
                 (POFilterConfigurationData)config : new POFilterConfigurationData();
