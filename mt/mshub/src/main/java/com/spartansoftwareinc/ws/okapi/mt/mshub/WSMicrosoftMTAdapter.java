@@ -33,6 +33,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     private static final Logger log = LoggerFactory.getLogger(WSMicrosoftMTAdapter.class);
 
     private WSMTAdapterConfigurationData configurationData;
+    private MTRequestConverter converter = new MTRequestConverter();
 
     @Override
     public void translate(WSContext wsContext, WSMTRequest[] wsmtRequests, WSLanguage srcLanguage, WSLanguage tgtLanguage) {
@@ -48,26 +49,20 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
             mtConnector.setLanguages(srcLocaleId, tgtLocaleId);
 
             mtConnector.open();
-            List<BatchData> batches = new ArrayList<BatchData>();
-            for (WSMTRequest wsmtRequest : wsmtRequests) {
-                if (batches.size() == 0) {
-                    batches.add(new BatchData());
-                }
-                BatchData lastBatchData = batches.get(batches.size() - 1);
-
-                if (!lastBatchData.add(wsmtRequest)) {
-                    BatchData batchData = new BatchData();
-                    batchData.add(wsmtRequest);
-                    batches.add(batchData);
-                }
+            if (configurationData.getIncludeCodes()) {
+                processWithCodes(mtConnector, wsmtRequests);
             }
-
-            for (BatchData batch : batches) {
-                batch.process(mtConnector);
+            else {
+                processWithoutCodes(mtConnector, wsmtRequests);
             }
-
             mtConnector.close();
         }
+    }
+
+    @Override
+    public boolean supportsPlaceholders() {
+        log.info("Supports placeholders: " + getConfiguration().getIncludeCodes());
+        return getConfiguration().getIncludeCodes();
     }
 
     @Override
@@ -110,7 +105,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return (WSLanguagePair[]) pairs.toArray(new WSLanguagePair[pairs.size()]);
     }
 
-    private WSMTAdapterConfigurationData getConfiguration() {
+    WSMTAdapterConfigurationData getConfiguration() {
         if (configurationData == null) {
             WSComponentConfiguration configuration = getCurrentConfiguration();
             configurationData = configuration != null
@@ -138,121 +133,61 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return config.useCustomScoring() ? config.getMatchScore() : result.getCombinedScore();
     }
 
-    // Facilitate composition of the batch queries to MS Translation Hub
-    // We need to deal with the following MS Translation Hub restrictions:
-    //  - maximum number of segments that can be sent within one batch - 10
-    //  - total amount of characters for all segments in the batch <= 10.000
-    // details at https://msdn.microsoft.com/en-us/library/ff512418.aspx
-    private class BatchData {
-        // maximum number of segments in a batch query
-        public static final int MAX_BATCH_ITEMS = 10;
-
-        // when preparing batch queries MicrosoftMTConnector assumes that batch query
-        // should not be longer than 10.000 characters including xml structure (although
-        // it seems that API only restricts the total length of text segments themselves,
-        // not including xml structure). We have no way of knowing the real size of xml created
-        // in MicrosoftMTConnector structure so we assume that it should not be greater
-        // than 10.000 - MAX_BATCH_CHARACTERS
-        public static final int MAX_BATCH_CHARACTERS = 8500;
-
-        // the length of the "<s:string></s:string>" wrapper for each text fragment inside a batch query
-        private static final int TEXT_ITEM_WRAPPER_LENGTH = 21;
-
-        private List<WSMTRequest> requests = new ArrayList<WSMTRequest>();
-        private int batchLength = 0;
-        private boolean isChunked = false;
-
-        public boolean add(WSMTRequest request) {
-            if (requests.size() >= MAX_BATCH_ITEMS) return false;
-
-            int batchLengthIncrement = TEXT_ITEM_WRAPPER_LENGTH + request.getSource().length();
-            if (batchLengthIncrement + batchLength > MAX_BATCH_CHARACTERS) {
-                if (requests.size() > 0) {
-                    return false;
-                }
-                isChunked = true;
-            }
-            requests.add(request);
-            batchLength += batchLengthIncrement;
-
-            return true;
-        }
-
-        public List<WSMTRequest> process(MicrosoftMTConnector mtConnector) {
-            if (isChunked) {
-                final WSMTRequest request = requests.get(0);
-                List<TextFragment> fragments = split(new ArrayList<TextFragment>(), request.getSource(), 0, MAX_BATCH_CHARACTERS);
-                List<List<QueryResult>> results = mtConnector.batchQuery(fragments);
-                request.setResults(joinChunkedResults(request.getSource(), results));
-            } else {
-                List<List<QueryResult>> batchResults = mtConnector.batchQuery(extractTextFragments());
-                if (batchResults.size() == requests.size()) {
-                    for (int i = 0; i < requests.size(); i++) {
-                        final List<QueryResult> requestResults = batchResults.get(i);
-                        final WSMTRequest request = requests.get(i);
-                        request.setResults(convert(request.getSource(), requestResults));
-                    }
-                }
-            }
-
-            return requests;
-        }
-
-        private List<TextFragment> extractTextFragments() {
-            List<TextFragment> fragments = new ArrayList<TextFragment>();
-            if (!isChunked) {
-                for (WSMTRequest request : requests) {
-                    fragments.add(new TextFragment(request.getSource()));
-                }
-            }
-
-            return fragments;
-        }
-
-        private List<TextFragment> split(List<TextFragment> chunks, String src, int startIdx, int chunkSize) {
-            if ((src.length() - startIdx) <= chunkSize) {
-                chunks.add(new TextFragment(src.substring(startIdx)));
-                return chunks;
-            }
-
-            String fullChunk = src.substring(startIdx, startIdx + chunkSize);
-            int breakPos = fullChunk.lastIndexOf(" ");
-            if (breakPos >= 0) {
-                chunks.add(new TextFragment(fullChunk.substring(0, breakPos)));
-                return split(chunks, src, startIdx + breakPos, chunkSize);
-            } else {
-                throw new IllegalArgumentException("Input string cannot be broken into words with a length <= " + chunkSize);
+    protected void processWithCodes(MicrosoftMTConnector mtConnector, WSMTRequest[] requests) {
+        List<List<QueryResult>> batchResults = mtConnector.batchQuery(extractTextFragments(requests));
+        if (batchResults.size() == requests.length) {
+            for (int i = 0; i < requests.length; i++) {
+                final List<QueryResult> requestResults = batchResults.get(i);
+                final WSMTRequest request = requests[i];
+                request.setResults(convertTextFragment(request.getSource(), requestResults));
             }
         }
+    }
 
-        private WSMTResult[] convert(String source, List<QueryResult> queryResults) {
-            List<WSMTResult> results = new ArrayList<WSMTResult>();
-            for (QueryResult queryResult : queryResults) {
-                results.add(new WSMTResult(source, queryResult.target.getCodedText(), getScore(queryResult)));
+    protected void processWithoutCodes(MicrosoftMTConnector mtConnector, WSMTRequest[] requests) {
+        List<List<QueryResult>> batchResults = mtConnector.batchQueryText(extractStrings(requests));
+        if (batchResults.size() == requests.length) {
+            for (int i = 0; i < requests.length; i++) {
+                final List<QueryResult> requestResults = batchResults.get(i);
+                final WSMTRequest request = requests[i];
+                request.setResults(convertText(request.getSource(), requestResults));
             }
-            return results.toArray(new WSMTResult[results.size()]);
         }
+    }
 
-        private WSMTResult[] joinChunkedResults(String source, List<List<QueryResult>> batchResults) {
-            // since we do not configure Okapi connector to request multiple results for a single
-            // segment we can safely ignore QueryResults with index greater than 0
-            int combinedScore = getConfiguration().useCustomScoring() ?
-                                        getConfiguration().getMatchScore() : 100;
-            StringBuilder sb = new StringBuilder();
-            for (List<QueryResult> chunkResults : batchResults) {
-                if (!chunkResults.isEmpty()) {
-                    final QueryResult queryResult = chunkResults.get(0);
-                    sb.append(queryResult.target.getCodedText());
-
-                    if (!getConfiguration().useCustomScoring()) {
-                        if (queryResult.getCombinedScore() < combinedScore) {
-                            combinedScore = queryResult.getCombinedScore();
-                        }
-                    }
-                }
-            }
-
-            return new WSMTResult[]{ new WSMTResult(source, sb.toString(), combinedScore) };
+    private List<TextFragment> extractTextFragments(WSMTRequest[] requests) {
+        List<TextFragment> fragments = new ArrayList<TextFragment>();
+        for (WSMTRequest request : requests) {
+            TextFragment tf = converter.toTextFragment(request.getSource());
+            log.debug("Request: Converted [" + request.getSource() + "] --> [" + tf.getCodedText() + "]");
+            fragments.add(tf);
         }
+        return fragments;
+    }
+
+    private List<String> extractStrings(WSMTRequest[] requests) {
+        List<String> strings = new ArrayList<String>();
+        for (WSMTRequest request : requests) {
+            strings.add(request.getSource());
+        }
+        return strings;
+    }
+
+    private WSMTResult[] convertTextFragment(String source, List<QueryResult> queryResults) {
+        List<WSMTResult> results = new ArrayList<WSMTResult>();
+        for (QueryResult queryResult : queryResults) {
+            String s = converter.fromTextFragment(queryResult.target);
+            log.debug("Result: Converted [" + queryResult.target + "] --> [" + s + "]");
+            results.add(new WSMTResult(source, s, getScore(queryResult)));
+        }
+        return results.toArray(new WSMTResult[results.size()]);
+    }
+
+    private WSMTResult[] convertText(String source, List<QueryResult> queryResults) {
+        List<WSMTResult> results = new ArrayList<WSMTResult>();
+        for (QueryResult queryResult : queryResults) {
+            results.add(new WSMTResult(source, queryResult.target.getCodedText(), getScore(queryResult)));
+        }
+        return results.toArray(new WSMTResult[results.size()]);
     }
 }

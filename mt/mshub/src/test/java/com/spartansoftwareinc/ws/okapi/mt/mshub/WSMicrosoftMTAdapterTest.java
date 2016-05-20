@@ -42,6 +42,29 @@ public class WSMicrosoftMTAdapterTest {
         doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
+        when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
+                "First segment", "Second segment", "Third segment"
+        ));
+
+        WSMTRequest[] requests = composeWSMTRequests("First segment", "Second segment", "Third segment");
+        mtAdapter.translate(wsContext, requests, wsLanguage, wsLanguage);
+
+        for (WSMTRequest request : requests) {
+            assertEquals(request.getMTResults().length, 1);
+        }
+
+        assertEquals(requests[0].getMTResults()[0].getTranslation(), "First segment");
+        assertEquals(requests[1].getMTResults()[0].getTranslation(), "Second segment");
+        assertEquals(requests[2].getMTResults()[0].getTranslation(), "Third segment");
+    }
+
+    @Test
+    public void testWSResultsAreSetOnWSRequestWithCodes() {
+        WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
+        mtAdapter.getConfiguration().setIncludeCodes(true);
+        doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
+        when(mtConnector.getParameters()).thenReturn(parameters);
+        when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQuery(anyList())).thenReturn(mockBatchQueryReturns(
                 "First segment", "Second segment", "Third segment"
         ));
