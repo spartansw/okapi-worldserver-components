@@ -68,6 +68,10 @@
                   <pattern>net.sf.okapi</pattern>
                   <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>org.apache</pattern>
+                  <shadedPattern>net.okapi.okapi.org.apache</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>
