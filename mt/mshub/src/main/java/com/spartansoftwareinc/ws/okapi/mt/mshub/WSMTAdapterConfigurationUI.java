@@ -106,11 +106,11 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
             errors = addError(LABEL_MATCH_SCORE, errors);
         }
 
-        if (clientId.length() < 1) {
+        if (clientId == null || clientId.length() < 1) {
             errors = addError(LABEL_CLIENT_ID, errors);
         }
 
-        if (clientSecret.length() < 1) {
+        if (clientSecret == null || clientSecret.length() < 1) {
             errors = addError(LABEL_CLIENT_SECRET, errors);
         }
 
@@ -143,7 +143,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
         try {
             return Integer.valueOf(request.getParameter(MATCH_SCORE_CUSTOM_VALUE));
         }
-        catch (Exception e) {
+        catch (NumberFormatException e) {
             return -1;
         }
     }
