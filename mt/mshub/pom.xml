@@ -70,7 +70,7 @@
                 </relocation>
                 <relocation>
                   <pattern>org.apache</pattern>
-                  <shadedPattern>net.okapi.okapi.org.apache</shadedPattern>
+                  <shadedPattern>okapi_ws_components.org.apache</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
