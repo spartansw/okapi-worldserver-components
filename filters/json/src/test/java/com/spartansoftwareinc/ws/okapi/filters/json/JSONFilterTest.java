@@ -36,8 +36,10 @@ public class JSONFilterTest {
     @Test
     @UseDataProvider("testParsingAllTranslatableKeysResults")
     public void testParsingAllTranslatableKeys(SegmentInfoHolder[] expected) throws Exception {
-        FilterTestHarness harness = new FilterTestHarness(new TestJsonWSOkapiFilter());
-        harness.extractAndExpectSegments("/TestFile.json", Charset.forName("UTF-8"), expected);
+        JSONWSOkapiFilter filter = new TestJsonWSOkapiFilter();
+        FilterTestHarness harness = new FilterTestHarness(filter);
+        harness.extractAndExpectSegments("/TestFile.json", filter.getOkapiFilterConfiguration(),
+                Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider
@@ -55,15 +57,18 @@ public class JSONFilterTest {
     @Test
     @UseDataProvider("testParsingWithExcludedKeysResults")
     public void testParsingWithExcludedKeys(SegmentInfoHolder[] expected) throws Exception {
-        FilterTestHarness harness = new FilterTestHarness(new TestJsonWSOkapiFilter("value", "html"));
-        harness.extractAndExpectSegments("/TestFile.json", Charset.forName("UTF-8"), expected);
+        JSONWSOkapiFilter filter = new TestJsonWSOkapiFilter("value", "html");
+        FilterTestHarness harness = new FilterTestHarness(filter);
+        harness.extractAndExpectSegments("/TestFile.json", filter.getOkapiFilterConfiguration(),
+                Charset.forName("UTF-8"), expected);
     }
 
     @Test
     public void testParseExcludeEverything() throws Exception {
-        FilterTestHarness harness = new FilterTestHarness(
-                new TestJsonWSOkapiFilter("value", "html", "ph", "field"));
-        harness.extractAndExpectSegments("/TestFile.json", Charset.forName("UTF-8"), new SegmentInfoHolder[0]);
+        JSONWSOkapiFilter filter = new TestJsonWSOkapiFilter("value", "html", "ph", "field");
+        FilterTestHarness harness = new FilterTestHarness(filter);
+        harness.extractAndExpectSegments("/TestFile.json", filter.getOkapiFilterConfiguration(),
+                Charset.forName("UTF-8"), new SegmentInfoHolder[0]);
     }
 
     class TestJsonWSOkapiFilter extends JSONWSOkapiFilter {
@@ -74,7 +79,7 @@ public class JSONFilterTest {
         }
 
         @Override
-        protected JSONFilterConfigurationData getJSONFilterConfiguration() {
+        protected JSONFilterConfigurationData getOkapiFilterConfiguration() {
             return testData;
         }
     }

@@ -3,6 +3,7 @@ package com.spartansoftwareinc.ws.okapi.mt.mshub;
 import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.component.WSComponentConfigurationData;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
+import com.spartansoftwareinc.ws.okapi.base.ui.UICheckbox;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIRadioButton;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITable;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITextField;
@@ -23,6 +24,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
     private static final String LABEL_CLIENT_SECRET = "Client Secret";
     private static final String LABEL_CATEGORY = "Category";
     private static final String LABEL_MATCH_SCORE = "MT Match Score";
+    private static final String LABEL_INCLUDE_CODES = "Include Codes for MT";
 
     private static final String CLIENT_ID = "clientId";
     private static final String CLIENT_SECRET = "secret";
@@ -31,6 +33,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
     private static final String MATCH_SCORE_MSHUB = "mshub";
     private static final String MATCH_SCORE_CUSTOM = "custom";
     private static final String MATCH_SCORE_CUSTOM_VALUE = "customValue";
+    private static final String INCLUDE_CODES = "includeCodes";
 
     @Override
     public String render(WSContext wsContext, HttpServletRequest request, WSComponentConfigurationData config) {
@@ -57,6 +60,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
                             .add(new UITextField(LABEL_CLIENT_ID, CLIENT_ID, clientId))
                             .add(new UITextField(LABEL_CLIENT_SECRET, CLIENT_SECRET, secret))
                             .add(new UITextField(LABEL_CATEGORY, CATEGORY, category))
+                            .add(new UICheckbox(LABEL_INCLUDE_CODES, INCLUDE_CODES, configData.getIncludeCodes()))
                             .add(new UIRadioButton(LABEL_MATCH_SCORE, MATCH_SCORE, defaultOption, customOption));
         sb.append(table.render());
         return sb.toString();
@@ -102,11 +106,11 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
             errors = addError(LABEL_MATCH_SCORE, errors);
         }
 
-        if (clientId.length() < 1) {
+        if (clientId == null || clientId.length() < 1) {
             errors = addError(LABEL_CLIENT_ID, errors);
         }
 
-        if (clientSecret.length() < 1) {
+        if (clientSecret == null || clientSecret.length() < 1) {
             errors = addError(LABEL_CLIENT_SECRET, errors);
         }
 
@@ -123,6 +127,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
         configData.setSecret(clientSecret);
         configData.setCategory(request.getParameter(CATEGORY));
         configData.setUseCustomScoring(useCustomScoring);
+        configData.setIncludeCodes("on".equals(request.getParameter(INCLUDE_CODES)));
         if (useCustomScoring) {
             configData.setMatchScore(matchScore);
         }
@@ -138,7 +143,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
         try {
             return Integer.valueOf(request.getParameter(MATCH_SCORE_CUSTOM_VALUE));
         }
-        catch (Exception e) {
+        catch (NumberFormatException e) {
             return -1;
         }
     }

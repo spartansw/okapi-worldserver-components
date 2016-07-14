@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class YAMLWSOkapiFilter extends WSOkapiFilter {
+public class YAMLWSOkapiFilter extends WSOkapiFilter<YAMLFilterConfigurationData> {
 
     private static final Logger LOG = LoggerFactory.getLogger(YAMLWSOkapiFilter.class);
     private static final String FILTER_NAME = "Okapi YAML Filter";
@@ -44,11 +44,11 @@ public class YAMLWSOkapiFilter extends WSOkapiFilter {
         return LOG;
     }
 
-    public ConfiguredYAMLFilter getConfiguredFilter() {
+    @Override
+    public ConfiguredYAMLFilter getConfiguredFilter(YAMLFilterConfigurationData config) {
         ConfiguredYAMLFilter filter = new ConfiguredYAMLFilter();
-        YAMLFilterConfigurationData configurationData = getYAMLFilterConfiguration();
-        filter.setParameters(configurationData.getParameters());
-        filter.setExcludedKeys(configurationData.getExcludedKeys());
+        filter.setParameters(config.getParameters());
+        filter.setExcludedKeys(config.getExcludedKeys());
         return filter;
     }
 
@@ -57,7 +57,8 @@ public class YAMLWSOkapiFilter extends WSOkapiFilter {
         return DEFAULT_ENCODING;
     }
 
-    protected YAMLFilterConfigurationData getYAMLFilterConfiguration() {
+    @Override
+    protected YAMLFilterConfigurationData getOkapiFilterConfiguration() {
         WSFilterConfigurationData config = getConfiguration();
         return (config != null && config instanceof YAMLFilterConfigurationData) ?
                 (YAMLFilterConfigurationData)config : new YAMLFilterConfigurationData();

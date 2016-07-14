@@ -47,11 +47,12 @@ public class FilterTestHarness {
         this.filter = filter;
     }
 
-    public void extractAndExpectSegments(String resourceToTest, Charset charset, SegmentInfoHolder[] expected)
-                                            throws IOException {
+    public void extractAndExpectSegments(String resourceToTest, WSOkapiFilterConfigurationData<?> config,
+            Charset charset, SegmentInfoHolder[] expected) throws Exception {
         WSNode srcNode = new ResourceMockWSNode(resourceToTest, charset, MockWSLocale.ENGLISH);
         List<WSSegment> list = new ArrayList<WSSegment>();
-        list.add(new MockWSMarkupSegment(resourceToTest));
+        MarkupSegmentMetadata meta = MarkupSegmentMetadata.fromAsset(srcNode, config);
+        list.add(new MockWSMarkupSegment(meta.toXML()));
         for (SegmentInfoHolder holder : expected) {
             list.add(new MockWSTextSegment(holder.getEncodedText(), holder.getPlaceholders()));
             list.add(new MockWSMarkupSegment(OkapiFilterBridge.SEGMENT_SEPARATOR));

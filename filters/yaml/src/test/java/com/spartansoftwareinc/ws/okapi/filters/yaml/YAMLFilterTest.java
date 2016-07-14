@@ -34,15 +34,19 @@ public class YAMLFilterTest {
     @Test
     @UseDataProvider("testParsingSegmentsResults")
     public void testParsingSegments(SegmentInfoHolder[] expected) throws Exception {
-        FilterTestHarness harness = new FilterTestHarness(new TestYamlWSOkapiFilter());
-        harness.extractAndExpectSegments("/TestFile.yml", Charset.forName("UTF-8"), expected);
+        YAMLWSOkapiFilter filter = new TestYamlWSOkapiFilter();
+        FilterTestHarness harness = new FilterTestHarness(filter);
+        harness.extractAndExpectSegments("/TestFile.yml", filter.getOkapiFilterConfiguration(),
+                Charset.forName("UTF-8"), expected);
     }
 
     @Test
     @UseDataProvider("testParsingSegmentsResults")
     public void testParsingExcludeEmptyString(SegmentInfoHolder[] expected) throws Exception {
-        FilterTestHarness harness = new FilterTestHarness(new TestYamlWSOkapiFilter(""));
-        harness.extractAndExpectSegments("/TestFile.yml", Charset.forName("UTF-8"), expected);
+        YAMLWSOkapiFilter filter = new TestYamlWSOkapiFilter("");
+        FilterTestHarness harness = new FilterTestHarness(filter);
+        harness.extractAndExpectSegments("/TestFile.yml", filter.getOkapiFilterConfiguration(),
+                Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider
@@ -61,8 +65,10 @@ public class YAMLFilterTest {
     @Test
     @UseDataProvider("testParsingExcludeKeysResults")
     public  void testParsingExcludeKeys(SegmentInfoHolder[] expected) throws Exception {
-        FilterTestHarness harness = new FilterTestHarness(new TestYamlWSOkapiFilter("other", "body"));
-        harness.extractAndExpectSegments("/TestFile.yml", Charset.forName("UTF-8"), expected);
+        YAMLWSOkapiFilter filter = new TestYamlWSOkapiFilter("other", "body");
+        FilterTestHarness harness = new FilterTestHarness(filter);
+        harness.extractAndExpectSegments("/TestFile.yml", filter.getOkapiFilterConfiguration(),
+                Charset.forName("UTF-8"), expected);
     }
 
     class TestYamlWSOkapiFilter extends YAMLWSOkapiFilter {
@@ -74,7 +80,7 @@ public class YAMLFilterTest {
         }
 
         @Override
-        protected YAMLFilterConfigurationData getYAMLFilterConfiguration() {
+        protected YAMLFilterConfigurationData getOkapiFilterConfiguration() {
             return this.testData;
         }
     }

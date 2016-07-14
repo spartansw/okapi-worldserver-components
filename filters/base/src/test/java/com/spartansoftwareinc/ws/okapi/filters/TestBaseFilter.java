@@ -29,7 +29,7 @@ public class TestBaseFilter {
     @UseDataProvider("testParseResults")
     public void testParse(SegmentInfoHolder[] expected) throws Exception {
         new FilterTestHarness(new DummyWSOkapiFilter())
-            .extractAndExpectSegments("/test.properties", Charset.forName("UTF-8"), expected);
+            .extractAndExpectSegments("/test.properties", new DummyConfigData(), Charset.forName("UTF-8"), expected);
     }
 
     @DataProvider

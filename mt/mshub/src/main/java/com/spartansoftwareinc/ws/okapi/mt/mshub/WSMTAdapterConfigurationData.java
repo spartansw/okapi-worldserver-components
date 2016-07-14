@@ -12,6 +12,7 @@ public class WSMTAdapterConfigurationData extends WSMTConfigurationData {
     private String category;
     private boolean useCustomScoring = false;
     private int matchScore = DEFAULT_MATCH_SCORE;
+    private boolean includeCodes = false;
 
     public String getClientId() {
         return clientId;
@@ -51,5 +52,13 @@ public class WSMTAdapterConfigurationData extends WSMTConfigurationData {
 
     public void setMatchScore(int matchScore) {
         this.matchScore = matchScore;
+    }
+
+    public boolean getIncludeCodes() {
+        return includeCodes;
+    }
+
+    public void setIncludeCodes(boolean includeCodes) {
+        this.includeCodes = includeCodes;
     }
 }
