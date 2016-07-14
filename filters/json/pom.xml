@@ -23,6 +23,12 @@
       <artifactId>okapi-filter-json</artifactId>
       <groupId>net.sf.okapi.filters</groupId>
       <version>${okapi.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
