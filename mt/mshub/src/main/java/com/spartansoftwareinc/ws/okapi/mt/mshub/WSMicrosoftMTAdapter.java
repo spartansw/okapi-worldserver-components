@@ -42,8 +42,8 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
             MicrosoftMTConnector mtConnector = initMicrosoftMTConnector(getMicrosoftMTConnector());
             final Locale srcLocale = srcLanguage.getLocale();
             final Locale tgtLocale = tgtLanguage.getLocale();
-            LocaleId srcLocaleId = new LocaleId(srcLocale.getLanguage(), srcLocale.getCountry());
-            LocaleId tgtLocaleId = new LocaleId(tgtLocale.getLanguage(), tgtLocale.getCountry());
+            LocaleId srcLocaleId = getLocaleId(srcLocale.getLanguage(), srcLocale.getCountry());
+            LocaleId tgtLocaleId = getLocaleId(tgtLocale.getLanguage(), tgtLocale.getCountry());
             log.info("srcLocale = " + srcLanguage.getDisplayString() + "=>" + srcLocaleId.toBCP47() +
                      ", tgtLocale=" + tgtLanguage.getDisplayString() + "=>" + tgtLocaleId.toBCP47());
             mtConnector.setLanguages(srcLocaleId, tgtLocaleId);
@@ -57,6 +57,21 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
             }
             mtConnector.close();
         }
+    }
+
+    /**
+     * Override this to remap locale IDs as needed.  The common case for this is to map
+     * some es variant to es-419, which Microsoft expects for "Latin American Spanish".
+     * Since WorldServer doesn't support this, many implementations designate some other
+     * Spanish variant (such as es-MX or es-AR) as a proxy.  The base implementation
+     * creates a LocaleId with the specified language and country.
+     *
+     * @param language language tag
+     * @param country country tag
+     * @return a LocaleId instance appropriate for the parameters
+     */
+    protected LocaleId getLocaleId(String language, String country) {
+        return new LocaleId(language, country);
     }
 
     @Override
@@ -120,7 +135,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return new MicrosoftMTConnector();
     }
 
-    private MicrosoftMTConnector initMicrosoftMTConnector(MicrosoftMTConnector mtConnector) {
+    protected MicrosoftMTConnector initMicrosoftMTConnector(MicrosoftMTConnector mtConnector) {
         ((Parameters) mtConnector.getParameters()).setClientId(getConfiguration().getClientId());
         ((Parameters) mtConnector.getParameters()).setSecret(getConfiguration().getSecret());
         ((Parameters) mtConnector.getParameters()).setCategory(getConfiguration().getCategory());
@@ -128,7 +143,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return mtConnector;
     }
 
-    private int getScore(QueryResult result) {
+    protected int getScore(QueryResult result) {
         WSMTAdapterConfigurationData config = getConfiguration();
         return config.useCustomScoring() ? config.getMatchScore() : result.getCombinedScore();
     }
@@ -155,7 +170,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         }
     }
 
-    private List<TextFragment> extractTextFragments(WSMTRequest[] requests) {
+    protected List<TextFragment> extractTextFragments(WSMTRequest[] requests) {
         List<TextFragment> fragments = new ArrayList<TextFragment>();
         for (WSMTRequest request : requests) {
             TextFragment tf = converter.toTextFragment(request.getSource());
@@ -165,7 +180,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return fragments;
     }
 
-    private List<String> extractStrings(WSMTRequest[] requests) {
+    protected List<String> extractStrings(WSMTRequest[] requests) {
         List<String> strings = new ArrayList<String>();
         for (WSMTRequest request : requests) {
             strings.add(request.getSource());
@@ -173,7 +188,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return strings;
     }
 
-    private WSMTResult[] convertTextFragment(String source, List<QueryResult> queryResults) {
+    protected WSMTResult[] convertTextFragment(String source, List<QueryResult> queryResults) {
         List<WSMTResult> results = new ArrayList<WSMTResult>();
         for (QueryResult queryResult : queryResults) {
             String s = converter.fromTextFragment(queryResult.target);
@@ -183,7 +198,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return results.toArray(new WSMTResult[results.size()]);
     }
 
-    private WSMTResult[] convertText(String source, List<QueryResult> queryResults) {
+    protected WSMTResult[] convertText(String source, List<QueryResult> queryResults) {
         List<WSMTResult> results = new ArrayList<WSMTResult>();
         for (QueryResult queryResult : queryResults) {
             results.add(new WSMTResult(source, queryResult.target.getCodedText(), getScore(queryResult)));
