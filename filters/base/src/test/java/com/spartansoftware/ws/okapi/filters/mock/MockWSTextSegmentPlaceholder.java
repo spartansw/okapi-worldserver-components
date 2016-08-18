@@ -10,9 +10,15 @@ import com.idiominc.wssdk.asset.WSTextSegmentPlaceholder;
  */
 public class MockWSTextSegmentPlaceholder implements WSTextSegmentPlaceholder {
     private final String placeholderText;
+    private final int id;
 
-    public MockWSTextSegmentPlaceholder(String placeholderText) {
+    public MockWSTextSegmentPlaceholder(String placeholderText, int id) {
         this.placeholderText = placeholderText;
+        this.id = id;
+    }
+    
+    public MockWSTextSegmentPlaceholder(String placeholderText) {
+        this(placeholderText, 0);
     }
 
     @Override
@@ -22,7 +28,7 @@ public class MockWSTextSegmentPlaceholder implements WSTextSegmentPlaceholder {
 
     @Override
     public int getId() {
-        return 0;
+        return id;
     }
 
     @Override
