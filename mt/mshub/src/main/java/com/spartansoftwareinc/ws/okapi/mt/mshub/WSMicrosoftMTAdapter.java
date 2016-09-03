@@ -151,7 +151,6 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     protected void processWithCodes(MicrosoftMTConnector mtConnector, WSMTRequest[] requests) {
         List<TextFragment> extractedTextFragments = extractTextFragments(requests);
         List<List<QueryResult>> batchResults = mtConnector.batchQuery(extractedTextFragments);
-        log.warn("Got " + batchResults.size() + " results for " + requests.length + " requests");
         if (batchResults.size() == requests.length) {
             for (int i = 0; i < requests.length; i++) {
                 final List<QueryResult> requestResults = batchResults.get(i);
@@ -160,6 +159,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
             }
         }
         else {
+            log.warn("Got " + batchResults.size() + " results for " + requests.length + " requests");
             alignResponseTextFragments(requests, extractedTextFragments, batchResults);
         }
     }
@@ -167,7 +167,6 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     protected void processWithoutCodes(MicrosoftMTConnector mtConnector, WSMTRequest[] requests) {
         List<String> extractedStrings = extractStrings(requests);
         List<List<QueryResult>> batchResults = mtConnector.batchQueryText(extractedStrings);
-        log.warn("Got " + batchResults.size() + " results for " + requests.length + " requests");
         if (batchResults.size() == requests.length) {
             for (int i = 0; i < requests.length; i++) {
                 final List<QueryResult> requestResults = batchResults.get(i);
@@ -176,6 +175,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
             }
         }
         else {
+            log.warn("Got " + batchResults.size() + " results for " + requests.length + " requests");
             alignResponseStrings(requests, extractedStrings, batchResults);
         }
     }
