@@ -49,7 +49,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
             mtConnector.setLanguages(srcLocaleId, tgtLocaleId);
 
             mtConnector.open();
-            if (configurationData.getIncludeCodes()) {
+            if (getConfiguration().getIncludeCodes()) {
                 processWithCodes(mtConnector, wsmtRequests);
             }
             else {
@@ -149,7 +149,8 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     }
 
     protected void processWithCodes(MicrosoftMTConnector mtConnector, WSMTRequest[] requests) {
-        List<List<QueryResult>> batchResults = mtConnector.batchQuery(extractTextFragments(requests));
+        List<TextFragment> extractedTextFragments = extractTextFragments(requests);
+        List<List<QueryResult>> batchResults = mtConnector.batchQuery(extractedTextFragments);
         if (batchResults.size() == requests.length) {
             for (int i = 0; i < requests.length; i++) {
                 final List<QueryResult> requestResults = batchResults.get(i);
@@ -157,15 +158,65 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
                 request.setResults(convertTextFragment(request.getSource(), requestResults));
             }
         }
+        else {
+            log.warn("Got " + batchResults.size() + " results for " + requests.length + " requests");
+            alignResponseTextFragments(requests, extractedTextFragments, batchResults);
+        }
     }
 
     protected void processWithoutCodes(MicrosoftMTConnector mtConnector, WSMTRequest[] requests) {
-        List<List<QueryResult>> batchResults = mtConnector.batchQueryText(extractStrings(requests));
+        List<String> extractedStrings = extractStrings(requests);
+        List<List<QueryResult>> batchResults = mtConnector.batchQueryText(extractedStrings);
         if (batchResults.size() == requests.length) {
             for (int i = 0; i < requests.length; i++) {
                 final List<QueryResult> requestResults = batchResults.get(i);
                 final WSMTRequest request = requests[i];
                 request.setResults(convertText(request.getSource(), requestResults));
+            }
+        }
+        else {
+            log.warn("Got " + batchResults.size() + " results for " + requests.length + " requests");
+            alignResponseStrings(requests, extractedStrings, batchResults);
+        }
+    }
+
+    // TODO: refactor with the alignResponseTextFragments version
+    protected void alignResponseStrings(WSMTRequest[] requests, List<String> requestStrings,
+                                        List<List<QueryResult>> batchResults) {
+        int nextRequestIndex = 0;
+        for (int i = 0; i < batchResults.size(); i++) {
+            List<QueryResult> results = batchResults.get(i);
+            String resultSource = results.get(0).source.toString();
+
+            for ( ; nextRequestIndex < requests.length; nextRequestIndex++) {
+                if (requestStrings.get(nextRequestIndex).equals(resultSource)) {
+                    requests[nextRequestIndex].setResults(convertText(resultSource, results));
+                    nextRequestIndex++;
+                    break;
+                }
+                else {
+                    requests[nextRequestIndex].setResults(new WSMTResult[0]);
+                }
+            }
+        }
+    }
+
+    protected void alignResponseTextFragments(WSMTRequest[] requests, List<TextFragment> requestFragments,
+                                              List<List<QueryResult>> batchResults) {
+        int nextRequestIndex = 0;
+        for (int i = 0; i < batchResults.size(); i++) {
+            List<QueryResult> results = batchResults.get(i);
+            TextFragment resultSource = results.get(0).source;
+
+            for ( ; nextRequestIndex < requests.length; nextRequestIndex++) {
+                if (requestFragments.get(nextRequestIndex).equals(resultSource)) {
+                    requests[nextRequestIndex].setResults(convertTextFragment(requests[nextRequestIndex].getSource(), results));
+                    nextRequestIndex++;
+                    break;
+                }
+                else {
+                    requests[nextRequestIndex].setResults(new WSMTResult[0]);
+                }
             }
         }
     }
