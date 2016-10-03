@@ -34,6 +34,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
 
     private WSMTAdapterConfigurationData configurationData;
     private MTRequestConverter converter = new MTRequestConverter();
+    private MicrosoftMTConnector connector = new MicrosoftMTConnector();
 
     @Override
     public void translate(WSContext wsContext, WSMTRequest[] wsmtRequests, WSLanguage srcLanguage, WSLanguage tgtLanguage) {
@@ -132,7 +133,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     }
 
     public MicrosoftMTConnector getMicrosoftMTConnector() {
-        return new MicrosoftMTConnector();
+        return connector;
     }
 
     protected MicrosoftMTConnector initMicrosoftMTConnector(MicrosoftMTConnector mtConnector) {

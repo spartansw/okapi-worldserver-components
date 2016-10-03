@@ -68,6 +68,12 @@
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                 </transformer>
               </transformers>
+              <relocations>
+                <relocation>
+                  <pattern>net.sf.okapi</pattern>
+                  <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
+                </relocation>
+              </relocations>
             </configuration>
           </execution>
         </executions>

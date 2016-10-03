@@ -7,21 +7,21 @@ import static org.junit.Assert.*;
 import com.spartansoftwareinc.ws.okapi.filters.ConfigTestUtils;
 
 public class YAMLFilterConfigurationDataTest {
-
-    private final static String CONFIG_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><params><okapi><![CDATA[#v1\n" +
-            "extractIsolatedStrings.b=false\n" +
-            "extractAllPairs.b=true\n" +
-            "exceptions=\n" +
-            "useKeyAsName.b=true\n" +
-            "useFullKeyPath.b=true\n" +
-            "useCodeFinder.b=true\n" +
-            "escapeNonAscii.b=false\n" +
-            "wrap.b=true\n" +
-            "codeFinderRules.count.i=3\n" +
-            "codeFinderRules.rule0=%(([-0+#]?)[-0+#]?)((\\d\\$)?)(([\\d\\*]*)(\\.[\\d\\*]*)?)[dioxXucsfeEgGpnYyBbHhSMmAZ]\n" +
-            "codeFinderRules.rule1=(\\\\r\\\\n)|\\\\a|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|\\\\v\n" +
-            "codeFinderRules.rule2=\\{\\{\\w.*?\\}\\}\n" +
-            "codeFinderRules.sample=%s, %d, {1}, \\n, \\r, \\t, {{var}} etc.\n" +
+    private final static String TERMINATOR = System.getProperty("line.separator");
+    private final static String CONFIG_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><params><okapi><![CDATA[#v1" + TERMINATOR +
+            "extractIsolatedStrings.b=false" + TERMINATOR +
+            "extractAllPairs.b=true" + TERMINATOR +
+            "exceptions=" + TERMINATOR +
+            "useKeyAsName.b=true" + TERMINATOR +
+            "useFullKeyPath.b=true" + TERMINATOR +
+            "useCodeFinder.b=true" + TERMINATOR +
+            "escapeNonAscii.b=false" + TERMINATOR +
+            "wrap.b=true" + TERMINATOR +
+            "codeFinderRules.count.i=3" + TERMINATOR +
+            "codeFinderRules.rule0=%(([-0+#]?)[-0+#]?)((\\d\\$)?)(([\\d\\*]*)(\\.[\\d\\*]*)?)[dioxXucsfeEgGpnYyBbHhSMmAZ]" + TERMINATOR +
+            "codeFinderRules.rule1=(\\\\r\\\\n)|\\\\a|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|\\\\v" + TERMINATOR +
+            "codeFinderRules.rule2=\\{\\{\\w.*?\\}\\}" + TERMINATOR +
+            "codeFinderRules.sample=%s, %d, {1}, \\n, \\r, \\t, {{var}} etc." + TERMINATOR +
             "codeFinderRules.useAllRulesWhenTesting.b=true]]></okapi>" +
             "<applySentenceBreaking>true</applySentenceBreaking>" +
             "<excludedKeys><key>hello</key></excludedKeys></params>";
