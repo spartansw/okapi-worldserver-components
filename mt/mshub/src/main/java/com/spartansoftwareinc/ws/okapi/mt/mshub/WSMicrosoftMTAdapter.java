@@ -140,7 +140,8 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         ((Parameters) mtConnector.getParameters()).setClientId(getConfiguration().getClientId());
         ((Parameters) mtConnector.getParameters()).setSecret(getConfiguration().getSecret());
         ((Parameters) mtConnector.getParameters()).setCategory(getConfiguration().getCategory());
-
+        log.info("Using configuration: clientId={}, category={}", getConfiguration().getClientId(),
+                 getConfiguration().getCategory());
         return mtConnector;
     }
 
