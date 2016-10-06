@@ -153,7 +153,7 @@ public class WSPlaceholderUtil
      */
     public static Map<Integer, PHData> makePlaceholderMap( WSTextSegmentPlaceholder[] holders )
     {
-        HashMap<Integer, PHData> phmap = new HashMap<>();
+        HashMap<Integer, PHData> phmap = new HashMap<Integer, PHData>();
         for ( WSTextSegmentPlaceholder h : holders )
         {
             phmap.put(h.getId(), parsePlaceholderContent(h.getText(), h.getId()));
