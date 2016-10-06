@@ -13,6 +13,8 @@ Currently, this repository contains:
    * JSON
 * MT Adapters, including
    * Microsoft Translator Hub
+* Automatic Actions, including
+   * An automatic action to improve MT quality of HTML and XML content, when used with the Microsoft Translator Hub
 * Common code, including
    * Classes for generating table-based config UIs
    * Classes to simplify working with `WSAttribute` values
@@ -82,18 +84,19 @@ long as it contains a `desc.xml` file, as these do.)
 
 To deploy an individual components, upload any of:
 
-* `filters/json/target/okapi-ws-filters-json-1.2-SNAPSHOT.jar`
-* `filters/po/target/okapi-ws-filters-po-1.2-SNAPSHOT.jar`
-* `filters/yaml/target/okapi-ws-filters-yaml-1.2-SNAPSHOT.jar`
-* `mt/mshub/target/okapi-ws-mt-mshub-1.2-SNAPSHOT.jar`
+* `filters/json/target/okapi-ws-filters-json-[release].jar`
+* `filters/po/target/okapi-ws-filters-po-[release].jar`
+* `filters/yaml/target/okapi-ws-filters-yaml-[release].jar`
+* `mt/mshub/target/okapi-ws-mt-mshub-[release].jar`
+* `autoactions/mshub/target/okapi-ws-autoactions-mshub-[release].jar`
 
 To deploy all filters at once, upload:
 
-* `filters/bundle/target/okapi-ws-filters-base-1.2-SNAPSHOT.jar`
+* `filters/bundle/target/okapi-ws-filters-bundle-[release].jar`
 
-To deploy all components (all filters + MT Adapters), upload:
+To deploy all components (all filters + MT Adapters + AAs), upload:
 
-* `bundle/target/okapi-ws-base-1.2-SNAPSHOT.jar`
+* `bundle/target/okapi-ws-components-bundle-[release].jar`
 
 These jars include all dependencies, including the necessary Okapi components.
 

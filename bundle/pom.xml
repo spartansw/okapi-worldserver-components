@@ -24,6 +24,11 @@
       <artifactId>okapi-ws-mt-mshub</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.autoactions.mt</groupId>
+      <artifactId>okapi-ws-autoactions-mshub</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
