@@ -3,48 +3,40 @@ package com.spartansoftwareinc.ws.okapi.mt.mshub;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.okapi.common.resource.Code;
-import net.sf.okapi.common.resource.TextFragment;
-import net.sf.okapi.common.resource.TextFragment.TagType;
-
 public class MTRequestConverter {
     private static final Pattern WS_PLACEHOLDER = Pattern.compile("\\{([0-9]+)\\}");
+    private static final Pattern CODE_MARKUP = Pattern.compile("<span\\s+ws_id=\"(\\d+)\">\\s*</span>");
 
     /**
-     * Convert a MT request string (which may contain WorldServer placeholder codes)
-     * into an Okapi TextFragment with equivalent codes.  All codes are of type
-     * PLACEHOLDER, with IDs set to the value within the WorldServer code (eg "{5}" -> 5).
+     * Replace WorldServer placeholder codes in &lt;span&gt;...&lt;/span&gt; markup
+     * in order to protect them from translation.
      */
-    public TextFragment toTextFragment(String source) {
-        TextFragment tf = new TextFragment();
+    public String addCodeMarkup(String source) {
+        StringBuilder sb = new StringBuilder();
         int start = 0;
         Matcher m = WS_PLACEHOLDER.matcher(source);
         while (m.find()) {
-            tf.append(source.substring(start, m.start()));
-            int phId = Integer.valueOf(m.group(1));
-            Code code = new Code();
-            code.setTagType(TagType.PLACEHOLDER);
-            code.setId(phId);
-            tf.append(code);
+            sb.append(source.substring(start, m.start()));
+            sb.append("<span ws_id=\"");
+            sb.append(m.group(1));
+            sb.append("\"></span>");
             start = m.end();
         }
-        tf.append(source.substring(start, source.length()));
-        return tf;
-    }
-
-    public String fromTextFragment(TextFragment tf) {
-        StringBuilder sb = new StringBuilder();
-        char[] buf = tf.getCodedText().toCharArray();
-        for (int i = 0; i < buf.length; i++) {
-            char c = buf[i];
-            if (TextFragment.isMarker(c)) {
-                Code code = tf.getCode(tf.charAt(++i));
-                sb.append("{").append(code.getId()).append("}");
-            }
-            else {
-                sb.append(c);
-            }
-        }
+        sb.append(source.substring(start, source.length()));
         return sb.toString();
     }
+
+    public String removeCodeMarkup(String s) {
+        StringBuilder sb = new StringBuilder();
+        int start = 0;
+        Matcher m = CODE_MARKUP.matcher(s);
+        while (m.find()) {
+            sb.append(s.substring(start, m.start()));
+            sb.append("{").append(m.group(1)).append("}");
+            start = m.end();
+        }
+        sb.append(s.substring(start, s.length()));
+        return sb.toString();
+    }
+
 }

@@ -14,7 +14,6 @@ import com.spartansoftwareinc.ws.okapi.Version;
 
 import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.query.QueryResult;
-import net.sf.okapi.common.resource.TextFragment;
 import net.sf.okapi.connectors.microsoft.MicrosoftMTConnector;
 import net.sf.okapi.connectors.microsoft.Parameters;
 
@@ -151,18 +150,18 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     }
 
     protected void processWithCodes(MicrosoftMTConnector mtConnector, WSMTRequest[] requests) {
-        List<TextFragment> extractedTextFragments = extractTextFragments(requests);
-        List<List<QueryResult>> batchResults = mtConnector.batchQuery(extractedTextFragments);
+        List<String> codedStrings = extractStringsWithCodeMarkup(requests);
+        List<List<QueryResult>> batchResults = mtConnector.batchQueryText(codedStrings);
         if (batchResults.size() == requests.length) {
             for (int i = 0; i < requests.length; i++) {
                 final List<QueryResult> requestResults = batchResults.get(i);
                 final WSMTRequest request = requests[i];
-                request.setResults(convertTextFragment(request.getSource(), requestResults));
+                request.setResults(removeCodeMarkup(request.getSource(), requestResults));
             }
         }
         else {
-            log.warn("Got " + batchResults.size() + " results for " + requests.length + " requests");
-            alignResponseTextFragments(requests, extractedTextFragments, batchResults);
+            log.info("Got " + batchResults.size() + " results for " + requests.length + " requests");
+            alignResponseCodedText(requests, codedStrings, batchResults);
         }
     }
 
@@ -177,12 +176,12 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
             }
         }
         else {
-            log.warn("Got " + batchResults.size() + " results for " + requests.length + " requests");
+            log.info("Got " + batchResults.size() + " results for " + requests.length + " requests");
             alignResponseStrings(requests, extractedStrings, batchResults);
         }
     }
 
-    // TODO: refactor with the alignResponseTextFragments version
+    // TODO: refactor with the alignResponseCodedText version
     protected void alignResponseStrings(WSMTRequest[] requests, List<String> requestStrings,
                                         List<List<QueryResult>> batchResults) {
         int nextRequestIndex = 0;
@@ -203,16 +202,16 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         }
     }
 
-    protected void alignResponseTextFragments(WSMTRequest[] requests, List<TextFragment> requestFragments,
-                                              List<List<QueryResult>> batchResults) {
+    protected void alignResponseCodedText(WSMTRequest[] requests, List<String> codedStrings,
+                                          List<List<QueryResult>> batchResults) {
         int nextRequestIndex = 0;
         for (int i = 0; i < batchResults.size(); i++) {
             List<QueryResult> results = batchResults.get(i);
-            TextFragment resultSource = results.get(0).source;
+            String resultSource = results.get(0).source.getCodedText();
 
             for ( ; nextRequestIndex < requests.length; nextRequestIndex++) {
-                if (requestFragments.get(nextRequestIndex).equals(resultSource)) {
-                    requests[nextRequestIndex].setResults(convertTextFragment(requests[nextRequestIndex].getSource(), results));
+                if (codedStrings.get(nextRequestIndex).equals(resultSource)) {
+                    requests[nextRequestIndex].setResults(removeCodeMarkup(requests[nextRequestIndex].getSource(), results));
                     nextRequestIndex++;
                     break;
                 }
@@ -223,12 +222,12 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         }
     }
 
-    protected List<TextFragment> extractTextFragments(WSMTRequest[] requests) {
-        List<TextFragment> fragments = new ArrayList<TextFragment>();
+    protected List<String> extractStringsWithCodeMarkup(WSMTRequest[] requests) {
+        List<String> fragments = new ArrayList<String>();
         for (WSMTRequest request : requests) {
-            TextFragment tf = converter.toTextFragment(request.getSource());
-            log.debug("Request: Converted [" + request.getSource() + "] --> [" + tf.getCodedText() + "]");
-            fragments.add(tf);
+            String s = converter.addCodeMarkup(request.getSource());
+            log.info("Request: Converted [" + request.getSource() + "] --> [" + s + "]");
+            fragments.add(s);
         }
         return fragments;
     }
@@ -241,11 +240,11 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         return strings;
     }
 
-    protected WSMTResult[] convertTextFragment(String source, List<QueryResult> queryResults) {
+    protected WSMTResult[] removeCodeMarkup(String source, List<QueryResult> queryResults) {
         List<WSMTResult> results = new ArrayList<WSMTResult>();
         for (QueryResult queryResult : queryResults) {
-            String s = converter.fromTextFragment(queryResult.target);
-            log.debug("Result: Converted [" + queryResult.target + "] --> [" + s + "]");
+            String s = converter.removeCodeMarkup(queryResult.target.getCodedText());
+            log.info("Result: Converted [" + queryResult.target + "] --> [" + s + "]");
             results.add(new WSMTResult(source, s, getScore(queryResult)));
         }
         return results.toArray(new WSMTResult[results.size()]);

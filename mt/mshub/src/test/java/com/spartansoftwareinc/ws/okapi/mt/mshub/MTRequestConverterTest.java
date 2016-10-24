@@ -2,10 +2,6 @@ package com.spartansoftwareinc.ws.okapi.mt.mshub;
 
 import org.junit.Test;
 
-import net.sf.okapi.common.resource.Code;
-import net.sf.okapi.common.resource.TextFragment;
-import net.sf.okapi.common.resource.TextFragment.TagType;
-
 import static org.junit.Assert.*;
 
 public class MTRequestConverterTest {
@@ -13,48 +9,33 @@ public class MTRequestConverterTest {
 
     @Test
     public void testNoCodes() {
-        assertEquals(new TextFragment("Hello world."),
-                     converter.toTextFragment("Hello world."));
-        assertEquals("Hello world.", converter.fromTextFragment(new TextFragment("Hello world.")));
+        assertEquals("Hello world.", converter.addCodeMarkup("Hello world."));
+        assertEquals("Hello world.", converter.removeCodeMarkup(("Hello world.")));
     }
 
     @Test
     public void testCodes() {
-        TextFragment tf = new TextFragment(); 
-        tf.append("Hello ");
-        tf.append(ph(1));
-        tf.append("world");
-        tf.append(ph(2));
-        tf.append(".");
-        assertEquals(tf, converter.toTextFragment("Hello {1}world{2}."));
-        assertEquals("Hello {1}world{2}.", converter.fromTextFragment(tf));
+        String s = "Hello <span ws_id=\"1\"></span>world<span ws_id=\"2\"></span>.";
+        assertEquals(s, converter.addCodeMarkup("Hello {1}world{2}."));
+        assertEquals("Hello {1}world{2}.", converter.removeCodeMarkup(s));
     }
 
     @Test
     public void testCodesWithLargerIds() {
-        TextFragment tf = new TextFragment(); 
-        tf.append("Hello ");
-        tf.append(ph(31));
-        tf.append("world");
-        tf.append(ph(32));
-        tf.append(".");
-        assertEquals(tf, converter.toTextFragment("Hello {31}world{32}."));
-        assertEquals("Hello {31}world{32}.", converter.fromTextFragment(tf));
+        String s = "Hello <span ws_id=\"31\"></span>world<span ws_id=\"32\"></span>.";
+        assertEquals(s, converter.addCodeMarkup("Hello {31}world{32}."));
+        assertEquals("Hello {31}world{32}.", converter.removeCodeMarkup(s));
     }
 
     @Test
     public void testCodesWithoutText() {
-        TextFragment tf = new TextFragment(); 
-        tf.append(ph(1));
-        tf.append(ph(2));
-        assertEquals(tf, converter.toTextFragment("{1}{2}"));
-        assertEquals("{1}{2}", converter.fromTextFragment(tf));
+        String s = "<span ws_id=\"1\"></span><span ws_id=\"2\"></span>";
+        assertEquals(s, converter.addCodeMarkup("{1}{2}"));
+        assertEquals("{1}{2}", converter.removeCodeMarkup(s));
     }
 
-    private Code ph(int id) {
-        Code code = new Code();
-        code.setTagType(TagType.PLACEHOLDER);
-        code.setId(id);
-        return code;
+    @Test
+    public void testIntroducedWhitespace() {
+        assertEquals("{1}{2}", converter.removeCodeMarkup("<span ws_id=\"1\"> </span><span ws_id=\"2\">    </span>"));
     }
 }
