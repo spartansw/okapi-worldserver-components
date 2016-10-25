@@ -89,8 +89,49 @@ public class WSPlaceholderUtilTest
         // Let's pretend the placeholders were re-ordered in translation...
         String z = WSPlaceholderUtil.restorePlaceholders(
                 "A <a ws_id='7'>cat</a> is chased by a <a ws_id='5'>dog</a>", phmap );
-        // This isn't quite correct, but we can't tell the </a> apart...
-        assertEquals( "A {7}cat{6} is chased by a {5}dog{8}", z );
+        assertEquals( "A {7}cat{8} is chased by a {5}dog{6}", z );
+    }
+
+    @Test
+    public void testReordering2()
+    {
+        WSTextSegmentPlaceholder[] wsphs = new WSTextSegmentPlaceholder[6];
+        wsphs[0] = new MockWSTextSegmentPlaceholder("<tt>", 1);
+        wsphs[1] = new MockWSTextSegmentPlaceholder("</tt>", 2);
+        wsphs[2] = new MockWSTextSegmentPlaceholder("<tt>", 3);
+        wsphs[3] = new MockWSTextSegmentPlaceholder("</tt>", 4);
+        wsphs[4] = new MockWSTextSegmentPlaceholder("<tt>", 5);
+        wsphs[5] = new MockWSTextSegmentPlaceholder("</tt>", 6);
+        Map<Integer, PHData> phmap = WSPlaceholderUtil.makePlaceholderMap(wsphs);
+        final String parameterizedText = "A {1}cat{2} is {3}chased{4} by a {5}dog{6}";
+        String x = WSPlaceholderUtil.replacePlaceholders( parameterizedText, phmap );
+        assertEquals( "A <tt ws_id='1'>cat</tt> is <tt ws_id='3'>chased</tt> by a <tt ws_id='5'>dog</tt>", x );
+        String y = WSPlaceholderUtil.restorePlaceholders( x, phmap );
+        assertEquals( "A {1}cat{2} is {3}chased{4} by a {5}dog{6}", y );
+        // Let's pretend the placeholders were re-ordered in translation...
+        String z = WSPlaceholderUtil.restorePlaceholders(
+                "A <tt ws_id='3'>chat</tt> is <tt ws_id='5'>chased</tt> by a <tt ws_id='1'>chien</tt>", phmap );
+        assertEquals( "A {3}chat{4} is {5}chased{6} by a {1}chien{2}", z );
+    }
+
+    @Test
+    public void testReordering3() {
+        WSTextSegmentPlaceholder[] wsphs = new WSTextSegmentPlaceholder[6];
+        wsphs[0] = new MockWSTextSegmentPlaceholder("<tt>", 41);
+        wsphs[1] = new MockWSTextSegmentPlaceholder("</tt>", 42);
+        wsphs[2] = new MockWSTextSegmentPlaceholder("<tt>", 43);
+        wsphs[3] = new MockWSTextSegmentPlaceholder("</tt>", 44);
+        wsphs[4] = new MockWSTextSegmentPlaceholder("<tt>", 45);
+        wsphs[5] = new MockWSTextSegmentPlaceholder("</tt>", 46);
+        Map<Integer, PHData> phmap = WSPlaceholderUtil.makePlaceholderMap(wsphs);
+        final String parameterizedText = "{41}--d{42} (the name), {43}--b{44} (the ID), and {45}--c{46} (the name).";
+        String x = WSPlaceholderUtil.replacePlaceholders( parameterizedText, phmap );
+        assertEquals( "<tt ws_id='41'>--d</tt> (the name), <tt ws_id='43'>--b</tt> (the ID), and <tt ws_id='45'>--c</tt> (the name).", x );
+        String z = WSPlaceholderUtil.restorePlaceholders(
+                "<tt ws_id='41'>--d</tt> (le nom), <tt ws_id='43'>--b</tt> (l’ID) et <tt ws_id='45'>--c</tt> (le nom).",
+                phmap );
+        System.out.println(z);
+        assertEquals("{41}--d{42} (le nom), {43}--b{44} (l’ID) et {45}--c{46} (le nom).", z);
     }
 
     /*

@@ -4,9 +4,12 @@
  */
 package com.spartansoftwareinc.ws.autoactions.hubmt;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +24,8 @@ import net.htmlparser.jericho.StartTagType;
 import net.htmlparser.jericho.Tag;
 
 import org.apache.log4j.Logger;
+
+import static com.spartansoftwareinc.ws.autoactions.hubmt.WSPlaceholderUtil.PHData.Type.*;
 
 /**
  * Collection of static methods that handles WorldServer's placeholders.
@@ -71,18 +76,34 @@ public class WSPlaceholderUtil
     }
 
     static class PHData {
+        enum Type {
+            OPEN,
+            CLOSED,
+            STANDALONE;
+        }
+        final Type type;
+        final String tag;
         final String rawForm;
         // This is what we actually send to MT, possibly different from rawForm
         final String mtForm;
+        PHData correspondingOpenTag; // Closed tags only
+        int wsid;
 
-        PHData(String rawForm, String mtForm) {
+        PHData(Type type, String tag, String rawForm, String mtForm) {
+            this.type = type;
+            this.tag = tag;
             this.rawForm = rawForm;
             this.mtForm = mtForm;
         }
 
         @Override
         public String toString() {
-            return "{raw='" + rawForm + "'; mt='" + mtForm + "'}";
+            return String.format("[type=%s, tag=%s, raw='%s', mt='%s', prev='%s']", type, tag, rawForm, mtForm,
+                    correspondingOpenTag != null ? correspondingOpenTag.tag : null);
+        }
+
+        public String toWSPlaceholder() {
+            return "{" + wsid + "}";
         }
     }
 
@@ -102,7 +123,7 @@ public class WSPlaceholderUtil
                 if (tag.getTagType() == StartTagType.XML_PROCESSING_INSTRUCTION) {
                     // Jericho exposes the name for <?foo?> as "?foo".
                     String piForm = "<" + tag.getName() + " " + WS_ID_ATTR + "='" + phId + "'?>";
-                    return new PHData(content, piForm);
+                    return new PHData(STANDALONE, "processing-instruction", content, piForm);
                 }
                 firstTag = tag.getName();
             }
@@ -111,7 +132,7 @@ public class WSPlaceholderUtil
                     // This is a paired tag!
                     String pairedMtForm = "<" + firstTag + " " + WS_ID_ATTR + "='" + phId + "'>"
                                         + getDummyPairedTagContent(phId) + "</" + firstTag + ">";
-                    return new PHData(content, pairedMtForm);
+                    return new PHData(STANDALONE, firstTag, content, pairedMtForm);
                 }
             }
         }
@@ -119,7 +140,7 @@ public class WSPlaceholderUtil
             // This is triggered by translatable attributes, but
             // worth tracking for other reasons
             log.info("Warning: placeholder with no tags '" + content + "'");
-            return new PHData(content, content);
+            return new PHData(STANDALONE, "", content, content);
         }
         return makeTagForMT(content, mtTags.get(0), phId);
     }
@@ -127,7 +148,9 @@ public class WSPlaceholderUtil
     private static PHData makeTagForMT(String content, Tag tag, int phId) {
         StringBuilder sb = new StringBuilder();
         sb.append("<");
+        PHData.Type type = OPEN;
         if (tag instanceof EndTag) {
+            type = CLOSED;
             sb.append("/");
             sb.append(tag.getName());
         }
@@ -135,12 +158,13 @@ public class WSPlaceholderUtil
             sb.append(tag.getName());
             sb.append(" ").append(WS_ID_ATTR).append("='").append(phId).append("'");
             if (((StartTag)tag).isSyntacticalEmptyElementTag()) {
+                type = STANDALONE;
                 sb.append("/");
             }
         }
         sb.append(">");
         String mt = sb.toString();
-        return new PHData(content, mt);
+        return new PHData(type, tag.getName(), content, mt);
     }
 
     /**
@@ -153,10 +177,29 @@ public class WSPlaceholderUtil
      */
     public static Map<Integer, PHData> makePlaceholderMap( WSTextSegmentPlaceholder[] holders )
     {
-        HashMap<Integer, PHData> phmap = new HashMap<>();
+        TreeMap<Integer, PHData> phmap = new TreeMap<>();
+        Deque<PHData> tagStack = new ArrayDeque<>();
         for ( WSTextSegmentPlaceholder h : holders )
         {
-            phmap.put(h.getId(), parsePlaceholderContent(h.getText(), h.getId()));
+            PHData phdata = parsePlaceholderContent(h.getText(), h.getId());
+            switch (phdata.type) {
+            case OPEN:
+                tagStack.push(phdata);
+                break;
+            case CLOSED:
+                if (!tagStack.isEmpty()) {
+                    PHData previousTag = tagStack.peek();
+                    if (previousTag.type == OPEN && previousTag.tag.equals(phdata.tag)) {
+                        phdata.correspondingOpenTag = tagStack.pop();
+                    }
+                }
+                break;
+            case STANDALONE:
+                // Ignore
+                break;
+            }
+            phdata.wsid = h.getId();
+            phmap.put(h.getId(), phdata);
         }
         return phmap;
     }
@@ -233,9 +276,26 @@ public class WSPlaceholderUtil
             // We'd like to use s.replace method but it replaces all occurrences
             // of the given substring. That is a problem because we don't want to see
             // "Click {1}here{2} or {3}here{2}" where {2}, representing "</a>", appears twice.
-            String ph = String.format( "{%d}", e.getKey() );
             PHData phData = e.getValue();
+            String ph = phData.toWSPlaceholder();
             String tag = phData.mtForm; // Usually a complete tag. Sometimes a fragment of a tag.
+
+            // First, check for ambiguous cases -- these are always end tags with no
+            // ws_id.
+            if (countOccurrences(sb, tag) > 1 && phData.correspondingOpenTag != null) {
+                // Try to find a place where we've already inserted the corresponding
+                // open tag
+                String openPh = phData.correspondingOpenTag.toWSPlaceholder();
+                int i = sb.indexOf(openPh);
+                if (i != 1) {
+                    i = sb.indexOf(tag, i);
+                    if (i != -1 ) {
+                        sb.replace( i,  i + tag.length(), ph );
+                        continue;
+                    }
+                }
+            }
+
             int i = sb.indexOf( tag );
             if ( i >= 0 )
             {
@@ -273,6 +333,20 @@ public class WSPlaceholderUtil
             sb.append( missingPhSb );
         }
         return removeEndTags( sb.toString() );
+    }
+
+    /**
+     * Return how many times a given search string occurs in a given 
+     * text.  Used to identify ambiguous replacements.
+     */
+    private static int countOccurrences(StringBuilder s, String searchText) {
+        int start = 0;
+        int count = 0;
+        for (int i = s.indexOf(searchText, start); i != -1; i = s.indexOf(searchText, start)) {
+            count++;
+            start = i + searchText.length();
+        }
+        return count;
     }
 
     /**
