@@ -20,6 +20,7 @@ import com.idiominc.wssdk.mt.WSMTAdapterRuntimeException;
 import com.idiominc.wssdk.mt.WSMTResult;
 import com.idiominc.wssdk.mt.WSMTService;
 import com.idiominc.wssdk.mt.WSUnsupportedLanguagePairException;
+import com.idiominc.wssdk.workflow.WSProject;
 import com.idiominc.wssdk.workflow.WSTask;
 
 /**
@@ -115,8 +116,10 @@ public abstract class SegmentMTAutomaticAction extends WSTaskAutomaticAction
         if ( null == mt )
         {
             // No MT adaptor assigned to this task.
-            return new WSActionResult( WSActionResult.ERROR,
-                                       "No MT adaptor has been assigned to this task.  Please assign the Microsoft Hub MT Adaptor." );
+            WSProject project = task.getProject();
+            getLogger().warn("No MT adapter has been assigned for task " + assetTask.getTargetPath() + " in project " +
+                             project.getProjectGroup().getName() + " (ID " + project.getId() + ")");
+            return new WSActionResult( "Done", "MT skipped; no MT adapter was configured");
         }
 
         if ( getLogger().isDebugEnabled() )
