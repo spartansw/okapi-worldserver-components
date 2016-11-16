@@ -11,6 +11,7 @@ Currently, this repository contains:
    * YAML
    * po/pot (gettext)
    * JSON
+   * OpenXML (Word, PowerPoint, Excel, and Visio)
 * MT Adapters, including
    * Microsoft Translator Hub
 * Automatic Actions, including
@@ -87,6 +88,7 @@ To deploy an individual components, upload any of:
 * `filters/json/target/okapi-ws-filters-json-[release]-deployable.jar`
 * `filters/po/target/okapi-ws-filters-po-[release]-deployable.jar`
 * `filters/yaml/target/okapi-ws-filters-yaml-[release]-deployable.jar`
+* `filters/openxml/target/okapi-ws-filters-openxml-[release]-deployable.jar`
 * `mt/mshub/target/okapi-ws-mt-mshub-[release]-deployable.jar`
 * `autoactions/mshub/target/okapi-ws-autoactions-mshub-[release]-deployable.jar`
 
@@ -115,7 +117,7 @@ interface.
 About
 =====
 This project is a joint collaboration between [Spartan Software, Inc.
-](http://spartansoftwareinc.com) and [Tableau Software](http://www.tableau.com/).
+](http://spartansoftwareinc.com) and [Tableau Software](http://www.tableau.com/).  Additional support has been provided by [VMware](https://vmware.com), [Veritas](https://veritas.com) and [Vistatec](http://vistatec.com/).
 
 License
 -------
