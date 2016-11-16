@@ -84,11 +84,11 @@ long as it contains a `desc.xml` file, as these do.)
 
 To deploy an individual components, upload any of:
 
-* `filters/json/target/okapi-ws-filters-json-[release].jar`
-* `filters/po/target/okapi-ws-filters-po-[release].jar`
-* `filters/yaml/target/okapi-ws-filters-yaml-[release].jar`
-* `mt/mshub/target/okapi-ws-mt-mshub-[release].jar`
-* `autoactions/mshub/target/okapi-ws-autoactions-mshub-[release].jar`
+* `filters/json/target/okapi-ws-filters-json-[release]-deployable.jar`
+* `filters/po/target/okapi-ws-filters-po-[release]-deployable.jar`
+* `filters/yaml/target/okapi-ws-filters-yaml-[release]-deployable.jar`
+* `mt/mshub/target/okapi-ws-mt-mshub-[release]-deployable.jar`
+* `autoactions/mshub/target/okapi-ws-autoactions-mshub-[release]-deployable.jar`
 
 To deploy all filters at once, upload:
 

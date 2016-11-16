@@ -63,7 +63,7 @@ public class WSMicrosoftMTAdapterTest {
         doReturn(config).when(mtAdapter).getConfiguration();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
-        when(mtConnector.batchQuery(anyList())).thenReturn(mockBatchQueryReturns(
+        when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
                 "First segment", "Third segment"
         ));
         WSMTRequest[] requests = composeWSMTRequests("First segment", "Second segment", "Third segment");
@@ -104,7 +104,7 @@ public class WSMicrosoftMTAdapterTest {
         doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
-        when(mtConnector.batchQuery(anyList())).thenReturn(mockBatchQueryReturns(
+        when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
                 "First segment", "Second segment", "Third segment"
         ));
 
