@@ -24,6 +24,12 @@
         <artifactId>okapi-filter-openxml</artifactId>
         <groupId>net.sf.okapi.filters</groupId>
         <version>${okapi.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>woodstox-core-lgpl</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
