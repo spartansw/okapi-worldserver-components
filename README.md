@@ -11,7 +11,7 @@ Currently, this repository contains:
    * YAML
    * po/pot (gettext)
    * JSON
-   * OpenXML (Word, PowerPoint, Excel, and Visio)
+   * OpenXML (Word, PowerPoint, Excel)
 * MT Adapters, including
    * Microsoft Translator Hub
 * Automatic Actions, including
