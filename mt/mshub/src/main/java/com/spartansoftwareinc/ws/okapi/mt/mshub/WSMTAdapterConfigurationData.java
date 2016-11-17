@@ -7,27 +7,20 @@ public class WSMTAdapterConfigurationData extends WSMTConfigurationData {
 
     private static final int DEFAULT_MATCH_SCORE = 95;
 
-    private String clientId;
-    private String secret;
+    @Deprecated private String clientId;
+    @Deprecated private String secret;
+    private String azureKey;
     private String category;
     private boolean useCustomScoring = false;
     private int matchScore = DEFAULT_MATCH_SCORE;
     private boolean includeCodes = false;
 
-    public String getClientId() {
-        return clientId;
+    public String getAzureKey() {
+        return azureKey;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
+    public void setAzureKey(String azureKey) {
+        this.azureKey = azureKey;
     }
 
     public String getCategory() {

@@ -136,11 +136,9 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     }
 
     protected MicrosoftMTConnector initMicrosoftMTConnector(MicrosoftMTConnector mtConnector) {
-        ((Parameters) mtConnector.getParameters()).setClientId(getConfiguration().getClientId());
-        ((Parameters) mtConnector.getParameters()).setSecret(getConfiguration().getSecret());
+        ((Parameters) mtConnector.getParameters()).setAzureKey(getConfiguration().getAzureKey());
         ((Parameters) mtConnector.getParameters()).setCategory(getConfiguration().getCategory());
-        log.info("Using configuration: clientId={}, category={}", getConfiguration().getClientId(),
-                 getConfiguration().getCategory());
+        log.info("Using configuration: category={}", getConfiguration().getCategory());
         return mtConnector;
     }
 
