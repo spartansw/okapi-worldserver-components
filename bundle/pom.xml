@@ -77,6 +77,10 @@
                   <pattern>org.apache</pattern>
                   <shadedPattern>okapi_ws_components.org.apache</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>com.ibm.icu</pattern>
+                  <shadedPattern>okapi_ws_components.com.ibm.icu</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>

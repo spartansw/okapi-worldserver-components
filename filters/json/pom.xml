@@ -74,6 +74,10 @@
                   <pattern>net.sf.okapi</pattern>
                   <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>com.ibm.icu</pattern>
+                  <shadedPattern>okapi_ws_components.com.ibm.icu</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>
