@@ -12,6 +12,8 @@ import net.sf.okapi.filters.xliff.XLIFFFilter;
 public class XLIFFWSOkapiFilter extends WSOkapiFilter<XLIFFFilterConfigurationData> {
     private static final Logger LOG = LoggerFactory.getLogger(XLIFFWSOkapiFilter.class);
 
+    public static final String DEFAULT_XLIFF_ENCODING = "UTF-8";
+
     @Override
     public String getDescription() {
         return "Bilingual XLIFF 1.2 filter";
@@ -48,6 +50,6 @@ public class XLIFFWSOkapiFilter extends WSOkapiFilter<XLIFFFilterConfigurationDa
 
     @Override
     protected String getDefaultEncoding() {
-        return "UTF-8";
+        return DEFAULT_XLIFF_ENCODING;
     }
 }
