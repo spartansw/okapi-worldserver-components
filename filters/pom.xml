@@ -21,6 +21,7 @@
     <module>po</module>
     <module>yaml</module>
     <module>openxml</module>
+    <module>xliff</module>
     <module>bundle</module>
   </modules>
 </project>
