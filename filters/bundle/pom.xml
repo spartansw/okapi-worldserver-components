@@ -80,7 +80,7 @@
                   </excludes>
                 </filter>
                 <filter>
-                  <artifact>com.spartansoftwareinc.ws.okapi.filters.yaml:okapi-ws-filters-openxml</artifact>
+                  <artifact>com.spartansoftwareinc.ws.okapi.filters.openxml:okapi-ws-filters-openxml</artifact>
                   <excludes>
                     <exclude>net/sf/okapi/common/**</exclude>
                     <exclude>org/slf4j/**</exclude>
