@@ -2,6 +2,7 @@ package com.spartansoftwareinc.ws.okapi.filters.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -50,8 +51,12 @@ public class FilterUtil {
 
     public static File convertAisContentIntoFile(WSNode aisContent) throws IOException,
             WSAisException {
-        Path tempFile = Files.createTempFile("wsokapi", getFileExtension(aisContent.getName()));
-        Files.copy(aisContent.getInputStream(), tempFile, StandardCopyOption.REPLACE_EXISTING);
+        return convertContentIntoFile(aisContent.getInputStream(), getFileExtension(aisContent.getName()));
+    }
+
+    public static File convertContentIntoFile(InputStream is, String extension) throws IOException {
+        Path tempFile = Files.createTempFile("wsokapi", getFileExtension(extension));
+        Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
         return tempFile.toFile();
     }
 

@@ -19,6 +19,13 @@
       <artifactId>okapi-ws-filters-xliff</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+      <artifactId>okapi-ws-filters-base</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+      <type>test-jar</type>
+    </dependency>
   </dependencies>
 
   <build>
