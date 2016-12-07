@@ -14,6 +14,7 @@ public class WSMTAdapterConfigurationData extends WSMTConfigurationData {
     private boolean useCustomScoring = false;
     private int matchScore = DEFAULT_MATCH_SCORE;
     private boolean includeCodes = false;
+    private String localeMapAISPath = null;
 
     public String getAzureKey() {
         return azureKey;
@@ -53,5 +54,13 @@ public class WSMTAdapterConfigurationData extends WSMTConfigurationData {
 
     public void setIncludeCodes(boolean includeCodes) {
         this.includeCodes = includeCodes;
+    }
+
+    public String getLocaleMapAISPath() {
+        return this.localeMapAISPath;
+    }
+
+    public void setLocaleMapAISPath(String aisPath) {
+        this.localeMapAISPath = aisPath;
     }
 }

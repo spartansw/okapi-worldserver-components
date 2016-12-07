@@ -2,6 +2,7 @@ package com.spartansoftwareinc.ws.okapi.mt.mshub;
 
 import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.WSVersion;
+import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.component.WSComponentConfiguration;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
 import com.idiominc.wssdk.component.mt.WSMTAdapterComponent;
@@ -20,6 +21,9 @@ import net.sf.okapi.connectors.microsoft.Parameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -34,12 +38,14 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
     private WSMTAdapterConfigurationData configurationData;
     private MTRequestConverter converter = new MTRequestConverter();
     private MicrosoftMTConnector connector = new MicrosoftMTConnector();
+    private LocaleMap localeMap = new LocaleMap();
 
     @Override
     public void translate(WSContext wsContext, WSMTRequest[] wsmtRequests, WSLanguage srcLanguage, WSLanguage tgtLanguage) {
 
         if (wsmtRequests.length > 0) {
             MicrosoftMTConnector mtConnector = initMicrosoftMTConnector(getMicrosoftMTConnector());
+            localeMap = initializeLocaleMap(wsContext);
             final Locale srcLocale = srcLanguage.getLocale();
             final Locale tgtLocale = tgtLanguage.getLocale();
             LocaleId srcLocaleId = getLocaleId(srcLocale.getLanguage(), srcLocale.getCountry());
@@ -59,6 +65,26 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
         }
     }
 
+    protected LocaleMap initializeLocaleMap(WSContext context) {
+        WSMTAdapterConfigurationData configData = getConfiguration();
+        if (configData.getLocaleMapAISPath() != null && !"".equals(configData.getLocaleMapAISPath())) {
+            try {
+                WSNode node = context.getAisManager().getNode(configData.getLocaleMapAISPath());
+                if (node == null) {
+                    log.warn("Unable to load locale map from AIS: {} does not exist", configData.getLocaleMapAISPath());
+                    return new LocaleMap();
+                }
+                try (Reader r = new InputStreamReader(node.getInputStream(), StandardCharsets.UTF_8)) {
+                    return LocaleMap.load(r);
+                }
+            }
+            catch (Exception e) {
+                log.error("Unable to load locale map from AIS ({}); {}", configData.getLocaleMapAISPath(), e.getMessage());
+            }
+        }
+        return new LocaleMap();
+    }
+
     /**
      * Override this to remap locale IDs as needed.  The common case for this is to map
      * some es variant to es-419, which Microsoft expects for "Latin American Spanish".
@@ -71,7 +97,7 @@ public class WSMicrosoftMTAdapter extends WSMTAdapterComponent {
      * @return a LocaleId instance appropriate for the parameters
      */
     protected LocaleId getLocaleId(String language, String country) {
-        return new LocaleId(language, country);
+        return localeMap.getMappedLocale(new LocaleId(language, country));
     }
 
     @Override

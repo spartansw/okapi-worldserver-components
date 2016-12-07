@@ -6,7 +6,7 @@ public class UITextField implements UIElement {
     public UITextField(String label, String inputName, String value) {
         this.label = label;
         this.inputName = inputName;
-        this.value = value;
+        this.value = value != null ? value : "";
     }
 
     @Override

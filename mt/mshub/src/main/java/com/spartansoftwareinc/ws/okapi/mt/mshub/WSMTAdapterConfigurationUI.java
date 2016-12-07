@@ -1,6 +1,7 @@
 package com.spartansoftwareinc.ws.okapi.mt.mshub;
 
 import com.idiominc.wssdk.WSContext;
+import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.component.WSComponentConfigurationData;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
 import com.spartansoftwareinc.ws.okapi.base.ui.UICheckbox;
@@ -24,6 +25,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
     private static final String LABEL_CATEGORY = "Category";
     private static final String LABEL_MATCH_SCORE = "MT Match Score";
     private static final String LABEL_INCLUDE_CODES = "Include Codes for MT";
+    private static final String LABEL_LOCALE_MAP_AIS_PATH = "AIS Path for Locale Overrides";
 
     private static final String AZURE_KEY = "azureKey";
     private static final String CATEGORY = "category";
@@ -32,6 +34,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
     private static final String MATCH_SCORE_CUSTOM = "custom";
     private static final String MATCH_SCORE_CUSTOM_VALUE = "customValue";
     private static final String INCLUDE_CODES = "includeCodes";
+    private static final String LOCALE_MAP_AIS_PATH = "localeMapAISPath";
 
     @Override
     public String render(WSContext wsContext, HttpServletRequest request, WSComponentConfigurationData config) {
@@ -41,6 +44,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
         StringBuilder sb = new StringBuilder();
         String azureKey = configData.getAzureKey() == null ? "" : configData.getAzureKey();
         String category = configData.getCategory() == null ? "" : configData.getCategory();
+        String aisPath = configData.getLocaleMapAISPath() == null ? "" : configData.getLocaleMapAISPath();
         int matchScore = configData.getMatchScore();
 
         final String error = (String)request.getAttribute(ERROR_MESSAGE_ATTRIBUTE);
@@ -57,7 +61,8 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
                             .add(new UITextField(LABEL_AZURE_KEY, AZURE_KEY, azureKey))
                             .add(new UITextField(LABEL_CATEGORY, CATEGORY, category))
                             .add(new UICheckbox(LABEL_INCLUDE_CODES, INCLUDE_CODES, configData.getIncludeCodes()))
-                            .add(new UIRadioButton(LABEL_MATCH_SCORE, MATCH_SCORE, defaultOption, customOption));
+                            .add(new UIRadioButton(LABEL_MATCH_SCORE, MATCH_SCORE, defaultOption, customOption))
+                            .add(new UITextField(LABEL_LOCALE_MAP_AIS_PATH, LOCALE_MAP_AIS_PATH, aisPath));
         sb.append(table.render());
         return sb.toString();
     }
@@ -85,6 +90,7 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
                 : ((WSMTAdapterConfigurationData) config);
 
         final String azureKey = request.getParameter(AZURE_KEY);
+        final String aisPath = request.getParameter(LOCALE_MAP_AIS_PATH).trim();
 
         String errors = null;
         boolean useCustomScoring = false;
@@ -109,15 +115,26 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
             errors = addError(LABEL_MATCH_SCORE, errors);
         }
 
+        try {
+            if (wsContext.getAisManager().getMetaDataNode(aisPath) == null) {
+                errors = addError(LABEL_LOCALE_MAP_AIS_PATH, errors);
+            }
+        }
+        catch (WSAisException e) {
+            LOG.error("Error saving locale map ais path configuration", e);
+            errors = addError(LABEL_LOCALE_MAP_AIS_PATH, errors);
+        }
+
         if (errors != null) {
             request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE + errors);
             throw new IllegalArgumentException();
         }
 
         configData.setAzureKey(azureKey);
-        configData.setCategory(request.getParameter(CATEGORY));
+        configData.setCategory(request.getParameter(CATEGORY).trim());
         configData.setUseCustomScoring(useCustomScoring);
         configData.setIncludeCodes("on".equals(request.getParameter(INCLUDE_CODES)));
+        configData.setLocaleMapAISPath(aisPath);
         if (useCustomScoring) {
             configData.setMatchScore(matchScore);
         }
