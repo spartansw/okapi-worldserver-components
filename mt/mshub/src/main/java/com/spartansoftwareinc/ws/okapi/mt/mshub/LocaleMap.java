@@ -38,7 +38,7 @@ public class LocaleMap {
                 continue;
             }
             try {
-                lm.add(LocaleId.fromBCP47(parts[0]), LocaleId.fromBCP47(parts[1]));
+                lm.add(LocaleId.fromBCP47(parts[0], true), LocaleId.fromBCP47(parts[1], true));
             }
             catch (IllegalArgumentException e) {
                 log.warn("Skipping locale mapping '{}'. Reason: {}", line, e.getMessage());
