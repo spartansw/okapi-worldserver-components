@@ -26,7 +26,7 @@ public class ConfigTestUtils {
         Transformer transformer = factory.newTransformer();
         StringWriter sw = new StringWriter();
         transformer.transform(new DOMSource(node), new StreamResult(sw));
-        return sw.toString();
+        return sw.toString().replaceAll("\\r\\n", "\\\n"); //TODO was is supposed to fail on CRLF/LF difference?
     }
 
     public static WSFilterConfigurationData fromXML(WSFilterConfigurationData config, String xml) 
