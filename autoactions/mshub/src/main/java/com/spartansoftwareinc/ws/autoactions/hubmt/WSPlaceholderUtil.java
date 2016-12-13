@@ -59,7 +59,7 @@ public class WSPlaceholderUtil
      * @param placeholderMap An int-to-String map.
      * @return a String where all placeholders are replaced by the corresponding strings.
      */
-    static String replacePlaceholders( String s, Map<Integer, PHData> phmap )
+    public static String replacePlaceholders( String s, Map<Integer, PHData> phmap )
     {
         StringBuilder sb = new StringBuilder();
         Matcher m = CURLY_N_RE.matcher( s );
@@ -75,19 +75,19 @@ public class WSPlaceholderUtil
         return sb.toString();
     }
 
-    static class PHData {
-        enum Type {
+    public static class PHData {
+        public enum Type {
             OPEN,
             CLOSED,
             STANDALONE;
         }
-        final Type type;
-        final String tag;
-        final String rawForm;
+        public final Type type;
+        public final String tag;
+        public final String rawForm;
         // This is what we actually send to MT, possibly different from rawForm
-        String mtForm;
-        PHData correspondingOpenTag; // Closed tags only
-        int wsid;
+        public String mtForm;
+        public PHData correspondingOpenTag; // Closed tags only
+        public int wsid;
 
         PHData(Type type, String tag, String rawForm, String mtForm) {
             this.type = type;
