@@ -50,8 +50,12 @@ public class FilterUtil {
 
     public static File convertAisContentIntoFile(WSNode aisContent) throws IOException,
             WSAisException {
-        File tempFile = File.createTempFile("wsokapi", getFileExtension(aisContent.getName()));
-        copy(aisContent.getInputStream(), tempFile);
+        return convertContentIntoFile(aisContent.getInputStream(), getFileExtension(aisContent.getName()));
+    }
+
+    public static File convertContentIntoFile(InputStream is, String extension) throws IOException {
+        File tempFile = File.createTempFile("wsokapi", extension);
+        copy(is, tempFile);
         return tempFile;
     }
 

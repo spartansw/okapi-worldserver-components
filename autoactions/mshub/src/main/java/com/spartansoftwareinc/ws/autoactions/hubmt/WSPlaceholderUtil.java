@@ -85,7 +85,7 @@ public class WSPlaceholderUtil
         final String tag;
         final String rawForm;
         // This is what we actually send to MT, possibly different from rawForm
-        final String mtForm;
+        String mtForm;
         PHData correspondingOpenTag; // Closed tags only
         int wsid;
 

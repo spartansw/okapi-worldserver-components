@@ -1,10 +1,22 @@
 package com.spartansoftwareinc.ws.okapi.mt.mshub;
 
 import com.idiominc.wssdk.WSContext;
+import com.idiominc.wssdk.WSException;
+import com.idiominc.wssdk.WSObject;
+import com.idiominc.wssdk.ais.WSAclPermission;
+import com.idiominc.wssdk.ais.WSAisException;
+import com.idiominc.wssdk.ais.WSAisManager;
+import com.idiominc.wssdk.ais.WSNode;
+import com.idiominc.wssdk.ais.WSNodeType;
+import com.idiominc.wssdk.ais.WSSystemPropertyKey;
 import com.idiominc.wssdk.component.mt.WSMTRequest;
 import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.mt.WSMTResult;
+import com.idiominc.wssdk.security.acl.WSAcl;
+import com.idiominc.wssdk.user.WSUser;
+
 import net.sf.okapi.common.IParameters;
+import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.query.QueryResult;
 import net.sf.okapi.common.resource.TextFragment;
 import net.sf.okapi.connectors.microsoft.MicrosoftMTConnector;
@@ -14,9 +26,19 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -26,6 +48,12 @@ public class WSMicrosoftMTAdapterTest {
 
     @Mock
     private WSContext wsContext;
+
+    @Mock
+    private WSAisManager wsAisManager;
+
+    @Mock
+    private WSNode localeMapAisNode;
 
     @Mock
     private WSLanguage wsLanguage;
@@ -118,6 +146,23 @@ public class WSMicrosoftMTAdapterTest {
         assertEquals(requests[0].getMTResults()[0].getTranslation(), "First segment");
         assertEquals(requests[1].getMTResults()[0].getTranslation(), "Second segment");
         assertEquals(requests[2].getMTResults()[0].getTranslation(), "Third segment");
+    }
+
+    @Test
+    public void testLocaleMapping() throws Exception {
+        WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
+        mtAdapter.getConfiguration().setLocaleMapAISPath("/Configuration/locales.txt");
+        when(wsContext.getAisManager()).thenReturn(wsAisManager);
+        when(wsAisManager.getNode("/Configuration/locales.txt")).thenReturn(localeMapAisNode);
+        when(localeMapAisNode.getInputStream()).thenReturn(
+            new ByteArrayInputStream("es-CO=es-419".getBytes(StandardCharsets.UTF_8)));
+        doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
+        when(mtConnector.getParameters()).thenReturn(parameters);
+        when(wsLanguage.getLocale()).thenReturn(new Locale("es", "CO"));
+        LocaleId es419 = new LocaleId("es", "419");
+        WSMTRequest[] requests = composeWSMTRequests("First segment", "Second segment", "Third segment");
+        mtAdapter.translate(wsContext, requests, wsLanguage, wsLanguage);
+        // Make sure the locale was set
     }
 
     private WSMTRequest[] composeWSMTRequests(String ... segments) {

@@ -5,7 +5,7 @@
     <parent>
       <artifactId>okapi-ws-filters</artifactId>
       <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
-      <version>1.4</version>
+      <version>1.5-SNAPSHOT</version>
     </parent>
 
     <groupId>com.spartansoftwareinc.ws.okapi.filters.openxml</groupId>
@@ -65,6 +65,10 @@
                   <relocation>
                     <pattern>net.sf.okapi</pattern>
                     <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
+                  </relocation>
+                  <relocation>
+                    <pattern>com.ibm.icu</pattern>
+                    <shadedPattern>okapi_ws_components.com.ibm.icu</shadedPattern>
                   </relocation>
                 </relocations>
               </configuration>

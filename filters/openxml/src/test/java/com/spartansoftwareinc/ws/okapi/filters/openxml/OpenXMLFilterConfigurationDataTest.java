@@ -14,6 +14,7 @@ public class OpenXMLFilterConfigurationDataTest {
                     "bPreferenceTranslateComments.b=true\n" +
                     "bPreferenceTranslatePowerpointNotes.b=true\n" +
                     "bPreferenceTranslatePowerpointMasters.b=true\n" +
+                    "bPreferenceIgnorePlaceholdersInPowerpointMasters.b=false\n" +
                     "bPreferenceTranslateWordHeadersFooters.b=true\n" +
                     "bPreferenceTranslateWordHidden.b=false\n" +
                     "bPreferenceTranslateWordExcludeGraphicMetaData.b=false\n" +

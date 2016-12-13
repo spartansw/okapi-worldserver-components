@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
     <artifactId>okapi-ws-filters</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
 
   <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
@@ -37,6 +37,11 @@
     <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.filters.openxml</groupId>
       <artifactId>okapi-ws-filters-openxml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters.xliff</groupId>
+      <artifactId>okapi-ws-filters-xliff</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -80,7 +85,14 @@
                   </excludes>
                 </filter>
                 <filter>
-                  <artifact>com.spartansoftwareinc.ws.okapi.filters.yaml:okapi-ws-filters-openxml</artifact>
+                  <artifact>com.spartansoftwareinc.ws.okapi.filters.openxml:okapi-ws-filters-openxml</artifact>
+                  <excludes>
+                    <exclude>net/sf/okapi/common/**</exclude>
+                    <exclude>org/slf4j/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.spartansoftwareinc.ws.okapi.filters.xliff:okapi-ws-filters-xliff</artifact>
                   <excludes>
                     <exclude>net/sf/okapi/common/**</exclude>
                     <exclude>org/slf4j/**</exclude>
@@ -96,6 +108,10 @@
                 <relocation>
                   <pattern>net.sf.okapi</pattern>
                   <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>com.ibm.icu</pattern>
+                  <shadedPattern>okapi_ws_components.com.ibm.icu</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>
