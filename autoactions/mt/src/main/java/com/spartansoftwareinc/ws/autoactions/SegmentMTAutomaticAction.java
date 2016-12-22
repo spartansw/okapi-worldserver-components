@@ -3,7 +3,6 @@ package com.spartansoftwareinc.ws.autoactions;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.idiominc.wssdk.WSContext;
@@ -94,8 +93,6 @@ public abstract class SegmentMTAutomaticAction extends WSTaskAutomaticAction
     @Override
     public WSActionResult execute( WSContext context, Map parameters, WSTask task )
     {
-        if (!getLogger().isDebugEnabled()) getLogger().setLevel(Level.INFO); //TODO: Remove me before official release.
-        
         // The standard prolog of the automatic action ...
         if ( !( task instanceof WSAssetTask ) )
         {
