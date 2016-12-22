@@ -71,8 +71,12 @@
                   <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
                 </relocation>
                 <relocation>
-                  <pattern>org.apache</pattern>
-                  <shadedPattern>okapi_ws_components.org.apache</shadedPattern>
+                  <pattern>org.apache.commons</pattern>
+                  <shadedPattern>okapi_ws_components.org.apache.commons</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.apache.http</pattern>
+                  <shadedPattern>okapi_ws_components.org.apache.http</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>com.ibm.icu</pattern>
