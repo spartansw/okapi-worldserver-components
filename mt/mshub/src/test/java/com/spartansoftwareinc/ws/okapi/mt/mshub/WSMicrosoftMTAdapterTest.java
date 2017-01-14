@@ -32,7 +32,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
+import net.sf.okapi.common.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

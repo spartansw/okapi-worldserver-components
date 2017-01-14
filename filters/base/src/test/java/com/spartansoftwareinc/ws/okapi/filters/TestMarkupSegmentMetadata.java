@@ -3,7 +3,7 @@ package com.spartansoftwareinc.ws.okapi.filters;
 import org.custommonkey.xmlunit.XMLTestCase;
 import org.junit.Test;
 
-import java.nio.charset.StandardCharsets;
+import net.sf.okapi.common.StandardCharsets;
 import com.idiominc.wssdk.ais.WSNode;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSLocale;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSMarkupSegment;

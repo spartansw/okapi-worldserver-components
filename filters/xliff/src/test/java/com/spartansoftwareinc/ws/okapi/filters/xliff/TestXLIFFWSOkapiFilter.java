@@ -1,6 +1,6 @@
 package com.spartansoftwareinc.ws.okapi.filters.xliff;
 
-import java.nio.charset.StandardCharsets;
+import net.sf.okapi.common.StandardCharsets;
 
 import org.junit.Before;
 import org.junit.Test;

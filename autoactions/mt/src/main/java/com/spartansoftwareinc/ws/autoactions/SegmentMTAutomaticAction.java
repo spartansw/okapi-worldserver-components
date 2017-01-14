@@ -2,6 +2,7 @@ package com.spartansoftwareinc.ws.autoactions;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
@@ -229,18 +230,20 @@ public abstract class SegmentMTAutomaticAction extends WSTaskAutomaticAction
             WSMTResult[] mtrs = mt.translate(t, sourceLang, targetLang);
             long durationMs = System.currentTimeMillis() - startMs;
             getLogger().info(String.format("translate(\"%.50s%s\", %s, %s) took %d ms", t, (t.length() > 50 ? "..." : ""),
-                    sourceLang.getLocale().toLanguageTag(), targetLang.getLocale().toLanguageTag(), durationMs));
+                    toLanguageTag(sourceLang), toLanguageTag(targetLang),
+                    durationMs));
             if (mtrs.length == 0) 
             {
                 getLogger().warn(String.format("translate(\"%s\", %s, %s) returned no translation.", t,
-                        sourceLang.getLocale().toLanguageTag(), targetLang.getLocale().toLanguageTag()));
+                    toLanguageTag(sourceLang), toLanguageTag(targetLang)));
                 return;
             }
             else if (mtrs.length > 1) 
             {
                 getLogger().warn(String.format(
                         "translate(\"%s\", %s, %s) returned %d (>1) translations. Only the first one is used.", t,
-                        sourceLang.getLocale().toLanguageTag(), targetLang.getLocale().toLanguageTag(), mtrs.length));
+                    toLanguageTag(sourceLang), toLanguageTag(targetLang),
+                    mtrs.length));
             }
             x = processMTResults(t, mtrs, sourceLang, targetLang);
             seg.getTargetSegment().setContent(x);
@@ -254,5 +257,10 @@ public abstract class SegmentMTAutomaticAction extends WSTaskAutomaticAction
             debugLogMsg.append( "After reverse-replacement:" ).append( x ).append( '\n' );
             getLogger().debug( debugLogMsg.toString() );
         }
+    }
+
+    private String toLanguageTag(WSLanguage lang) {
+        Locale l = lang.getLocale();
+        return l.getLanguage() + "-" + l.getCountry();
     }
 }

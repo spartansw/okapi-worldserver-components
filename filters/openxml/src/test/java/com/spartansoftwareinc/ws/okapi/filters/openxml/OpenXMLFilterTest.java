@@ -9,7 +9,7 @@ import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.nio.charset.StandardCharsets;
+import net.sf.okapi.common.StandardCharsets;
 
 @RunWith(DataProviderRunner.class)
 public class OpenXMLFilterTest {
