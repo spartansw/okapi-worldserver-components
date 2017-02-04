@@ -3,6 +3,8 @@
     <filter class="com.spartansoftwareinc.ws.okapi.filters.yaml.YAMLWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.po.PoWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.openxml.OpenXMLWSOkapiFilter"/>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.xliff.XLIFFWSOkapiFilter"/>
     <mt_adapter class="com.spartansoftwareinc.ws.okapi.mt.mshub.WSMicrosoftMTAdapter" />
     <auto_action class="com.spartansoftwareinc.ws.autoactions.hubmt.HubMTAutomaticAction"/>
+    <auto_action class="com.spartansoftwareinc.ws.autoactions.xliff.ImportXLIFFTargetsAutomaticAction" />
 </components>
