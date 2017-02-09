@@ -340,6 +340,9 @@ public class WSPlaceholderUtil
      * text.  Used to identify ambiguous replacements.
      */
     private static int countOccurrences(StringBuilder s, String searchText) {
+        if ("".equals(searchText)) {
+            return 0;
+        }
         int start = 0;
         int count = 0;
         for (int i = s.indexOf(searchText, start); i != -1; i = s.indexOf(searchText, start)) {

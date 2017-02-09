@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.okapi</groupId>
     <artifactId>okapi-ws-components</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
   </parent>
 
   <groupId>com.spartansoftwareinc.ws.okapi</groupId>
@@ -27,6 +27,11 @@
     <dependency>
       <groupId>com.spartansoftwareinc.ws.autoactions.mt</groupId>
       <artifactId>okapi-ws-autoactions-mshub</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.autoactions.xliff</groupId>
+      <artifactId>okapi-ws-autoactions-xliff</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

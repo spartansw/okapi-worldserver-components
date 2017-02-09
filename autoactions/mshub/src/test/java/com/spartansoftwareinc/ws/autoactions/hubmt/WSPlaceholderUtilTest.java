@@ -5,12 +5,15 @@
 package com.spartansoftwareinc.ws.autoactions.hubmt;
 
 import static org.junit.Assert.assertEquals;
+
+import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
 
 import com.idiominc.wssdk.asset.WSTextSegmentPlaceholder;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSTextSegmentPlaceholder;
 import com.spartansoftwareinc.ws.autoactions.hubmt.WSPlaceholderUtil.PHData;
+import com.spartansoftwareinc.ws.autoactions.hubmt.WSPlaceholderUtil.PHData.Type;
 
 public class WSPlaceholderUtilTest
 {
@@ -299,4 +302,18 @@ public class WSPlaceholderUtilTest
                       WSPlaceholderUtil.removeEndTags( "Hello</span> </span>" ) );
     }
 
+    /**
+     * A user encountered a case where bad input produced PHDat with an empty mtForm. This
+     * caused an infinite loop during placeholder restoration.  Make sure we are defensive
+     * and this doesn't happen again.
+     */
+    @Test
+    public void testCorrectHandlingOfEmptyPlaceholderText() {
+        Map<Integer, PHData> phdata = new HashMap<>();
+        PHData bad = new PHData(Type.STANDALONE, "foo", "<foo/>", "");
+        bad.wsid = 1;
+        phdata.put(1, bad);
+        String result = WSPlaceholderUtil.restorePlaceholders("The quick brown fox jumps over <foo/>.", phdata);
+        assertEquals("{1}The quick brown fox jumps over <foo/>.", result);
+    }
 }

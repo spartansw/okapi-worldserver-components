@@ -11,7 +11,7 @@ Currently, this repository contains:
    * YAML
    * po/pot (gettext)
    * JSON
-   * OpenXML (Word, PowerPoint, Excel)
+   * OpenXML (Word, PowerPoint, Excel, Visio)
 * MT Adapters, including
    * Microsoft Translator Hub
 * Automatic Actions, including
@@ -89,8 +89,10 @@ To deploy an individual components, upload any of:
 * `filters/po/target/okapi-ws-filters-po-[release]-deployable.jar`
 * `filters/yaml/target/okapi-ws-filters-yaml-[release]-deployable.jar`
 * `filters/openxml/target/okapi-ws-filters-openxml-[release]-deployable.jar`
+* `filters/xliff/target/okapi-ws-filters-xliff-[release]-deployable.jar`
 * `mt/mshub/target/okapi-ws-mt-mshub-[release]-deployable.jar`
 * `autoactions/mshub/target/okapi-ws-autoactions-mshub-[release]-deployable.jar`
+* `autoactions/xliff/target/okapi-ws-autoactions-xliff-[release]-deployable.jar`
 
 To deploy all filters at once, upload:
 
@@ -117,7 +119,7 @@ interface.
 About
 =====
 This project is a joint collaboration between [Spartan Software, Inc.
-](http://spartansoftwareinc.com) and [Tableau Software](http://www.tableau.com/).  Additional support has been provided by [VMware](https://vmware.com), [Veritas](https://veritas.com) and [Vistatec](http://vistatec.com/).
+](http://spartansoftwareinc.com) and [Tableau Software](http://www.tableau.com/).  Additional support has been provided by [VMware](https://vmware.com), [Veritas](https://veritas.com), [Vistatec](http://vistatec.com/), and [ebay](http://www.ebay.com/).
 
 License
 -------

@@ -5,7 +5,7 @@
 
   <groupId>com.spartansoftwareinc.ws.okapi</groupId>
   <artifactId>okapi-ws-components</artifactId>
-  <version>1.5-SNAPSHOT</version>
+  <version>1.5</version>
 
   <packaging>pom</packaging>
 
@@ -14,13 +14,13 @@
   <scm>
     <connection>scm:git:https://github.com/spartansw/okapi-worldserver-components.git</connection>
     <url>https://github.com/spartansw/okapi-worldserver-components</url>
-    <tag>HEAD</tag>
+    <tag>okapi-ws-components-1.5</tag>
   </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <ws.version>10.4.3.195</ws.version>
-    <okapi.version>0.32-SNAPSHOT-java6</okapi.version>
+    <okapi.version>0.32-java6</okapi.version>
     <mainPackage>com.spartansoftwareinc.ws.okapi</mainPackage>
   </properties>
 
