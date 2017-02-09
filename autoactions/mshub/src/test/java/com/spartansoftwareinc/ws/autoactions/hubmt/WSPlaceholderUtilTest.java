@@ -309,7 +309,7 @@ public class WSPlaceholderUtilTest
      */
     @Test
     public void testCorrectHandlingOfEmptyPlaceholderText() {
-        Map<Integer, PHData> phdata = new HashMap<>();
+        Map<Integer, PHData> phdata = new HashMap<Integer, PHData>();
         PHData bad = new PHData(Type.STANDALONE, "foo", "<foo/>", "");
         bad.wsid = 1;
         phdata.put(1, bad);
