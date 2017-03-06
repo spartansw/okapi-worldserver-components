@@ -58,11 +58,11 @@ public class WSMTAdapterConfigurationUI extends WSComponentConfigurationUI {
         UIRadioButton.Option customOption = new UIRadioButton.Option("Use Custom Value", MATCH_SCORE_CUSTOM,
                         configData.useCustomScoring(), getCustomValueHtml(MATCH_SCORE_CUSTOM_VALUE, 0, 100, matchScore));
         UITable table = new UITable()
-                            .add(new UITextField(LABEL_AZURE_KEY, AZURE_KEY, azureKey))
-                            .add(new UITextField(LABEL_CATEGORY, CATEGORY, category))
+                            .add(new UITextField(LABEL_AZURE_KEY, AZURE_KEY, azureKey).setSize(60))
+                            .add(new UITextField(LABEL_CATEGORY, CATEGORY, category).setSize(60))
                             .add(new UICheckbox(LABEL_INCLUDE_CODES, INCLUDE_CODES, configData.getIncludeCodes()))
                             .add(new UIRadioButton(LABEL_MATCH_SCORE, MATCH_SCORE, defaultOption, customOption))
-                            .add(new UITextField(LABEL_LOCALE_MAP_AIS_PATH, LOCALE_MAP_AIS_PATH, aisPath));
+                            .add(new UITextField(LABEL_LOCALE_MAP_AIS_PATH, LOCALE_MAP_AIS_PATH, aisPath).setSize(60));
         sb.append(table.render());
         return sb.toString();
     }
