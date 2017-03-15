@@ -61,6 +61,9 @@ public abstract class MockWSNode implements WSNode {
         if (key.equals(WSSystemPropertyKey.LOCALE)) {
             return locale;
         }
+        else if (key.equals(WSSystemPropertyKey.ENCODING)) {
+            return charset.name();
+        }
         throw new UnsupportedOperationException();
     }
 
