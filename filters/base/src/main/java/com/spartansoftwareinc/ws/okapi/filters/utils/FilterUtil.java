@@ -3,6 +3,7 @@ package com.spartansoftwareinc.ws.okapi.filters.utils;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -32,7 +33,13 @@ public class FilterUtil {
     }
 
     public static String detectEncoding(WSNode content, String defaultEncoding) throws WSAisException {
-        return content.getEncoding() == null ? defaultEncoding : content.getEncoding();
+        // AIS will return the java.io canonical name rather than the java.nio canonical name.
+        // This matters for UTF-8, which is "UTF8" in java.io and "UTF-8" (which we want)
+        // in java.nio.  So we fetch the value and then immediately cycle it through
+        // java.nio to get the final name.
+        String value = (String)content.getProperty(WSSystemPropertyKey.ENCODING);
+        String aisEncodingValue = (value != null) ? Charset.forName(value).name() : null;
+        return aisEncodingValue == null ? defaultEncoding : aisEncodingValue;
     }
 
     /**

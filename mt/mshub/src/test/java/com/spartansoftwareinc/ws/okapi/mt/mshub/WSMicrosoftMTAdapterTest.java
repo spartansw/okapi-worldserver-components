@@ -1,20 +1,11 @@
 package com.spartansoftwareinc.ws.okapi.mt.mshub;
 
 import com.idiominc.wssdk.WSContext;
-import com.idiominc.wssdk.WSException;
-import com.idiominc.wssdk.WSObject;
-import com.idiominc.wssdk.ais.WSAclPermission;
-import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.ais.WSAisManager;
 import com.idiominc.wssdk.ais.WSNode;
-import com.idiominc.wssdk.ais.WSNodeType;
-import com.idiominc.wssdk.ais.WSSystemPropertyKey;
 import com.idiominc.wssdk.component.mt.WSMTRequest;
 import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.mt.WSMTResult;
-import com.idiominc.wssdk.security.acl.WSAcl;
-import com.idiominc.wssdk.user.WSUser;
-
 import net.sf.okapi.common.IParameters;
 import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.query.QueryResult;
@@ -27,19 +18,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
