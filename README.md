@@ -119,7 +119,7 @@ interface.
 About
 =====
 This project is a joint collaboration between [Spartan Software, Inc.
-](http://spartansoftwareinc.com) and [Tableau Software](http://www.tableau.com/).  Additional support has been provided by [VMware](https://vmware.com), [Veritas](https://veritas.com), [Vistatec](http://vistatec.com/), and [ebay](http://www.ebay.com/).
+](http://spartansoftwareinc.com) and [Tableau Software](http://www.tableau.com/).  Additional support has been provided by [VMware](https://vmware.com), [Veritas](https://veritas.com), [Vistatec](http://vistatec.com/), [Intuit](https://www.intuit.com/), and [ebay](http://www.ebay.com/).
 
 License
 -------
