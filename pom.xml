@@ -20,20 +20,20 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <ws.version>10.4.3.195</ws.version>
-    <okapi.version>0.33-SNAPSHOT</okapi.version>
+    <okapi.version>0.34-SNAPSHOT</okapi.version>
     <mainPackage>com.spartansoftwareinc.ws.okapi</mainPackage>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>okapi-release</id>
-      <url>http://repository-okapi.forge.cloudbees.com/release/</url>
-    </repository>
-    <repository>
-      <id>okapi-snapshot</id>
-      <url>http://repository-okapi.forge.cloudbees.com/snapshot/</url>
-    </repository>
-  </repositories>
+  <!--<repositories>-->
+    <!--<repository>-->
+      <!--<id>okapi-release</id>-->
+      <!--<url>http://repository-okapi.forge.cloudbees.com/release/</url>-->
+    <!--</repository>-->
+    <!--<repository>-->
+      <!--<id>okapi-snapshot</id>-->
+      <!--<url>http://repository-okapi.forge.cloudbees.com/snapshot/</url>-->
+    <!--</repository>-->
+  <!--</repositories>-->
 
   <modules>
     <module>base</module>

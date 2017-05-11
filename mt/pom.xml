@@ -16,6 +16,8 @@
   <name>Okapi MT Adapters for WorldServer</name>
 
   <modules>
+    <module>base</module>
     <module>mshub</module>
+    <!--<module>google</module>-->
   </modules>
 </project>

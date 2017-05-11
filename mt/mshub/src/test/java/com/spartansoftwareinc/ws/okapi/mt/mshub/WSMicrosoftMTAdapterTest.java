@@ -49,7 +49,7 @@ public class WSMicrosoftMTAdapterTest {
     @Test
     public void testSomeFilteredResponses() {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
-        doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
+        doReturn(mtConnector).when(mtAdapter).getMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
@@ -67,10 +67,10 @@ public class WSMicrosoftMTAdapterTest {
     @Test
     public void testSomeFilteredResponsesWithCodes() {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
-        doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
-        WSMTAdapterConfigurationData config = new WSMTAdapterConfigurationData();
+        doReturn(mtConnector).when(mtAdapter).getMTConnector();
+        WSMicrosoftMTAdapterConfigurationData config = new WSMicrosoftMTAdapterConfigurationData();
         config.setIncludeCodes(true);
-        doReturn(config).when(mtAdapter).getConfiguration();
+        doReturn(config).when(mtAdapter).getConfigurationData();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
@@ -88,7 +88,7 @@ public class WSMicrosoftMTAdapterTest {
     @Test
     public void testWSResultsAreSetOnWSRequest() {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
-        doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
+        doReturn(mtConnector).when(mtAdapter).getMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
@@ -110,8 +110,8 @@ public class WSMicrosoftMTAdapterTest {
     @Test
     public void testWSResultsAreSetOnWSRequestWithCodes() {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
-        mtAdapter.getConfiguration().setIncludeCodes(true);
-        doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
+        mtAdapter.getConfigurationData().setIncludeCodes(true);
+        doReturn(mtConnector).when(mtAdapter).getMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
@@ -133,12 +133,12 @@ public class WSMicrosoftMTAdapterTest {
     @Test
     public void testLocaleMapping() throws Exception {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
-        mtAdapter.getConfiguration().setLocaleMapAISPath("/Configuration/locales.txt");
+        mtAdapter.getConfigurationData().setLocaleMapAISPath("/Configuration/locales.txt");
         when(wsContext.getAisManager()).thenReturn(wsAisManager);
         when(wsAisManager.getNode("/Configuration/locales.txt")).thenReturn(localeMapAisNode);
         when(localeMapAisNode.getInputStream()).thenReturn(
             new ByteArrayInputStream("es-CO=es-419".getBytes(StandardCharsets.UTF_8)));
-        doReturn(mtConnector).when(mtAdapter).getMicrosoftMTConnector();
+        doReturn(mtConnector).when(mtAdapter).getMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(new Locale("es", "CO"));
         LocaleId es419 = new LocaleId("es", "419");

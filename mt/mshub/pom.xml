@@ -25,6 +25,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.mt.base</groupId>
+      <artifactId>okapi-ws-mt-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>net.sf.okapi.connectors</groupId>
       <artifactId>okapi-connector-microsoft</artifactId>
       <version>${okapi.version}</version>

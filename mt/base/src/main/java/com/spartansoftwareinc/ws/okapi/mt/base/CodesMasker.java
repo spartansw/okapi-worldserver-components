@@ -1,9 +1,10 @@
-package com.spartansoftwareinc.ws.okapi.mt.mshub;
+package com.spartansoftwareinc.ws.okapi.mt.base;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MTRequestConverter {
+public class CodesMasker {
+
     private static final Pattern WS_PLACEHOLDER = Pattern.compile("\\{([0-9]+)\\}");
     private static final Pattern CODE_MARKUP = Pattern.compile("<span\\s+ws_id=\"(\\d+)\">(\\s*</span>)?");
     private static final Pattern TRAILING_CODE_MARKUP = Pattern.compile("</span>");
@@ -12,7 +13,7 @@ public class MTRequestConverter {
      * Replace WorldServer placeholder codes in &lt;span&gt;...&lt;/span&gt; markup
      * in order to protect them from translation.
      */
-    public String addCodeMarkup(String source) {
+    public String mask(String source) {
         StringBuilder sb = new StringBuilder();
         int start = 0;
         Matcher m = WS_PLACEHOLDER.matcher(source);
@@ -27,7 +28,7 @@ public class MTRequestConverter {
         return sb.toString();
     }
 
-    public String removeCodeMarkup(String s) {
+    public String unmask(String s) {
         s = removeWellformedCodes(s);
         return removeNonWellformedCodes(s);
     }
@@ -44,6 +45,7 @@ public class MTRequestConverter {
         sb.append(s.substring(start, s.length()));
         return sb.toString();
     }
+
     private String removeNonWellformedCodes(String s) {
         StringBuilder sb = new StringBuilder();
         int start = 0;

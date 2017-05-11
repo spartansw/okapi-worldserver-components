@@ -1,4 +1,4 @@
-package com.spartansoftwareinc.ws.okapi.mt.mshub;
+package com.spartansoftwareinc.ws.okapi.mt.base;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
