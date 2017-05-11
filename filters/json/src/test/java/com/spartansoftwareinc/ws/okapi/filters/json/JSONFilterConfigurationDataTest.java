@@ -12,7 +12,7 @@ import net.sf.okapi.filters.json.Parameters;
 
 public class JSONFilterConfigurationDataTest {
 
-    private final static String TERMINATOR = System.getProperty("line.separator");
+    private final static String TERMINATOR = "\n";
     private final static String CONFIG_XML =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?><params><okapi><![CDATA[#v1" + TERMINATOR +
                 "extractIsolatedStrings.b=false" + TERMINATOR +
@@ -20,6 +20,7 @@ public class JSONFilterConfigurationDataTest {
                 "exceptions=^(^hello$)$" + TERMINATOR +
                 "useKeyAsName.b=true" + TERMINATOR +
                 "useFullKeyPath.b=false" + TERMINATOR +
+                "useLeadingSlashOnKeyPath.b=true" + TERMINATOR +
                 "useCodeFinder.b=true" + TERMINATOR +
                 "subfilter=" + TERMINATOR +
                 "codeFinderRules.count.i=9" + TERMINATOR +
