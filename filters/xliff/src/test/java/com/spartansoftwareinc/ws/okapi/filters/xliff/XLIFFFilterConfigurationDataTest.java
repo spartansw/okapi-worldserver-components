@@ -32,7 +32,10 @@ public class XLIFFFilterConfigurationDataTest {
             "quoteModeDefined.b=true" + TERMINATOR +
             "quoteMode.i=0" + TERMINATOR +
             "useSdlXliffWriter.b=false" + TERMINATOR +
-            "preserveSpaceByDefault.b=false]]></okapi><applySentenceBreaking>false</applySentenceBreaking></params>";
+            "preserveSpaceByDefault.b=false" + TERMINATOR +
+            "inlineCdata.b=false" + TERMINATOR +
+            "skipNoMrkSegSource.b=false" +
+            "]]></okapi><applySentenceBreaking>false</applySentenceBreaking></params>";
 
     @Test
     public void testToXML() throws Exception {

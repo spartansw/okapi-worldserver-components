@@ -20,6 +20,7 @@ public class JSONFilterConfigurationDataTest {
                 "exceptions=^(^hello$)$" + TERMINATOR +
                 "useKeyAsName.b=true" + TERMINATOR +
                 "useFullKeyPath.b=false" + TERMINATOR +
+                "useLeadingSlashOnKeyPath.b=true" + TERMINATOR +
                 "useCodeFinder.b=true" + TERMINATOR +
                 "subfilter=" + TERMINATOR +
                 "codeFinderRules.count.i=9" + TERMINATOR +

@@ -5,11 +5,8 @@ import com.idiominc.wssdk.ais.WSAisManager;
 import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.component.mt.WSMTRequest;
 import com.idiominc.wssdk.linguistic.WSLanguage;
-import com.idiominc.wssdk.mt.WSMTResult;
 import net.sf.okapi.common.IParameters;
 import net.sf.okapi.common.LocaleId;
-import net.sf.okapi.common.query.QueryResult;
-import net.sf.okapi.common.resource.TextFragment;
 import net.sf.okapi.connectors.microsoft.MicrosoftMTConnector;
 import net.sf.okapi.connectors.microsoft.Parameters;
 import org.junit.Test;
@@ -19,11 +16,15 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
+
+import static com.spartansoftwareinc.ws.okapi.mt.base.BatchQueryResults.getBatchQueryResults;
+import static com.spartansoftwareinc.ws.okapi.mt.base.WSMTRequestStabs.getWSMTRequestStabs;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WSMicrosoftMTAdapterTest {
@@ -52,10 +53,10 @@ public class WSMicrosoftMTAdapterTest {
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
-        when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
+        when(mtConnector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Third segment"
         ));
-        WSMTRequest[] requests = composeWSMTRequests("First segment", "Second segment", "Third segment");
+        WSMTRequest[] requests = getWSMTRequestStabs("First segment", "Second segment", "Third segment");
         mtAdapter.translate(wsContext, requests, wsLanguage, wsLanguage);
         assertEquals(1, requests[0].getMTResults().length);
         assertEquals(0, requests[1].getMTResults().length);
@@ -73,10 +74,10 @@ public class WSMicrosoftMTAdapterTest {
         doReturn(config).when(mtAdapter).getConfigurationData();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
-        when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
+        when(mtConnector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Third segment"
         ));
-        WSMTRequest[] requests = composeWSMTRequests("First segment", "Second segment", "Third segment");
+        WSMTRequest[] requests = getWSMTRequestStabs("First segment", "Second segment", "Third segment");
         mtAdapter.translate(wsContext, requests, wsLanguage, wsLanguage);
         assertEquals(1, requests[0].getMTResults().length);
         assertEquals(0, requests[1].getMTResults().length);
@@ -91,11 +92,11 @@ public class WSMicrosoftMTAdapterTest {
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
-        when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
+        when(mtConnector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Second segment", "Third segment"
         ));
 
-        WSMTRequest[] requests = composeWSMTRequests("First segment", "Second segment", "Third segment");
+        WSMTRequest[] requests = getWSMTRequestStabs("First segment", "Second segment", "Third segment");
         mtAdapter.translate(wsContext, requests, wsLanguage, wsLanguage);
 
         for (WSMTRequest request : requests) {
@@ -114,11 +115,11 @@ public class WSMicrosoftMTAdapterTest {
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
-        when(mtConnector.batchQueryText(anyList())).thenReturn(mockBatchQueryReturns(
+        when(mtConnector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Second segment", "Third segment"
         ));
 
-        WSMTRequest[] requests = composeWSMTRequests("First segment", "Second segment", "Third segment");
+        WSMTRequest[] requests = getWSMTRequestStabs("First segment", "Second segment", "Third segment");
         mtAdapter.translate(wsContext, requests, wsLanguage, wsLanguage);
 
         for (WSMTRequest request : requests) {
@@ -137,74 +138,13 @@ public class WSMicrosoftMTAdapterTest {
         when(wsContext.getAisManager()).thenReturn(wsAisManager);
         when(wsAisManager.getNode("/Configuration/locales.txt")).thenReturn(localeMapAisNode);
         when(localeMapAisNode.getInputStream()).thenReturn(
-            new ByteArrayInputStream("es-CO=es-419".getBytes(StandardCharsets.UTF_8)));
+                new ByteArrayInputStream("es-CO=es-419".getBytes(StandardCharsets.UTF_8)));
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
         when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(new Locale("es", "CO"));
         LocaleId es419 = new LocaleId("es", "419");
-        WSMTRequest[] requests = composeWSMTRequests("First segment", "Second segment", "Third segment");
+        WSMTRequest[] requests = getWSMTRequestStabs("First segment", "Second segment", "Third segment");
         mtAdapter.translate(wsContext, requests, wsLanguage, wsLanguage);
         // Make sure the locale was set
-    }
-
-    private WSMTRequest[] composeWSMTRequests(String ... segments) {
-        if (segments == null || segments.length == 0) {
-            return new WSMTRequest[]{};
-        }
-
-        WSMTRequest[] requests = new WSMTRequest[segments.length];
-        for (int i = 0; i < segments.length; i++) {
-            requests[i] = new WSMTRequestImpl(segments[i]);
-        }
-
-        return requests;
-    }
-
-    private List<List<QueryResult>> mockBatchQueryReturns(String ... source) {
-        List<List<QueryResult>> queryResultsList = new ArrayList<List<QueryResult>>();
-        for (String s : source) {
-            List<QueryResult> queryResults = new ArrayList<QueryResult>();
-            final QueryResult qr = new QueryResult();
-            qr.source = new TextFragment(s);
-            qr.target = new TextFragment(s);
-            queryResults.add(qr);
-            queryResultsList.add(queryResults);
-        }
-
-        return queryResultsList;
-    }
-
-    private static class WSMTRequestImpl implements WSMTRequest {
-        private final String source;
-        private WSMTResult[] wsmtResults;
-
-        public WSMTRequestImpl(String source) {
-            this.source = source;
-        }
-
-        @Override
-        public String getSource() {
-            return source;
-        }
-
-        @Override
-        public void setResults(WSMTResult[] wsmtResults) {
-            this.wsmtResults = wsmtResults;
-        }
-
-        @Override
-        public WSMTResult[] getMTResults() {
-            return wsmtResults;
-        }
-
-        @Override
-        public int getScore() {
-            return 0;
-        }
-
-        @Override
-        public boolean isRepetition() {
-            return false;
-        }
     }
 }

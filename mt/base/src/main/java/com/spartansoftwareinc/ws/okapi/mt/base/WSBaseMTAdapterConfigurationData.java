@@ -9,8 +9,8 @@ public class WSBaseMTAdapterConfigurationData extends WSMTConfigurationData {
 
     private boolean useCustomScoring = false;
     private int matchScore = DEFAULT_MATCH_SCORE;
-    private boolean includeCodes = false;
     private String localeMapAISPath = null;
+    private boolean includeCodes = false;
 
     public boolean useCustomScoring() {
         return useCustomScoring;
@@ -28,19 +28,19 @@ public class WSBaseMTAdapterConfigurationData extends WSMTConfigurationData {
         this.matchScore = matchScore;
     }
 
-    public boolean getIncludeCodes() {
-        return includeCodes;
-    }
-
-    public void setIncludeCodes(boolean includeCodes) {
-        this.includeCodes = includeCodes;
-    }
-
     public String getLocaleMapAISPath() {
         return this.localeMapAISPath;
     }
 
     public void setLocaleMapAISPath(String aisPath) {
         this.localeMapAISPath = aisPath;
+    }
+
+    public boolean getIncludeCodes() {
+        return includeCodes;
+    }
+
+    public void setIncludeCodes(boolean includeCodes) {
+        this.includeCodes = includeCodes;
     }
 }

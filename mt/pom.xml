@@ -17,7 +17,7 @@
 
   <modules>
     <module>base</module>
+    <module>google</module>
     <module>mshub</module>
-    <!--<module>google</module>-->
   </modules>
 </project>

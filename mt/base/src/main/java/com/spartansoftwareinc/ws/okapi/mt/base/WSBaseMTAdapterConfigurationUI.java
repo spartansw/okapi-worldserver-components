@@ -67,7 +67,6 @@ public abstract class WSBaseMTAdapterConfigurationUI extends WSComponentConfigur
         UIRadioButton.Option customOption = new UIRadioButton.Option("Use Custom Value", MATCH_SCORE_CUSTOM,
                 configurationData.useCustomScoring(), getCustomValueHtml(MATCH_SCORE_CUSTOM_VALUE, 0, 100, matchScore));
 
-        uiElements.add(new UICheckbox(LABEL_INCLUDE_CODES, INCLUDE_CODES, configurationData.getIncludeCodes()));
         uiElements.add(new UIRadioButton(LABEL_MATCH_SCORE, MATCH_SCORE, defaultOption, customOption));
         uiElements.add(new UITextField(LABEL_LOCALE_MAP_AIS_PATH, LOCALE_MAP_AIS_PATH, aisPath).setSize(60));
 
@@ -140,7 +139,6 @@ public abstract class WSBaseMTAdapterConfigurationUI extends WSComponentConfigur
                 configData.setMatchScore(matchScore);
             }
 
-            configData.setIncludeCodes("on".equals(request.getParameter(INCLUDE_CODES)));
             configData.setLocaleMapAISPath(aisPath);
         }
 

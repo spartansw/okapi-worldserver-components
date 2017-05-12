@@ -2,6 +2,7 @@ package com.spartansoftwareinc.ws.okapi.mt.mshub;
 
 import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.component.WSComponentConfigurationData;
+import com.spartansoftwareinc.ws.okapi.base.ui.UICheckbox;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIElement;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITextField;
 import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData;
@@ -44,6 +45,8 @@ public class WSMicrosoftMTAdapterConfigurationUI extends WSBaseMTAdapterConfigur
 
         elements.addAll(super.getUIElements(configurationData));
 
+        elements.add(new UICheckbox(LABEL_INCLUDE_CODES, INCLUDE_CODES, configurationData.getIncludeCodes()));
+
         return elements;
     }
 
@@ -62,6 +65,8 @@ public class WSMicrosoftMTAdapterConfigurationUI extends WSBaseMTAdapterConfigur
 
             microsoftMTAdapterConfigurationData.setAzureKey(azureKey);
             microsoftMTAdapterConfigurationData.setCategory(request.getParameter(CATEGORY).trim());
+
+            microsoftMTAdapterConfigurationData.setIncludeCodes("on".equals(request.getParameter(INCLUDE_CODES)));
         }
 
         return errors;
