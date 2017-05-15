@@ -4,7 +4,6 @@ import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.component.WSComponentConfigurationData;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
-import com.spartansoftwareinc.ws.okapi.base.ui.UICheckbox;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIElement;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIRadioButton;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITable;
@@ -17,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData.LOCALE_MAP_AIS_PATH;
+import static com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData.MATCH_SCORE;
+
 public abstract class WSBaseMTAdapterConfigurationUI extends WSComponentConfigurationUI {
 
     private static final Logger LOG = LoggerFactory.getLogger(WSBaseMTAdapterConfigurationUI.class);
@@ -28,12 +30,9 @@ public abstract class WSBaseMTAdapterConfigurationUI extends WSComponentConfigur
     protected static final String LABEL_INCLUDE_CODES = "Include Codes for MT";
     protected static final String LABEL_LOCALE_MAP_AIS_PATH = "AIS Path for Locale Overrides";
 
-    protected static final String MATCH_SCORE = "matchScore";
     protected static final String MATCH_SCORE_TRANSLATION_SERVICE = "translationService";
     protected static final String MATCH_SCORE_CUSTOM = "custom";
     protected static final String MATCH_SCORE_CUSTOM_VALUE = "customValue";
-    protected static final String INCLUDE_CODES = "includeCodes";
-    protected static final String LOCALE_MAP_AIS_PATH = "localeMapAISPath";
 
     @Override
     public String render(WSContext wsContext, HttpServletRequest request, WSComponentConfigurationData configurationData) {

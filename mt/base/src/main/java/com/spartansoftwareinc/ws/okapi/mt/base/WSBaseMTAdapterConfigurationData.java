@@ -5,6 +5,11 @@ import com.idiominc.wssdk.component.mt.WSMTConfigurationData;
 public class WSBaseMTAdapterConfigurationData extends WSMTConfigurationData {
     private static final long serialVersionUID = 1L;
 
+    public static final String USE_CUSTOM_SCORING = "useCustomScoring";
+    public static final String MATCH_SCORE = "matchScore";
+    public static final String INCLUDE_CODES = "includeCodes";
+    public static final String LOCALE_MAP_AIS_PATH = "localeMapAISPath";
+
     private static final int DEFAULT_MATCH_SCORE = 95;
 
     private boolean useCustomScoring = false;

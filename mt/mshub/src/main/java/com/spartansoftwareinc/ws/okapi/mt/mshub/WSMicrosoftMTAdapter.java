@@ -40,8 +40,8 @@ public class WSMicrosoftMTAdapter extends WSBaseMTAdapter {
         WSComponentConfiguration configuration = getCurrentConfiguration();
 
         configurationData = null != configuration
-                ? ((WSMicrosoftMTAdapterConfigurationData) configuration.getConfigurationData())
-                : new WSMicrosoftMTAdapterConfigurationData();
+                ? ((WSMTAdapterConfigurationData) configuration.getConfigurationData())
+                : new WSMTAdapterConfigurationData();
 
         return configurationData;
     }
@@ -49,7 +49,7 @@ public class WSMicrosoftMTAdapter extends WSBaseMTAdapter {
     @Override
     protected BaseConnector getMTConnector() {
         MicrosoftMTConnector connector = new MicrosoftMTConnector();
-        WSMicrosoftMTAdapterConfigurationData configurationData = (WSMicrosoftMTAdapterConfigurationData) getConfigurationData();
+        WSMTAdapterConfigurationData configurationData = (WSMTAdapterConfigurationData) getConfigurationData();
 
         connector.getParameters().setAzureKey(configurationData.getAzureKey());
         connector.getParameters().setCategory(configurationData.getCategory());

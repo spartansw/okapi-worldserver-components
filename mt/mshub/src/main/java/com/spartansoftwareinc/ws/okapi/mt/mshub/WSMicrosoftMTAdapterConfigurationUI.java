@@ -14,6 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData.INCLUDE_CODES;
+import static com.spartansoftwareinc.ws.okapi.mt.mshub.WSMTAdapterConfigurationData.AZURE_KEY;
+import static com.spartansoftwareinc.ws.okapi.mt.mshub.WSMTAdapterConfigurationData.CATEGORY;
+
 public class WSMicrosoftMTAdapterConfigurationUI extends WSBaseMTAdapterConfigurationUI {
 
     private static final Logger logger = LoggerFactory.getLogger(WSMicrosoftMTAdapterConfigurationUI.class);
@@ -21,21 +25,18 @@ public class WSMicrosoftMTAdapterConfigurationUI extends WSBaseMTAdapterConfigur
     private static final String LABEL_AZURE_KEY = "Azure Key";
     private static final String LABEL_CATEGORY = "Category";
 
-    private static final String AZURE_KEY = "azureKey";
-    private static final String CATEGORY = "category";
-
     @Override
     protected WSBaseMTAdapterConfigurationData getConfigurationData(WSComponentConfigurationData configurationData) {
-        return configurationData == null || !(configurationData instanceof WSMicrosoftMTAdapterConfigurationData)
-                ? new WSMicrosoftMTAdapterConfigurationData()
-                : ((WSMicrosoftMTAdapterConfigurationData) configurationData);
+        return configurationData == null || !(configurationData instanceof WSMTAdapterConfigurationData)
+                ? new WSMTAdapterConfigurationData()
+                : ((WSMTAdapterConfigurationData) configurationData);
     }
 
     @Override
     protected List<UIElement> getUIElements(WSBaseMTAdapterConfigurationData configurationData) {
         List<UIElement> elements = new ArrayList<>();
 
-        WSMicrosoftMTAdapterConfigurationData microsoftMTAdapterConfigurationData = (WSMicrosoftMTAdapterConfigurationData) configurationData;
+        WSMTAdapterConfigurationData microsoftMTAdapterConfigurationData = (WSMTAdapterConfigurationData) configurationData;
 
         String azureKey = microsoftMTAdapterConfigurationData.getAzureKey() == null ? "" : microsoftMTAdapterConfigurationData.getAzureKey();
         String category = microsoftMTAdapterConfigurationData.getCategory() == null ? "" : microsoftMTAdapterConfigurationData.getCategory();
@@ -61,7 +62,7 @@ public class WSMicrosoftMTAdapterConfigurationUI extends WSBaseMTAdapterConfigur
         errors = super.validateAndSave(wsContext, request, configurationData, errors);
 
         if (null == errors) {
-            WSMicrosoftMTAdapterConfigurationData microsoftMTAdapterConfigurationData = (WSMicrosoftMTAdapterConfigurationData) configurationData;
+            WSMTAdapterConfigurationData microsoftMTAdapterConfigurationData = (WSMTAdapterConfigurationData) configurationData;
 
             microsoftMTAdapterConfigurationData.setAzureKey(azureKey);
             microsoftMTAdapterConfigurationData.setCategory(request.getParameter(CATEGORY).trim());

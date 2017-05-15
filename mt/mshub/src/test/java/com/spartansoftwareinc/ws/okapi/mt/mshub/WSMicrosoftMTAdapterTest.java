@@ -69,7 +69,7 @@ public class WSMicrosoftMTAdapterTest {
     public void testSomeFilteredResponsesWithCodes() {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
-        WSMicrosoftMTAdapterConfigurationData config = new WSMicrosoftMTAdapterConfigurationData();
+        WSMTAdapterConfigurationData config = new WSMTAdapterConfigurationData();
         config.setIncludeCodes(true);
         doReturn(config).when(mtAdapter).getConfigurationData();
         when(mtConnector.getParameters()).thenReturn(parameters);
