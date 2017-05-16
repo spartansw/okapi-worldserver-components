@@ -17,7 +17,7 @@ public class UITable {
     }
 
     public UITable addAll(List<UIElement> elements) {
-        elements.addAll(elements);
+        this.elements.addAll(elements);
         return this;
     }
 

@@ -121,6 +121,11 @@ public abstract class WSBaseMTAdapterConfigurationUI extends WSComponentConfigur
             errors = addError(LABEL_MATCH_SCORE, errors);
         }
 
+        if (null == request.getParameter(LOCALE_MAP_AIS_PATH)) {
+            errors = addError(LABEL_LOCALE_MAP_AIS_PATH, errors);
+            return errors;
+        }
+
         final String aisPath = request.getParameter(LOCALE_MAP_AIS_PATH).trim();
 
         try {
