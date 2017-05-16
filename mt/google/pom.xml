@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <url>http://maven.apache.org</url>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.spartansoftwareinc.ws.okapi.mt</groupId>
+        <artifactId>okapi-ws-mt</artifactId>
+        <version>1.6-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.spartansoftwareinc.ws.okapi.mt.google</groupId>
+    <artifactId>okapi-ws-mt-google</artifactId>
+
+    <name>Okapi Google MT Adapter for WorldServer</name>
+
+    <properties>
+        <mainPackage>com.spartansoftwareinc.ws.okapi.mt.google</mainPackage>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.spartansoftwareinc.ws.okapi</groupId>
+            <artifactId>okapi-ws-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.spartansoftwareinc.ws.okapi.mt.base</groupId>
+            <artifactId>okapi-ws-mt-base</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.okapi.connectors</groupId>
+            <artifactId>okapi-connector-google</artifactId>
+            <version>${okapi.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.spartansoftwareinc.ws.okapi.mt.base</groupId>
+            <artifactId>okapi-ws-mt-base</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.1</version>
+                <configuration>
+                    <createDependencyReducedPom>false</createDependencyReducedPom>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                </transformer>
+                            </transformers>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>deployable</shadedClassifierName>
+                            <relocations>
+                                <relocation>
+                                    <pattern>net.sf.okapi</pattern>
+                                    <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.commons</pattern>
+                                    <shadedPattern>okapi_ws_components.org.apache.commons</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache.http</pattern>
+                                    <shadedPattern>okapi_ws_components.org.apache.http</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.ibm.icu</pattern>
+                                    <shadedPattern>okapi_ws_components.com.ibm.icu</shadedPattern>
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

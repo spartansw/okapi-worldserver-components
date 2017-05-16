@@ -1,20 +1,29 @@
 package com.spartansoftwareinc.ws.okapi.mt.mshub;
 
-import com.idiominc.wssdk.component.mt.WSMTConfigurationData;
+import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData;
 
-public class WSMTAdapterConfigurationData extends WSMTConfigurationData {
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamField;
+
+public class WSMTAdapterConfigurationData extends WSBaseMTAdapterConfigurationData {
     private static final long serialVersionUID = 1L;
 
-    private static final int DEFAULT_MATCH_SCORE = 95;
+    static final String AZURE_KEY = "azureKey";
+    static final String CATEGORY = "category";
 
-    @Deprecated private String clientId;
-    @Deprecated private String secret;
+    private static final ObjectStreamField[] serialPersistentFields = {
+            new ObjectStreamField(AZURE_KEY, String.class),
+            new ObjectStreamField(CATEGORY, String.class),
+            new ObjectStreamField(USE_CUSTOM_SCORING, boolean.class),
+            new ObjectStreamField(MATCH_SCORE, int.class),
+            new ObjectStreamField(INCLUDE_CODES, boolean.class),
+            new ObjectStreamField(LOCALE_MAP_AIS_PATH, String.class),
+    };
+
     private String azureKey;
     private String category;
-    private boolean useCustomScoring = false;
-    private int matchScore = DEFAULT_MATCH_SCORE;
-    private boolean includeCodes = false;
-    private String localeMapAISPath = null;
 
     public String getAzureKey() {
         return azureKey;
@@ -32,35 +41,27 @@ public class WSMTAdapterConfigurationData extends WSMTConfigurationData {
         this.category = category;
     }
 
-    public boolean useCustomScoring() {
-        return useCustomScoring;
+    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException {
+        ObjectInputStream.GetField fields = inputStream.readFields();
+
+        setAzureKey((String) fields.get(AZURE_KEY, getAzureKey()));
+        setCategory((String) fields.get(CATEGORY, getCategory()));
+        setUseCustomScoring(fields.get(USE_CUSTOM_SCORING, useCustomScoring()));
+        setMatchScore(fields.get(MATCH_SCORE, getMatchScore()));
+        setIncludeCodes(fields.get(INCLUDE_CODES, getIncludeCodes()));
+        setLocaleMapAISPath((String) fields.get(LOCALE_MAP_AIS_PATH, getLocaleMapAISPath()));
     }
 
-    public void setUseCustomScoring(boolean useCustomScoring) {
-        this.useCustomScoring = useCustomScoring;
-    }
+    private void writeObject(ObjectOutputStream outputStream) throws IOException {
+        ObjectOutputStream.PutField fields = outputStream.putFields();
 
-    public int getMatchScore() {
-        return matchScore;
-    }
+        fields.put(AZURE_KEY, getAzureKey());
+        fields.put(CATEGORY, getCategory());
+        fields.put(USE_CUSTOM_SCORING, useCustomScoring());
+        fields.put(MATCH_SCORE, getMatchScore());
+        fields.put(INCLUDE_CODES, getIncludeCodes());
+        fields.put(LOCALE_MAP_AIS_PATH, getLocaleMapAISPath());
 
-    public void setMatchScore(int matchScore) {
-        this.matchScore = matchScore;
-    }
-
-    public boolean getIncludeCodes() {
-        return includeCodes;
-    }
-
-    public void setIncludeCodes(boolean includeCodes) {
-        this.includeCodes = includeCodes;
-    }
-
-    public String getLocaleMapAISPath() {
-        return this.localeMapAISPath;
-    }
-
-    public void setLocaleMapAISPath(String aisPath) {
-        this.localeMapAISPath = aisPath;
+        outputStream.writeFields();
     }
 }

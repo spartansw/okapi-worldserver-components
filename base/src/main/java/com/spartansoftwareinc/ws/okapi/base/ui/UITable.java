@@ -16,6 +16,11 @@ public class UITable {
         return this;
     }
 
+    public UITable addAll(List<UIElement> elements) {
+        this.elements.addAll(elements);
+        return this;
+    }
+
     public String render() {
         try {
             StringBuilder sb = new StringBuilder();
