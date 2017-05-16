@@ -30,9 +30,9 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
     }
 
     @Override
-    protected WSBaseMTAdapterConfigurationData getConfigurationData() {
+    protected WSGoogleMTAdapterConfigurationData getConfigurationData() {
         if (null != configurationData) {
-            return configurationData;
+            return (WSGoogleMTAdapterConfigurationData) configurationData;
         }
 
         WSComponentConfiguration configuration = getCurrentConfiguration();
@@ -41,13 +41,13 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
                 ? ((WSGoogleMTAdapterConfigurationData) configuration.getConfigurationData())
                 : new WSGoogleMTAdapterConfigurationData();
 
-        return configurationData;
+        return (WSGoogleMTAdapterConfigurationData) configurationData;
     }
 
     @Override
     protected BaseConnector getMTConnector() {
         GoogleMTv2Connector connector = new GoogleMTv2Connector();
-        WSGoogleMTAdapterConfigurationData configurationData = (WSGoogleMTAdapterConfigurationData) getConfigurationData();
+        WSGoogleMTAdapterConfigurationData configurationData = getConfigurationData();
 
         connector.getParameters().setApiKey(configurationData.getApiKey());
 
