@@ -117,7 +117,7 @@ public abstract class WSBaseMTAdapter extends WSMTAdapterComponent {
         return composeLanguagePairs(linguisticManager.getLanguages());
     }
 
-    private WSLanguagePair[] composeLanguagePairs(WSLanguage[] languages) {
+    protected WSLanguagePair[] composeLanguagePairs(WSLanguage[] languages) {
         ArrayList<WSLanguagePair> pairs = new ArrayList<>();
 
         for (int i = 0; i < languages.length; i++) {
