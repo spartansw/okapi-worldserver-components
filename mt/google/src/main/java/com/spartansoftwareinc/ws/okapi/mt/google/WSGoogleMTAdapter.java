@@ -5,6 +5,7 @@ import com.idiominc.wssdk.component.WSComponentConfiguration;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
 import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.linguistic.WSLanguagePair;
+import com.spartansoftwareinc.ws.okapi.mt.base.LocaleMap;
 import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapter;
 
 import net.sf.okapi.common.LocaleId;
@@ -13,7 +14,6 @@ import net.sf.okapi.connectors.google.GoogleMTv2Connector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +67,17 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
     }
 
     @Override
+    protected LocaleMap getLocaleMap(WSContext context) {
+        // Automatically remap zh-W to zh-TW
+        LocaleMap map = super.getLocaleMap(context);
+        LocaleId hk = LocaleId.fromBCP47("zh-HK");
+        if (map.getMappedLocale(hk) == hk) {
+            map.add(hk, LocaleId.fromBCP47("zh-TW"));
+        }
+        return map;
+    }
+
+    @Override
     public WSLanguagePair[] getSupportedLanguagePairs(WSContext wsContext) {
         List<LocaleId> locales = getMTConnector().getSupportedLanguages();
         WSLanguage[] availableLangs = wsContext.getLinguisticManager().getLanguages();
@@ -90,7 +101,7 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
                         return wslang;
                     }
                 }
-                else if ("".equals(l.getCountry())) {
+                else {
                     return wslang;
                 }
             }
