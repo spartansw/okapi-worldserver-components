@@ -18,6 +18,7 @@
       <groupId>com.spartansoftwareinc.ws.autoactions.mt</groupId>
       <artifactId>okapi-ws-autoactions-mt-base</artifactId>
       <version>${project.version}</version>
+      <classifier>java6</classifier>
     </dependency>
     <dependency>
       <groupId>net.htmlparser.jericho</groupId>
