@@ -20,18 +20,13 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters.idml</groupId>
+      <artifactId>okapi-ws-filters-idml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.filters.json</groupId>
       <artifactId>okapi-ws-filters-json</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.spartansoftwareinc.ws.okapi.filters.po</groupId>
-      <artifactId>okapi-ws-filters-po</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.spartansoftwareinc.ws.okapi.filters.yaml</groupId>
-      <artifactId>okapi-ws-filters-yaml</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -40,8 +35,18 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters.po</groupId>
+      <artifactId>okapi-ws-filters-po</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.filters.xliff</groupId>
       <artifactId>okapi-ws-filters-xliff</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters.yaml</groupId>
+      <artifactId>okapi-ws-filters-yaml</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
@@ -64,21 +69,14 @@
             <configuration>
               <filters>
                 <filter>
+                  <artifact>com.spartansoftwareinc.ws.okapi.filters.idml:okapi-ws-filters-idml</artifact>
+                  <excludes>
+                    <exclude>net/sf/okapi/common/**</exclude>
+                    <exclude>org/slf4j/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
                   <artifact>com.spartansoftwareinc.ws.okapi.filters.json:okapi-ws-filters-json</artifact>
-                  <excludes>
-                    <exclude>net/sf/okapi/common/**</exclude>
-                    <exclude>org/slf4j/**</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <artifact>com.spartansoftwareinc.ws.okapi.filters.po:okapi-ws-filters-po</artifact>
-                  <excludes>
-                    <exclude>net/sf/okapi/common/**</exclude>
-                    <exclude>org/slf4j/**</exclude>
-                  </excludes>
-                </filter>
-                <filter>
-                  <artifact>com.spartansoftwareinc.ws.okapi.filters.yaml:okapi-ws-filters-yaml</artifact>
                   <excludes>
                     <exclude>net/sf/okapi/common/**</exclude>
                     <exclude>org/slf4j/**</exclude>
@@ -92,7 +90,21 @@
                   </excludes>
                 </filter>
                 <filter>
+                  <artifact>com.spartansoftwareinc.ws.okapi.filters.po:okapi-ws-filters-po</artifact>
+                  <excludes>
+                    <exclude>net/sf/okapi/common/**</exclude>
+                    <exclude>org/slf4j/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
                   <artifact>com.spartansoftwareinc.ws.okapi.filters.xliff:okapi-ws-filters-xliff</artifact>
+                  <excludes>
+                    <exclude>net/sf/okapi/common/**</exclude>
+                    <exclude>org/slf4j/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.spartansoftwareinc.ws.okapi.filters.yaml:okapi-ws-filters-yaml</artifact>
                   <excludes>
                     <exclude>net/sf/okapi/common/**</exclude>
                     <exclude>org/slf4j/**</exclude>

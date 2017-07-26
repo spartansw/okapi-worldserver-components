@@ -11,26 +11,33 @@ import com.spartansoftwareinc.ws.okapi.base.ui.UIUtil;
 import com.spartansoftwareinc.ws.okapi.filters.WSOkapiFilterConfigurationData;
 
 public abstract class WSOkapiFilterUI<T extends WSOkapiFilterConfigurationData<?>> extends WSFilterUIConfiguration {
+
+    protected static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
+    protected static final String ERROR_MESSAGE = "Error: Please enter valid values for ";
+
     @Override
     public String getRedirectURI() {
         return null;
     }
 
     @Override
-    public String render(WSContext context, HttpServletRequest request,
-            WSComponentConfigurationData config) {
+    public String render(WSContext context, HttpServletRequest request, WSComponentConfigurationData config) {
+        StringBuilder sb = new StringBuilder();
+
+        final String error = (String) request.getAttribute(ERROR_MESSAGE_ATTRIBUTE);
+        if (error != null) {
+            sb.append("<p style=\"color: red;\">");
+            sb.append(UIUtil.escapeHtml(error));
+            sb.append("</p>");
+        }
+
         T wsConfig = getConfigurationData(config);
         UITable table = buildConfigurationTable(context, request, config);
         table.add(new UICheckbox("Apply sentence-breaking", "sentenceBreaking", wsConfig.getApplySegmentation()));
-        return table.render();
-    }
 
-    @Override
-    public WSComponentConfigurationData save(WSContext context,
-            HttpServletRequest request, WSComponentConfigurationData config) {
-        T wsConfig = getConfigurationData(config);
-        wsConfig.setApplySegmentation(UIUtil.getBoolean(request, "sentenceBreaking"));
-        return updateConfiguration(context, request, config);
+        sb.append(table.render());
+
+        return sb.toString();
     }
 
     /**
@@ -39,7 +46,7 @@ public abstract class WSOkapiFilterUI<T extends WSOkapiFilterConfigurationData<?
      * the config object was null, this method should return a new instance of
      * the WSOkapiFilterConfigurationData implementation initialized with the
      * filter's default configuration.
-     * 
+     *
      * @param config existing config data stored in WorldServer, or null
      * @return new or existing instance of the configuration implementation for
      *         this filter
@@ -57,13 +64,39 @@ public abstract class WSOkapiFilterUI<T extends WSOkapiFilterConfigurationData<?
         return new UITable();
     }
 
+    @Override
+    public WSComponentConfigurationData save(WSContext context, HttpServletRequest request, WSComponentConfigurationData config) {
+
+        T configData = getConfigurationData(config);
+
+        String errors = validateAndSave(context, request, configData, null);
+
+        if (null != errors) {
+            request.setAttribute(ERROR_MESSAGE_ATTRIBUTE, ERROR_MESSAGE + errors);
+            throw new IllegalArgumentException();
+        }
+
+        configData.setApplySegmentation(UIUtil.getBoolean(request, "sentenceBreaking"));
+
+        return configData;
+    }
+
     /**
-     * Update the configuration object with any filter parameters that are set in the request.
-     * The default implementation simply returns the config object.  Common options (such as
-     * sentence-breaking) will be updated by the framework.
+     * Validates and saves the request parameters into a configuration object.
+     *
+     * @param context    The context
+     * @param request    The request
+     * @param configData The configuration data
+     * @param errors     The errors
+     *
+     * @return {@code null} - if no errors found
+     *         comma-delimited parameters - otherwise
      */
-    protected WSComponentConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
-                                                WSComponentConfigurationData config) {
-        return config;
+    protected String validateAndSave(WSContext context, HttpServletRequest request, T configData, String errors) {
+        return errors;
+    }
+
+    protected String addError(String field, String invalidFields) {
+        return invalidFields == null ? field : invalidFields + ", " + field;
     }
 }

@@ -33,10 +33,10 @@ public class YAMLFilterConfigurationUI extends WSOkapiFilterUI<YAMLFilterConfigu
     }
 
     @Override
-    protected YAMLFilterConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
-            WSComponentConfigurationData config) {
-        YAMLFilterConfigurationData configData = getConfigurationData(config);
-        configData.setExcludedKeys(new LinkedHashSet<>(UIUtil.getOptionValues(request, "yaml_keys_res")));
-        return configData;
+    protected String validateAndSave(WSContext context, HttpServletRequest request, YAMLFilterConfigurationData configData, String errors) {
+        YAMLFilterConfigurationData configurationData = getConfigurationData(configData);
+        configurationData.setExcludedKeys(new LinkedHashSet<>(UIUtil.getOptionValues(request, "yaml_keys_res")));
+
+        return errors;
     }
 }

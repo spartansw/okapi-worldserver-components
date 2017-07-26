@@ -35,9 +35,10 @@ public class OpenXMLFilterConfigurationUI extends WSOkapiFilterUI<OpenXMLFilterC
     }
 
     @Override
-    protected OpenXMLFilterConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
-                                                            WSComponentConfigurationData config) {
-        OpenXMLFilterConfigurationData openXMLConfig = getConfigurationData(config);
+    protected String validateAndSave(WSContext context, HttpServletRequest request, OpenXMLFilterConfigurationData configData, String errors) {
+
+        OpenXMLFilterConfigurationData openXMLConfig = getConfigurationData(configData);
+
         openXMLConfig.setTranslateDocProperties(UIUtil.getBoolean(request, "translateDocProperties"));
         openXMLConfig.setTranslateComments(UIUtil.getBoolean(request, "translateComments"));
         openXMLConfig.setAggressiveCleanup(UIUtil.getBoolean(request, "aggressiveCleanup"));
@@ -52,7 +53,8 @@ public class OpenXMLFilterConfigurationUI extends WSOkapiFilterUI<OpenXMLFilterC
         openXMLConfig.setAddLineSeparatorAsCharacter(UIUtil.getBoolean(request, "addLineSeparatorAsCharacter"));
         openXMLConfig.setReplaceNoBreakHyphenTag(UIUtil.getBoolean(request, "replaceNoBreakHyphenTag"));
         openXMLConfig.setIgnoreSoftHyphenTag(UIUtil.getBoolean(request, "ignoreSoftHyphenTag"));
-        return openXMLConfig;
+
+        return errors;
     }
 
     @Override

@@ -44,14 +44,15 @@ public class JSONFilterConfigurationUI extends WSOkapiFilterUI<JSONFilterConfigu
     }
 
     @Override
-    protected JSONFilterConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
-            WSComponentConfigurationData config) {
-        JSONFilterConfigurationData configData = getConfigurationData(config);
-        configData.setExcludedKeys(UIUtil.getOptionValues(request, "json_keys_res"));
-        Parameters params = configData.getParameters();
+    protected String validateAndSave(WSContext context, HttpServletRequest request, JSONFilterConfigurationData configData, String errors) {
+        JSONFilterConfigurationData configurationData = getConfigurationData(configData);
+
+        configurationData.setExcludedKeys(UIUtil.getOptionValues(request, "json_keys_res"));
+        Parameters params = configurationData.getParameters();
         params.setExtractStandalone(UIUtil.getBoolean(request, "extractIsolated"));
-        configData.setParameters(params);
-        return configData;
+        configurationData.setParameters(params);
+
+        return errors;
     }
 
     // ^(^key1$|^key2$|^key3$)$
