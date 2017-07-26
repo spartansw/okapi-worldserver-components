@@ -17,11 +17,12 @@
 
   <modules>
     <module>base</module>
+    <module>idml</module>
     <module>json</module>
-    <module>po</module>
-    <module>yaml</module>
     <module>openxml</module>
+    <module>po</module>
     <module>xliff</module>
+    <module>yaml</module>
     <module>bundle</module>
   </modules>
 </project>

@@ -8,30 +8,32 @@ import static org.junit.Assert.assertEquals;
 
 public class OpenXMLFilterConfigurationDataTest {
 
+    private final static String LINE_SEPARATOR = System.getProperty("line.separator");
+
     private final static String CONFIG_XML =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><params><okapi><![CDATA[#v1\n" +
-                    "bPreferenceTranslateDocProperties.b=true\n" +
-                    "bPreferenceTranslateComments.b=true\n" +
-                    "bPreferenceTranslatePowerpointNotes.b=true\n" +
-                    "bPreferenceTranslatePowerpointMasters.b=true\n" +
-                    "bPreferenceIgnorePlaceholdersInPowerpointMasters.b=false\n" +
-                    "bPreferenceTranslateWordHeadersFooters.b=true\n" +
-                    "bPreferenceTranslateWordHidden.b=false\n" +
-                    "bPreferenceTranslateWordExcludeGraphicMetaData.b=false\n" +
-                    "bPreferenceTranslateExcelExcludeColors.b=false\n" +
-                    "bPreferenceTranslateExcelExcludeColumns.b=false\n" +
-                    "bPreferenceTranslateExcelSheetNames.b=false\n" +
-                    "bPreferenceAddLineSeparatorAsCharacter.b=false\n" +
-                    "sPreferenceLineSeparatorReplacement=$0a$\n" +
-                    "bPreferenceReplaceNoBreakHyphenTag.b=true\n" +
-                    "bPreferenceIgnoreSoftHyphenTag.b=false\n" +
-                    "bPreferenceAddTabAsCharacter.b=false\n" +
-                    "bPreferenceAggressiveCleanup.b=false\n" +
-                    "bPreferenceAutomaticallyAcceptRevisions.b=true\n" +
-                    "tsComplexFieldDefinitionsToExtract.i=1\n" +
-                    "cfd0=HYPERLINK\n" +
-                    "tsExcelExcludedColors.i=0\n" +
-                    "tsExcelExcludedColumns.i=0\n" +
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?><params><okapi><![CDATA[#v1" + LINE_SEPARATOR +
+                    "bPreferenceTranslateDocProperties.b=true" + LINE_SEPARATOR +
+                    "bPreferenceTranslateComments.b=true" + LINE_SEPARATOR +
+                    "bPreferenceTranslatePowerpointNotes.b=true" + LINE_SEPARATOR +
+                    "bPreferenceTranslatePowerpointMasters.b=true" + LINE_SEPARATOR +
+                    "bPreferenceIgnorePlaceholdersInPowerpointMasters.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslateWordHeadersFooters.b=true" + LINE_SEPARATOR +
+                    "bPreferenceTranslateWordHidden.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslateWordExcludeGraphicMetaData.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslateExcelExcludeColors.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslateExcelExcludeColumns.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslateExcelSheetNames.b=false" + LINE_SEPARATOR +
+                    "bPreferenceAddLineSeparatorAsCharacter.b=false" + LINE_SEPARATOR +
+                    "sPreferenceLineSeparatorReplacement=$0a$" + LINE_SEPARATOR +
+                    "bPreferenceReplaceNoBreakHyphenTag.b=true" + LINE_SEPARATOR +
+                    "bPreferenceIgnoreSoftHyphenTag.b=false" + LINE_SEPARATOR +
+                    "bPreferenceAddTabAsCharacter.b=false" + LINE_SEPARATOR +
+                    "bPreferenceAggressiveCleanup.b=false" + LINE_SEPARATOR +
+                    "bPreferenceAutomaticallyAcceptRevisions.b=true" + LINE_SEPARATOR +
+                    "tsComplexFieldDefinitionsToExtract.i=1" + LINE_SEPARATOR +
+                    "cfd0=HYPERLINK" + LINE_SEPARATOR +
+                    "tsExcelExcludedColors.i=0" + LINE_SEPARATOR +
+                    "tsExcelExcludedColumns.i=0" + LINE_SEPARATOR +
                     "tsExcludeWordStyles.i=0]]></okapi>" +
                     "<applySentenceBreaking>false</applySentenceBreaking>" +
                     "</params>";

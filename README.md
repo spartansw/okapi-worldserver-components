@@ -8,11 +8,14 @@ part of the open source [Okapi Framework](http://okapi.opentag.com/).
 Currently, this repository contains:
 
 * Filters, including
-   * YAML
-   * po/pot (gettext)
+   * IDML
    * JSON
    * OpenXML (Word, PowerPoint, Excel, Visio)
+   * po/pot (gettext)
+   * XLIFF
+   * YAML
 * MT Adapters, including
+   * Google MT Adapter
    * Microsoft Translator Hub
 * Automatic Actions, including
    * An automatic action to improve MT quality of HTML and XML content, when used with the Microsoft Translator Hub
@@ -85,11 +88,13 @@ long as it contains a `desc.xml` file, as these do.)
 
 To deploy an individual components, upload any of:
 
+* `filters/json/target/okapi-ws-filters-idml-[release]-deployable.jar`
 * `filters/json/target/okapi-ws-filters-json-[release]-deployable.jar`
-* `filters/po/target/okapi-ws-filters-po-[release]-deployable.jar`
-* `filters/yaml/target/okapi-ws-filters-yaml-[release]-deployable.jar`
 * `filters/openxml/target/okapi-ws-filters-openxml-[release]-deployable.jar`
+* `filters/po/target/okapi-ws-filters-po-[release]-deployable.jar`
 * `filters/xliff/target/okapi-ws-filters-xliff-[release]-deployable.jar`
+* `filters/yaml/target/okapi-ws-filters-yaml-[release]-deployable.jar`
+* `mt/google/target/okapi-ws-mt-google-[release]-deployable.jar`
 * `mt/mshub/target/okapi-ws-mt-mshub-[release]-deployable.jar`
 * `autoactions/mshub/target/okapi-ws-autoactions-mshub-[release]-deployable.jar`
 * `autoactions/xliff/target/okapi-ws-autoactions-xliff-[release]-deployable.jar`

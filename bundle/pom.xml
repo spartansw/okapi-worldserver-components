@@ -20,6 +20,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.mt.google</groupId>
+      <artifactId>okapi-ws-mt-google</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.mt.mshub</groupId>
       <artifactId>okapi-ws-mt-mshub</artifactId>
       <version>${project.version}</version>
@@ -55,6 +60,13 @@
               <filters>
                 <filter>
                   <artifact>com.spartansoftwareinc.ws.okapi.filters:okapi-ws-filters-bundle</artifact>
+                  <excludes>
+                    <exclude>net/sf/okapi/common/**</exclude>
+                    <exclude>org/slf4j/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>com.spartansoftwareinc.ws.okapi.mt.google:okapi-ws-mt-google</artifact>
                   <excludes>
                     <exclude>net/sf/okapi/common/**</exclude>
                     <exclude>org/slf4j/**</exclude>

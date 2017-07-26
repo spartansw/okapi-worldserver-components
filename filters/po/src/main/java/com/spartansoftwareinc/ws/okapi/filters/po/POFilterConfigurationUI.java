@@ -21,11 +21,11 @@ public class POFilterConfigurationUI extends WSOkapiFilterUI<POFilterConfigurati
     }
 
     @Override
-    protected POFilterConfigurationData updateConfiguration(WSContext context, HttpServletRequest request,
-            WSComponentConfigurationData config) {
-        POFilterConfigurationData poConfig = getConfigurationData(config);
+    protected String validateAndSave(WSContext context, HttpServletRequest request, POFilterConfigurationData configData, String errors) {
+        POFilterConfigurationData poConfig = getConfigurationData(configData);
         poConfig.setCopyToPO(UIUtil.getBoolean(request, "copyTarget"));
-        return poConfig;
+
+        return errors;
     }
 
     @Override
