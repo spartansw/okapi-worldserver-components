@@ -62,6 +62,8 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
             WSGoogleMTAdapterConfigurationData configurationData = getConfigurationData();
 
             connector.getParameters().setApiKey(configurationData.getApiKey());
+            connector.getParameters().setRetryCount(configurationData.getRetryCount());
+            connector.getParameters().setRetryIntervalMs(configurationData.getRetryInterval());
         }
         return connector;
     }
