@@ -93,7 +93,7 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
         return composeLanguagePairs(langs.toArray(new WSLanguage[langs.size()]));
     }
     private WSLanguage findLanguage(WSLanguage[] available, LocaleId locale) {
-        String lang = locale.getLanguage();
+        String lang = convertLanguageCode(locale.getLanguage());
         String region = locale.getRegion();
         for (WSLanguage wslang : available) {
             Locale l = wslang.getLocale();
@@ -110,5 +110,13 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
         }
         logger.debug("Could not find a WorldServer locale to map to Google locale {}", locale);
         return null;
+    }
+
+    private String convertLanguageCode(String lang) {
+        // Handle java.util.Locale#getLanguage special case for Indonesian
+        if (lang.equals("id")) {
+            lang = "in";
+        }
+        return lang;
     }
 }
