@@ -4,6 +4,7 @@ target
 .project
 .settings
 .idea
+.metadata
 *.iml
 Version.java
 tags
