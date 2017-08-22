@@ -15,10 +15,11 @@ Currently, this repository contains:
    * XLIFF
    * YAML
 * MT Adapters, including
-   * Google MT Adapter
+   * Google MT
    * Microsoft Translator Hub
 * Automatic Actions, including
    * An automatic action to improve MT quality of HTML and XML content, when used with the Microsoft Translator Hub
+   * An automic action to import target segment data from source XLIFF files, for use when processing bilingual XLIFF as a source format
 * Common code, including
    * Classes for generating table-based config UIs
    * Classes to simplify working with `WSAttribute` values
