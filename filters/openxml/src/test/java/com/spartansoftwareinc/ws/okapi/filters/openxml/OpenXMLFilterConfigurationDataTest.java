@@ -30,11 +30,15 @@ public class OpenXMLFilterConfigurationDataTest {
                     "bPreferenceAddTabAsCharacter.b=false" + LINE_SEPARATOR +
                     "bPreferenceAggressiveCleanup.b=false" + LINE_SEPARATOR +
                     "bPreferenceAutomaticallyAcceptRevisions.b=true" + LINE_SEPARATOR +
+                    "bPreferencePowerpointIncludedSlideNumbersOnly.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslateExcelDiagramData.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslateExcelDrawings.b=false" + LINE_SEPARATOR +
                     "tsComplexFieldDefinitionsToExtract.i=1" + LINE_SEPARATOR +
                     "cfd0=HYPERLINK" + LINE_SEPARATOR +
                     "tsExcelExcludedColors.i=0" + LINE_SEPARATOR +
                     "tsExcelExcludedColumns.i=0" + LINE_SEPARATOR +
-                    "tsExcludeWordStyles.i=0]]></okapi>" +
+                    "tsExcludeWordStyles.i=0" + LINE_SEPARATOR +
+                    "tsPowerpointIncludedSlideNumbers.i=0]]></okapi>" +
                     "<applySentenceBreaking>false</applySentenceBreaking>" +
                     "</params>";
 

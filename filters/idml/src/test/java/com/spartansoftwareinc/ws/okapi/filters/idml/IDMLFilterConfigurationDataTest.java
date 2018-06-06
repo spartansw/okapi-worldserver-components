@@ -16,7 +16,8 @@ public class IDMLFilterConfigurationDataTest {
                     "untagXmlStructures.b=true" + LINE_SEPARATOR +
                     "extractNotes.b=false" + LINE_SEPARATOR +
                     "extractMasterSpreads.b=true" + LINE_SEPARATOR +
-                    "extractHiddenLayers.b=false]]></okapi>" +
+                    "extractHiddenLayers.b=false" + LINE_SEPARATOR +
+                    "skipDiscretionaryHyphens.b=false]]></okapi>" +
                     "<applySentenceBreaking>false</applySentenceBreaking>" +
                     "</params>";
 
