@@ -42,7 +42,7 @@ public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigura
     }
 
     @Override
-    public MarkdownFilter getConfiguredFilter(MarkdwownFilterConfigurationData config) {
+    public MarkdownFilter getConfiguredFilter(MarkdownFilterConfigurationData config) {
         MarkdownFilter filter = new MarkdownFilter();
         filter.setParameters(config.getParameters());
         return filter;

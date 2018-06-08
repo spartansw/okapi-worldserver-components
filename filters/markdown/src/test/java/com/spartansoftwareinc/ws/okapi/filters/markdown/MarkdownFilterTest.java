@@ -11,7 +11,7 @@ import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 
-@RunWith(DataProviderRunner.class)
+//@RunWith(DataProviderRunner.class)
 public class MarkdownFilterTest {
     //TODO: Add some test cases
 }

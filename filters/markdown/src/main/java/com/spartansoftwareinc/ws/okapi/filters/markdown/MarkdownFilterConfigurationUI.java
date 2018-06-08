@@ -34,12 +34,14 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
     protected UITable buildConfigurationTable(WSContext context, HttpServletRequest request,
                                 WSComponentConfigurationData config) {
         MarkdownFilterConfigurationData configData = getConfigurationData(config);
-        Collection<String> excludedKeys = getExcludedKeys(configData);
+
+        //Collection<String> excludedKeys = getExcludedKeys(configData);
+
         UITable table = new UITable();
-        table.add(new UIMultiValueInput("Non-Translatable Markdown Keys", "json",
+/*        table.add(new UIMultiValueInput("Non-Translatable Markdown Keys", "json",
                   excludedKeys, excludedKeys));
         table.add(new UICheckbox("Extract Standalone Keys", "extractIsolated",
-                configData.getParameters().getExtractStandalone()));
+                configData.getParameters().getExtractStandalone()));*/
         return table;
     }
 
@@ -47,32 +49,13 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
     protected String validateAndSave(WSContext context, HttpServletRequest request, MarkdownFilterConfigurationData configData, String errors) {
         MarkdownFilterConfigurationData configurationData = getConfigurationData(configData);
 
-        configurationData.setExcludedKeys(UIUtil.getOptionValues(request, "json_keys_res"));
+ //       configurationData.setExcludedKeys(UIUtil.getOptionValues(request, "json_keys_res"));
         Parameters params = configurationData.getParameters();
-        params.setExtractStandalone(UIUtil.getBoolean(request, "extractIsolated"));
+//        params.setExtractStandalone(UIUtil.getBoolean(request, "extractIsolated"));
         configurationData.setParameters(params);
 
         return errors;
     }
 
-    // ^(^key1$|^key2$|^key3$)$
-    private Pattern KEYS_PATTERN = Pattern.compile("\\^\\((.*)\\)\\$");
-    private Pattern KEY_PATTERN = Pattern.compile("\\^(.*)\\$");
-
-    private List<String> getExcludedKeys(MarkdownFilterConfigurationData data) {
-        Matcher m = KEYS_PATTERN.matcher(data.getParameters().getExceptions());
-        if (m.matches()) {
-            String[] rawKeys = m.group(1).split("\\|");
-            List<String> keys = new ArrayList<String>();
-            for (String raw : rawKeys) {
-                Matcher rawMatcher = KEY_PATTERN.matcher(raw);
-                if (rawMatcher.matches()) {
-                    keys.add(rawMatcher.group(1));
-                }
-            }
-            return keys;
-        }
-        return Collections.emptyList();
-    }
 
 }

@@ -14,7 +14,6 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
     protected Parameters getDefaultParameters() {
         Parameters parameters = new Parameters();
         setCodeFinder(parameters);
-        parameters.setExtractAllPairs(true);
         return parameters;
     }
 
@@ -32,7 +31,6 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
             appendExcludedKey(sb, key);
         }
         sb.append(")$");
-        params.setExceptions(sb.toString());
         setParameters(params);
     }
     
@@ -56,10 +54,10 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
         codeFinderData.add(FilterUtil.join(colonLabelRule, "\n"));
         codeFinderData.add(FilterUtil.join(htmlRules, "\n"));
 
-        parameters.setCodeFinderData(
+/*        parameters.setCodeFinderData(
                 FilterUtil.join(codeFinderData.toArray(new String[codeFinderData.size()]),
                         "\n")
-        );
+        );*/
     }
 
     private String[] getColonLabelCodeFinderRule(int numRules) {
