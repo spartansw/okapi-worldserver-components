@@ -1,9 +1,6 @@
 package com.spartansoftwareinc.ws.okapi.filters.markdown;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.spartansoftwareinc.ws.okapi.filters.WSOkapiFilterConfigurationData;
-import com.spartansoftwareinc.ws.okapi.filters.utils.FilterUtil;
 
 import net.sf.okapi.filters.markdown.Parameters;
 
@@ -13,69 +10,51 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
     @Override
     protected Parameters getDefaultParameters() {
         Parameters parameters = new Parameters();
-        setCodeFinder(parameters);
         return parameters;
     }
+    
+    // translateUrl
+    public boolean getTranslateUrls() {
+        return getParameters().getTranslateUrls();
+    }
 
-    public void setExcludedKeys(List<String> excludedKeys) {
+    public void setTranslateUrls(boolean translateUrls) {
         Parameters params = getParameters();
-        StringBuilder sb = new StringBuilder("^(");
-        boolean first = true;
-        for (String key : excludedKeys) {
-            if (first) {
-                first = false;
-            }
-            else {
-                sb.append("|");
-            }
-            appendExcludedKey(sb, key);
-        }
-        sb.append(")$");
+        params.setTranslateUrls(translateUrls);
         setParameters(params);
     }
     
-    private static StringBuilder appendExcludedKey(StringBuilder builder, String key) {
-        return builder.append("^").append(key).append("$");
+    // translateCodeBlocks
+    public boolean getTranslateCodeBlocks() {
+        return getParameters().getTranslateCodeBlocks();
     }
 
-    private void setCodeFinder(Parameters parameters) {
-        parameters.setUseCodeFinder(true);
-
-        int numRules = 0;
-        String colonLabelRule[] = getColonLabelCodeFinderRule(numRules);
-        numRules += colonLabelRule.length;
-
-        String htmlRules[] = getHtmlCodeFinderRules(numRules);
-        numRules += htmlRules.length;
-
-        List<String> codeFinderData = new ArrayList<>();
-        codeFinderData.add("useAllRulesWhenTesting.b=true");
-        codeFinderData.add("count.i="+numRules);
-        codeFinderData.add(FilterUtil.join(colonLabelRule, "\n"));
-        codeFinderData.add(FilterUtil.join(htmlRules, "\n"));
-
-/*        parameters.setCodeFinderData(
-                FilterUtil.join(codeFinderData.toArray(new String[codeFinderData.size()]),
-                        "\n")
-        );*/
+    public void setTranslateCodeBlockse(boolean translateCodeBlocks) {
+        Parameters params = getParameters();
+        params.setTranslateCodeBlocks(translateCodeBlocks);
+        setParameters(params);
     }
 
-    private String[] getColonLabelCodeFinderRule(int numRules) {
-        String colonLabelRule[] = {"rule"+numRules+++"=:[a-zA-Z0-9_]+"};
-        return colonLabelRule;
+    // translateHeaderMetadata
+    public boolean getTranslateHeaderMetadata() {
+        return getParameters().getTranslateUrls();
     }
 
-    private String[] getHtmlCodeFinderRules(int numRules) {
-        String htmlRules[] = {
-            "rule"+numRules+++"=%(([-0+#]?)[-0+#]?)((\\d\\$)?)(([\\d\\*]*)(\\.[\\d\\*]*)?)[dioxXucsfeEgGpn]",
-            "rule"+numRules+++"=(\\\\r\\\\n)|\\\\a|\\\\b|\\\\f|\\\\n|\\\\r|\\\\t|\\\\v",
-            "rule"+numRules+++"=\\{\\d[^\\\\]*?\\}",
-            "rule"+numRules+++"=<.+?>",
-            "rule"+numRules+++"=%%[a-zA-Z]+%%",
-            "rule"+numRules+++"=%[0-9]+\\$[a-zA-Z]+",
-            "rule"+numRules+++"=%[a-zA-Z]+",
-            "rule"+numRules+++"=&[a-zA-Z]+;"};
-        return htmlRules;
+    public void setTranslateHeaderMetadata(boolean translateHeaderMetadata) {
+        Parameters params = getParameters();
+        params.setTranslateUrls(translateHeaderMetadata);
+        setParameters(params);
+    }
+    
+    // translateImageAltText
+    public boolean getTranslateImageAltText() {
+        return getParameters().getTranslateImageAltText();
     }
 
+    public void setTranslateImageAltText(boolean translateImageAltText) {
+        Parameters params = getParameters();
+        params.setTranslateImageAltText(translateImageAltText);
+        setParameters(params);
+    }
+    
 }

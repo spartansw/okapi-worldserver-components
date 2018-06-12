@@ -21,8 +21,14 @@ import net.sf.okapi.filters.markdown.Parameters;
 
 public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilterConfigurationData> {
 
-    public MarkdownFilterConfigurationUI() {
-    }
+    private static final String TRANSLATE_URLS_LABEL = "Translate URLs";
+    private static final String TRANSLATE_URLS_NAME = "translateUrls";
+    private static final String TRANSLATE_CODE_BLOCKS_LABEL = "Translate Code Blocks";
+    private static final String TRANSLATE_CODE_BLOCKS_NAME = "translateCodeBlocks";
+    private static final String TRANSLATE_HEADER_METADATA_LABEL = "Translate Header Metadata";
+    private static final String TRANSLATE_HEADER_METADATA_NAME = "translateHeaderMetadata";
+    private static final String TRANSLATE_IMAGE_ALT_TEXT_LABEL = "Translate Image Alt Text";
+    private static final String TRANSLATE_IMAGE_ALT_TEXT_NAME = "translateImageAltText";
 
     @Override
     protected MarkdownFilterConfigurationData getConfigurationData(WSComponentConfigurationData config) {
@@ -35,13 +41,15 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
                                 WSComponentConfigurationData config) {
         MarkdownFilterConfigurationData configData = getConfigurationData(config);
 
-        //Collection<String> excludedKeys = getExcludedKeys(configData);
-
-        UITable table = new UITable();
-/*        table.add(new UIMultiValueInput("Non-Translatable Markdown Keys", "json",
-                  excludedKeys, excludedKeys));
-        table.add(new UICheckbox("Extract Standalone Keys", "extractIsolated",
-                configData.getParameters().getExtractStandalone()));*/
+        UITable table = new UITable();     
+        table.add(new UICheckbox(TRANSLATE_URLS_LABEL, TRANSLATE_URLS_NAME,
+                configData.getParameters().getTranslateUrls()));
+        table.add(new UICheckbox(TRANSLATE_CODE_BLOCKS_LABEL, TRANSLATE_CODE_BLOCKS_NAME,
+                configData.getParameters().getTranslateCodeBlocks()));
+        table.add(new UICheckbox(TRANSLATE_HEADER_METADATA_LABEL, TRANSLATE_HEADER_METADATA_NAME,
+                configData.getParameters().getTranslateHeaderMetadata()));
+        table.add(new UICheckbox(TRANSLATE_IMAGE_ALT_TEXT_LABEL, TRANSLATE_IMAGE_ALT_TEXT_NAME,
+                configData.getParameters().getTranslateImageAltText()));
         return table;
     }
 
@@ -49,13 +57,12 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
     protected String validateAndSave(WSContext context, HttpServletRequest request, MarkdownFilterConfigurationData configData, String errors) {
         MarkdownFilterConfigurationData configurationData = getConfigurationData(configData);
 
- //       configurationData.setExcludedKeys(UIUtil.getOptionValues(request, "json_keys_res"));
-        Parameters params = configurationData.getParameters();
-//        params.setExtractStandalone(UIUtil.getBoolean(request, "extractIsolated"));
-        configurationData.setParameters(params);
-
+        // No real error check performed at this point.
+        configurationData.setTranslateUrls(UIUtil.getBoolean(request, TRANSLATE_URLS_NAME));
+        configurationData.setTranslateCodeBlockse(UIUtil.getBoolean(request, TRANSLATE_CODE_BLOCKS_NAME));
+        configurationData.setTranslateHeaderMetadata(UIUtil.getBoolean(request, TRANSLATE_HEADER_METADATA_NAME));
+        configurationData.setTranslateImageAltText(UIUtil.getBoolean(request, TRANSLATE_IMAGE_ALT_TEXT_NAME));
         return errors;
     }
-
 
 }
