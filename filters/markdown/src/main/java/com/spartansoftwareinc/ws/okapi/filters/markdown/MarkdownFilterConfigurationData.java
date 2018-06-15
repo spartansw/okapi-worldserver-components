@@ -10,6 +10,8 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
     @Override
     protected Parameters getDefaultParameters() {
         Parameters parameters = new Parameters();
+        parameters.reset();
+        parameters.setUseCodeFinder(false); // Turning off since we aren't providing a way to configure the rules.
         return parameters;
     }
     
@@ -37,12 +39,12 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
 
     // translateHeaderMetadata
     public boolean getTranslateHeaderMetadata() {
-        return getParameters().getTranslateUrls();
+        return getParameters().getTranslateHeaderMetadata();
     }
 
     public void setTranslateHeaderMetadata(boolean translateHeaderMetadata) {
         Parameters params = getParameters();
-        params.setTranslateUrls(translateHeaderMetadata);
+        params.setTranslateHeaderMetadata(translateHeaderMetadata);
         setParameters(params);
     }
     
