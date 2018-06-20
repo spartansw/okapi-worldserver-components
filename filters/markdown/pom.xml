@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
     <artifactId>okapi-ws-filters</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.8-M36SSjava7-SNAPSHOT</version>
   </parent>
 
   <groupId>com.spartansoftwareinc.ws.okapi.filters.markdown</groupId>
@@ -21,6 +21,17 @@
     </dependency>
     <dependency>
       <artifactId>okapi-filter-markdown</artifactId>
+      <groupId>net.sf.okapi.filters</groupId>
+      <version>${okapi.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <artifactId>okapi-filter-html</artifactId> <!-- HTML filter is used from Markdown to process HTML blocks. -->
       <groupId>net.sf.okapi.filters</groupId>
       <version>${okapi.version}</version>
       <exclusions>
@@ -83,11 +94,24 @@
                 </relocation>
                 <relocation>
                   <pattern>com.ibm.icu</pattern>
-                  <shadedPattern>okapi_ws_components.com.ibm.icu</shadedPattern>
+                  <shadedPattern>${project.version}.com.ibm.icu</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>org.slf4j</pattern>
-                  <shadedPattern>okapi_ws_components.org.slf4j</shadedPattern>
+                  <shadedPattern>${project.version}.org.slf4j</shadedPattern>
+                </relocation>
+                <relocation>
+		  <!-- Relocation is not absolute necesity because it is unlieley any other filters uses this, but just in case... -->
+                  <pattern>com.vladsch.flexmark</pattern>
+                  <shadedPattern>${project.version}.com.vladsch.flexmark</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>net.htmlparser</pattern>
+                  <shadedPattern>${project.version}.net.html.parser</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.yaml</pattern>
+                  <shadedPattern>${project.version}.org.yaml</shadedPattern>
                 </relocation>
               </relocations>
             </configuration>

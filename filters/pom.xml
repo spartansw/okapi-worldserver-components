@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.okapi</groupId>
     <artifactId>okapi-ws-components</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.8-M36SSjava7-SNAPSHOT</version>
   </parent>
 
   <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
@@ -17,13 +17,17 @@
 
   <modules>
     <module>base</module>
+<!--
     <module>idml</module>
     <module>json</module>
+-->
     <module>markdown</module>
+<!--
     <module>openxml</module>
     <module>po</module>
     <module>xliff</module>
     <module>yaml</module>
     <module>bundle</module>
+-->
   </modules>
 </project>
