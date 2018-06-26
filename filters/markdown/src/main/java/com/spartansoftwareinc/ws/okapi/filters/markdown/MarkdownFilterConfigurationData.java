@@ -1,21 +1,43 @@
 package com.spartansoftwareinc.ws.okapi.filters.markdown;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import com.idiominc.wssdk.WSContext;
+import com.idiominc.wssdk.ais.WSAisException;
+import com.idiominc.wssdk.ais.WSAisManager;
+import com.idiominc.wssdk.ais.WSNode;
 import com.spartansoftwareinc.ws.okapi.filters.WSOkapiFilterConfigurationData;
 
 import net.sf.okapi.common.filters.InlineCodeFinder;
 import net.sf.okapi.filters.markdown.Parameters;
 
 public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationData<Parameters> {
+    /**
+     * The path of the folder in the AIS where okf_html@<i>some_name</i>.fprm files
+     * should be uploaded.
+     */
+    public static final String FILTER_CONFIG_DIR_AIS_PATH = "/Customization/okapi_subfilter"; 
+    
+    private static final Logger LOG = LoggerFactory.getLogger(MarkdownFilterConfigurationData.class);
     private static final long serialVersionUID = 1L;
+    
+    /* This isn't really a configuration item. It is here so that it can be passed from
+     * MarkdownWSOkapiFilter.parse(WSContext, WSNode, WSSegmentWriter) (defined in its parent, WSOkapiFilter) to
+     * MarkdownWSOkapiFilter.getConfiguredFilter(MarkdownFilterConfigurationData)
+     */
+    private String filterConfigDirPath = null; 
 
     @Override
     protected Parameters getDefaultParameters() {
@@ -32,6 +54,17 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
     public void setTranslateUrls(boolean translateUrls) {
         Parameters params = getParameters();
         params.setTranslateUrls(translateUrls);
+        setParameters(params);
+    }
+    
+    // urlToTranslatePattern
+    public String getUrlToTranslatePattern() {
+	return getParameters().getUrlToTranslatePattern();
+    }
+    
+    public void setUrlToTranslatePattern(String urlToTranslatePattern) {
+        Parameters params = getParameters();
+        params.setUrlToTranslatePattern(urlToTranslatePattern);
         setParameters(params);
     }
     
@@ -68,6 +101,7 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
         setParameters(params);
     }
     
+    // htmlSubfilter
     public String getHtmlSubfilter() {
 	return getParameters().getHtmlSubfilter();
     }
@@ -105,6 +139,61 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
     }
     
     
+    // filterConfigDirPath --- not part of Okapi Markdown Filter
+    /**
+     * Sets the directory where the custom HTML configuration files (okf_html@<i>name</i>.fprm) should be saved.
+     * Call {@link #initializeFilterConfigDirPath(WSContext)} once, before calling this.
+     * @return
+     */
+    public String getFilterConfigDirPath() {
+	return filterConfigDirPath;
+    }
+    
+    // For unit test only.
+    /*package*/void setFilterConfigDirPath(String filterConfigDirPath) {
+	this.filterConfigDirPath = filterConfigDirPath;
+    }
+    
+    public void initializeFilterConfigDirPath(WSContext context) {
+	LOG.warn("Entering MarkdownFilterConfigurationData({}).initializeConfigDir(WSContext)", ((Object)this).toString());
+	LOG.warn("filterConfigDirPath={}", filterConfigDirPath);
+	if (filterConfigDirPath != null)
+	    return; // It's been done already.
+	File configDir = null;
+	WSAisManager aismgr = context.getAisManager();
+	if (aismgr == null)
+	    return; // When running a unit test, this happens.
+	try {
+
+	    WSNode configDirNode = aismgr.getNode(FILTER_CONFIG_DIR_AIS_PATH);
+	    if (configDirNode == null) {
+		LOG.error("The AIS node {} doesn't exist!", FILTER_CONFIG_DIR_AIS_PATH);
+	    } else {
+		configDir = configDirNode.getFile();
+		if (!configDir.isDirectory() || configDir.listFiles(htmlFprmFilter).length < 1) {
+		    configDir = null;
+		} else { // TODO: Remove this else block.
+		    LOG.warn("available .fprm files...");
+		    for (File f : configDir.listFiles(htmlFprmFilter)) {
+			LOG.warn("   {}", f.getName());
+		    }
+		}
+	    }
+	} catch (WSAisException e) {
+	    LOG.error("Error accessing Okapi filter configuration directory.", e);
+	}
+	LOG.warn("configDir={}", configDir); // TODO: Remove me
+	filterConfigDirPath = (configDir == null) ? null : configDir.getAbsolutePath();
+	LOG.warn("MarkdownFilterConfigurationData({}).initializeFilterConfigDirPath(WSContext) is setting filterConfigDirPath={}", ((Object)this).toString(), filterConfigDirPath);
+    }
+
+    private static final Pattern htmlFprmPat = Pattern.compile("okf_html@[\\w\\d]+\\.fprm");
+    private static final FilenameFilter htmlFprmFilter = new FilenameFilter() {
+	public boolean accept(File dir, String name) {
+	    return htmlFprmPat.matcher(name).matches();
+	}
+    };
+
     @Override
     protected void saveAdditionalConfiguration(Document doc, Node parent) {
         Node rules = parent.appendChild(doc.createElement("codeFinderRules"));
@@ -114,6 +203,11 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
                 Text t = doc.createTextNode(rule);
                 ruleNode.appendChild(t);
             }
+        }
+        Node fcdp = parent.appendChild(doc.createElement("filterConfigDirPath"));
+        if (filterConfigDirPath!=null) {
+            Text t = doc.createTextNode(filterConfigDirPath);
+            fcdp.appendChild(t);
         }
     }
 
@@ -127,8 +221,13 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
                 rules.add(n.getTextContent().trim());
             }
             setCodeFinderRules(rules);
-        }
-    }
-    
-    
-}
+        } else if (configNode.getNodeName().equals("filterConfigDirPath")) {
+            String s = configNode.getTextContent();
+            if (s==null || s.trim().isEmpty()) {
+        	filterConfigDirPath = null;
+            } else {
+        	filterConfigDirPath = s.trim();
+            }
+        }       
+    } 
+ }

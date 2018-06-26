@@ -1,10 +1,16 @@
 package com.spartansoftwareinc.ws.okapi.filters.markdown;
 
+import com.idiominc.wssdk.WSContext;
+import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.component.filter.WSFilterConfigurationData;
 import com.idiominc.wssdk.component.filter.WSFilterUIConfiguration;
+import com.idiominc.wssdk.component.filter.WSSegmentWriter;
 import com.spartansoftwareinc.ws.okapi.Version;
 import com.spartansoftwareinc.ws.okapi.filters.WSOkapiFilter;
 
+import net.sf.okapi.common.filters.FilterConfigurationMapper;
+import net.sf.okapi.common.filters.FilterInfo;
+import net.sf.okapi.filters.html.HtmlFilter;
 import net.sf.okapi.filters.markdown.MarkdownFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +51,36 @@ public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigura
     public MarkdownFilter getConfiguredFilter(MarkdownFilterConfigurationData config) {
         MarkdownFilter filter = new MarkdownFilter();
         filter.setParameters(config.getParameters());
+
+        LOG.warn("config({}).filterConfigDirPath={}", ((Object)config).toString(), config.getFilterConfigDirPath()); //TODO Change warn to debug
+        if (config.getHtmlSubfilter()==null) {
+            return filter;
+        }
+        
+        // Make sure custom config dir has filters.
+        if (config.getFilterConfigDirPath()==null) {
+            LOG.error("No filter config directory specified.");
+            return filter;
+        }
+        
+        FilterConfigurationMapper fcm = new FilterConfigurationMapper();
+        fcm.addConfigurations(HtmlFilter.class.getCanonicalName());
+		
+        fcm.setCustomConfigurationsDirectory(config.getFilterConfigDirPath());
+        fcm.updateCustomConfigurations();
+        
+        if (LOG.isDebugEnabled()) {
+	    if (fcm.getFiltersInfo().size() == 0) {
+		LOG.error("No filter found in the directory {}", config.getFilterConfigDirPath());
+		return filter;
+	    }
+
+	    for (FilterInfo fi : fcm.getFiltersInfo()) {
+		LOG.warn("  filter named {} of class {} found", fi.name, fi.className);
+	    }
+        }
+        
+        filter.setFilterConfigurationMapper(fcm);
         return filter;
     }
 
@@ -53,6 +89,17 @@ public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigura
         return DEFAULT_ENCODING;
     }
 
+    @Override
+    public void parse(WSContext context, WSNode srcContent, WSSegmentWriter wsSegmentWriter) {
+	MarkdownFilterConfigurationData config = getOkapiFilterConfiguration();
+	if (config.getFilterConfigDirPath()==null) {
+	    LOG.error("filterConfigDirPath should have been set by UI code but it was null. Calling initializeFilterConfigDirPath(WSContext)...");
+	    config.initializeFilterConfigDirPath(context);
+	}
+	super.parse(context, srcContent, wsSegmentWriter);
+    }
+
+    
     @Override
     protected MarkdownFilterConfigurationData getOkapiFilterConfiguration() {
         WSFilterConfigurationData config = getConfiguration();
