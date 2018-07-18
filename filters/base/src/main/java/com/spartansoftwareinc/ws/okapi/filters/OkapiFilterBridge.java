@@ -35,7 +35,7 @@ public class OkapiFilterBridge {
                 Event event = filter.next();
                 if (event.isTextUnit()) {
                     ITextUnit textUnit = event.getTextUnit();
-                    segmentTextContainerIfNeeded(textUnit.getSource());
+                    postProcessTextContainer(textUnit.getSource());
                     if (textUnit.isTranslatable()) {
                         processTextUnit(wsSegmentWriter, textUnit, breakSentences);
                     }
@@ -54,8 +54,8 @@ public class OkapiFilterBridge {
                 Event event = filter.next();
                 if (event.isTextUnit()) {
                     ITextUnit textUnit = event.getTextUnit();
-                    segmentTextContainerIfNeeded(textUnit.getSource());
-                    segmentTextContainerIfNeeded(textUnit.getTarget(targetLocale));
+                    postProcessTextContainer(textUnit.getSource());
+                    postProcessTextContainer(textUnit.getTarget(targetLocale));
                     if (textUnit.isTranslatable()) {
                         processTextUnit(segmentReader, targetLocale, textUnit);
                     }
@@ -67,7 +67,7 @@ public class OkapiFilterBridge {
         }
     }
 
-    protected void segmentTextContainerIfNeeded(TextContainer source) {
+    protected void postProcessTextContainer(TextContainer source) {
 
     }
 
