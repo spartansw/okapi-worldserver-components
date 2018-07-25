@@ -14,10 +14,16 @@ A client wanted to run the Okapi Markdown filter that with the
 features such as HTML subfilter that was available in post M35
 release, i.e. the version in the dev branch for 0.36-SNAPSHOT.
 
-This client was using a farely old version of WorldServer that
-they could managed to deploy on Java 7 runtime but not Java 8.
-In mean while, Okapi changed their minimum requirement for M36 
-to Java 8.
+This client was using WorldServer version 10.1.0 that
+they could managed to upgrade the Java runtime to Java 7,
+but not Java 8, due to a database driver incompatibility.
+In mean while, Okapi changed their minimum requirement to Java 8
+at the beginning of M36 development, i.e. 0.36-SNAPSHOT.
+
+Because of this Java version issue, any bug fixes and 
+new features introduced in version 0.36-SNAPSHOT would not be 
+available for this client in a usual way.  They needed
+a solution.
 
 
 STRATEGY
@@ -70,7 +76,7 @@ the values of plugin/configuration/target and
 plugin/configuration/source for maven-compiler-plugin
 in some pom.xml files have been changed to 1.7.
 But this not enough. It seems that if you use
-the mvn commmand on the computer where Java
+the mvn command on the computer where Java
 8 has been installed already, it seems that
 the build process still picks up the Java 8 library.
 
@@ -87,18 +93,26 @@ Java installations.
 
 Because the Okapi WorldServer Components depends on
 the Okapi Framework components, and they are a SNAPSHOT
-verison, they have to be built locally in this order.
+version, they have to be built locally in this order.
 
 Assuming you have the repositories copied in 
 okapi and okapi-worldserver-components directories:
 
+
 cd okapi/
 mvn7 clean install
+
+
+Not this builds the only the Markdown filter in okapi/filters/markdown/target.
+It does not build any other components or applications.
+After, this, type the followings:
+
 
 cd ../okapi-worldserver-components
 mvn7 clean install
 
 ls -l filters/markdown/target/okapi-ws-filters-markdown-1.8-M36SSjava7-SNAPSHOT-deployable.jar
+
 
 This JAR is the Markdown Filter for WorldServer.
 Note: DO NOT deliver or install the other JAR without
@@ -180,7 +194,7 @@ See the next section
 Use Inline Code Finder
 Check this in order to use the Inline Code Finder.
 
-Inline Code FInder Rules
+Inline Code Finder Rules
 Enter one more more regular expressions, one at a time,
 by clicking Add.
 Any substring matching any of the expressions will become
@@ -189,7 +203,7 @@ a code, and will be protected from being translated.
 
 Using Custom HTML Filters
 -------------------------
-Any of the options you configred above only applies to the
+Any of the options you configured above only applies to the
 Markdown proper part of the document, which is any part that
 are not a run of HTML tags. 
 
@@ -236,3 +250,4 @@ Click OK.
 In order to use the default HTML configuration builtin
 to the Markdown filter, leave this field blank.
 
+EOF

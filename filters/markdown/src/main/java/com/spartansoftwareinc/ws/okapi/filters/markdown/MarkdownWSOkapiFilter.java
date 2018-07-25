@@ -52,7 +52,7 @@ public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigura
         MarkdownFilter filter = new MarkdownFilter();
         filter.setParameters(config.getParameters());
 
-        LOG.warn("config({}).filterConfigDirPath={}", ((Object)config).toString(), config.getFilterConfigDirPath()); //TODO Change warn to debug
+        LOG.debug("config({}).filterConfigDirPath={}", ((Object)config).toString(), config.getFilterConfigDirPath());
         if (config.getHtmlSubfilter()==null) {
             return filter;
         }
@@ -69,12 +69,12 @@ public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigura
         fcm.setCustomConfigurationsDirectory(config.getFilterConfigDirPath());
         fcm.updateCustomConfigurations();
         
-        if (LOG.isDebugEnabled()) {
-	    if (fcm.getFiltersInfo().size() == 0) {
-		LOG.error("No filter found in the directory {}", config.getFilterConfigDirPath());
-		return filter;
-	    }
-
+	if (fcm.getFiltersInfo().size() == 0) {
+	    LOG.warn("No filter found in the directory {}", config.getFilterConfigDirPath());
+	    return filter;
+	}
+	    
+	if (LOG.isDebugEnabled()) {
 	    for (FilterInfo fi : fcm.getFiltersInfo()) {
 		LOG.warn("  filter named {} of class {} found", fi.name, fi.className);
 	    }

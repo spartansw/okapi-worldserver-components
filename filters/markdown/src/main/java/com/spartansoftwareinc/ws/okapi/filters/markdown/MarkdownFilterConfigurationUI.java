@@ -50,10 +50,7 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
                                 WSComponentConfigurationData config) {
         MarkdownFilterConfigurationData configData = getConfigurationData(config);
         configData.initializeFilterConfigDirPath(context);
-        LOG.warn("After calling initializeConfigDir(), configData.getFilterConfigDirPath()={}", configData.getFilterConfigDirPath());
         boolean okToUseCustomSubfilter = configData.getFilterConfigDirPath()!=null;
-        LOG.warn("okToUseCustomSubfilter={}", okToUseCustomSubfilter);
-
         
         UITable table = new UITable();     
         table.add(new UICheckbox(TRANSLATE_URLS_LABEL, TRANSLATE_URLS_NAME,
@@ -84,7 +81,7 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
     protected String validateAndSave(WSContext context, HttpServletRequest request, MarkdownFilterConfigurationData configData, String errors) {
         MarkdownFilterConfigurationData configurationData = getConfigurationData(configData);
         if (configData.getFilterConfigDirPath()==null) { // Need to invent a way to pass a hidden variable from buildConfigurationTable to avoid this.
-            LOG.warn("validateAndSave(...): filterConfigDirPath was null; calling initializeFilterConfigDirPath(context)");
+            LOG.debug("validateAndSave(...): filterConfigDirPath was null; calling initializeFilterConfigDirPath(context)");
             configData.initializeFilterConfigDirPath(context);            
         }
         
@@ -107,12 +104,20 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
         configurationData.setTranslateImageAltText(UIUtil.getBoolean(request, TRANSLATE_IMAGE_ALT_TEXT_NAME));
         
         String subfilterId = request.getParameter(SUBFILTER_ID_NAME);
-        if (subfilterId != null && subfilterId.isEmpty()) {
-            subfilterId = null;
+        if (subfilterId == null || subfilterId.trim().isEmpty()) {
+            configurationData.setHtmlSubfilter(null);
         } else {
-            ; //  TODO: Check if the specified id is valid and set errors if not.
+            subfilterId = subfilterId.trim();
+            if (subfilterId.endsWith(".fprm")) { // Rescue the common mistake; remove ".fprm" if the user included it.
+        	subfilterId = subfilterId.substring(0, subfilterId.length()-5); // 5 = ".fprm".length()
+            }
+            
+            if (configurationData.getAvailableConfigs().contains(subfilterId)) {
+                configurationData.setHtmlSubfilter(subfilterId);
+            } else {
+        	errors = addError(SUBFILTER_ID_NAME + "(available ids are:" + configurationData.getAvailableConfigs() + ")", errors);
+            }
         }
-        configurationData.setHtmlSubfilter(subfilterId);
         
         boolean useCodeFinder = UIUtil.getBoolean(request, USE_CODE_FINDER_NAME);
         configurationData.setUseCodeFinder(useCodeFinder);

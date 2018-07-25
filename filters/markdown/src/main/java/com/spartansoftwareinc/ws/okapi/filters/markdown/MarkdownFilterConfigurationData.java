@@ -33,11 +33,11 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
     private static final Logger LOG = LoggerFactory.getLogger(MarkdownFilterConfigurationData.class);
     private static final long serialVersionUID = 1L;
     
-    /* This isn't really a configuration item. It is here so that it can be passed from
-     * MarkdownWSOkapiFilter.parse(WSContext, WSNode, WSSegmentWriter) (defined in its parent, WSOkapiFilter) to
-     * MarkdownWSOkapiFilter.getConfiguredFilter(MarkdownFilterConfigurationData)
+    /* These are not real configuration items. They are here so that the information can be passed
+     * between the components.
      */
-    private String filterConfigDirPath = null; 
+    private String filterConfigDirPath = null; // The file system path of the AIS path FILTER_CONFIG_DIR_AIS_PATH
+    private List<String> availableConfigs = new ArrayList<>(); // Available custom HTML filter IDs.
 
     @Override
     protected Parameters getDefaultParameters() {
@@ -155,8 +155,8 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
     }
     
     public void initializeFilterConfigDirPath(WSContext context) {
-	LOG.warn("Entering MarkdownFilterConfigurationData({}).initializeConfigDir(WSContext)", ((Object)this).toString());
-	LOG.warn("filterConfigDirPath={}", filterConfigDirPath);
+	LOG.debug("Entering MarkdownFilterConfigurationData({}).initializeConfigDir(WSContext)", ((Object)this).toString());
+	LOG.debug("filterConfigDirPath={}", filterConfigDirPath);
 	if (filterConfigDirPath != null)
 	    return; // It's been done already.
 	File configDir = null;
@@ -167,26 +167,34 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
 
 	    WSNode configDirNode = aismgr.getNode(FILTER_CONFIG_DIR_AIS_PATH);
 	    if (configDirNode == null) {
-		LOG.error("The AIS node {} doesn't exist!", FILTER_CONFIG_DIR_AIS_PATH);
+		LOG.warn("The AIS node {} doesn't exist!", FILTER_CONFIG_DIR_AIS_PATH);
 	    } else {
 		configDir = configDirNode.getFile();
 		if (!configDir.isDirectory() || configDir.listFiles(htmlFprmFilter).length < 1) {
 		    configDir = null;
-		} else { // TODO: Remove this else block.
-		    LOG.warn("available .fprm files...");
+		} else {
+		    LOG.debug("Available .fprm files...");
 		    for (File f : configDir.listFiles(htmlFprmFilter)) {
-			LOG.warn("   {}", f.getName());
+			LOG.debug("   {}", f.getName());
+			availableConfigs.add(f.getName().split("\\.")[0]); // The part of the file before "." is the id.
 		    }
 		}
 	    }
 	} catch (WSAisException e) {
 	    LOG.error("Error accessing Okapi filter configuration directory.", e);
 	}
-	LOG.warn("configDir={}", configDir); // TODO: Remove me
 	filterConfigDirPath = (configDir == null) ? null : configDir.getAbsolutePath();
-	LOG.warn("MarkdownFilterConfigurationData({}).initializeFilterConfigDirPath(WSContext) is setting filterConfigDirPath={}", ((Object)this).toString(), filterConfigDirPath);
     }
 
+    /**
+     * Returns the list of available HTML configuration IDs.
+     * Note, {@link #initializeFilterConfigDirPath(WSContext)} must be called once before this can return the configuration list.
+     * @return a list of available configuration IDs
+     */
+    public List<String> getAvailableConfigs() {
+	return availableConfigs;
+    }
+    
     private static final Pattern htmlFprmPat = Pattern.compile("okf_html@[\\w\\d]+\\.fprm");
     private static final FilenameFilter htmlFprmFilter = new FilenameFilter() {
 	public boolean accept(File dir, String name) {
