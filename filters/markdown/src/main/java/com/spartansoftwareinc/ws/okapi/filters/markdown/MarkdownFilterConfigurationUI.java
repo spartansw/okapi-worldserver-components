@@ -34,6 +34,8 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
     private static final String SUBFILTER_ID_LABEL = "HTML Subfilter ID (Leave blank for default)";
     private static final String SUBFILTER_ID_UNAVAILABLE_LABEL = "HTML Subfilter ID *NONE AVAILABLE*";
     private static final String SUBFILTER_ID_NAME = "subfilterId";
+    private static final String NON_TRANSLATE_BLOCKS_LABEL = "No-translate Block Quote Starters (comman separated)";
+    private static final String NON_TRANSLATE_BLOCKS_NAME = "nonTranslateBlocks";
     private static final String USE_CODE_FINDER_LABEL = "Use Inline Code Finder";
     private static final String USE_CODE_FINDER_NAME = "useCodeFinder";
     private static final String CODE_FINDER_RULES_LABEL = "Inline Code Finder Rules (Regular Expressions)";
@@ -69,6 +71,8 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
         } else {
             table.add(new UITextField(SUBFILTER_ID_UNAVAILABLE_LABEL, SUBFILTER_ID_NAME, ""));
         }
+        table.add(new UITextField(NON_TRANSLATE_BLOCKS_LABEL, NON_TRANSLATE_BLOCKS_NAME,
+        	configData.getNonTranslateBlocks()));
         table.add(new UICheckbox(USE_CODE_FINDER_LABEL, USE_CODE_FINDER_NAME,
         	configData.getUseCodeFinder()));
         table.add(new UIMultiValueInput(CODE_FINDER_RULES_LABEL, CODE_FINDER_RULES_NAME,
@@ -118,6 +122,8 @@ public class MarkdownFilterConfigurationUI extends WSOkapiFilterUI<MarkdownFilte
         	errors = addError(SUBFILTER_ID_NAME + "(available ids are:" + configurationData.getAvailableConfigs() + ")", errors);
             }
         }
+        
+        configurationData.setNonTranslateBlocks(request.getParameter(NON_TRANSLATE_BLOCKS_NAME));
         
         boolean useCodeFinder = UIUtil.getBoolean(request, USE_CODE_FINDER_NAME);
         configurationData.setUseCodeFinder(useCodeFinder);

@@ -1,4 +1,5 @@
 Special README for the Java-7/M36 Markdown Filter
+2018-8-17 updated by T. Kuro Kurosaka
 2018-6-25 written by T. Kuro Kurosaka
 
 This README applies to for the custom version of
@@ -13,6 +14,7 @@ MOTIVATION
 A client wanted to run the Okapi Markdown filter that with the
 features such as HTML subfilter that was available in post M35
 release, i.e. the version in the dev branch for 0.36-SNAPSHOT.
+(Later updated to 0.36, the official release.)
 
 This client was using WorldServer version 10.1.0 that
 they could managed to upgrade the Java runtime to Java 7,
@@ -34,7 +36,7 @@ and the HTML filter, that is used from the Markdown filter, and then
 downgrade it to work with the Java 7 runtime.
 
 For WorldServer, add a Markdown filter, then adjust pom.xml files
-to build the minimum needed to build the Markdown filter,
+to build the minimum needed to build only the Markdown filter,
 and use the Java 7 version of Okapi 0.36-SNAPSHOT.
 Adjusting pom.xml files was necessary because the trimmed down, Java-7
 compatible Okapi only has the Markdown filter.
@@ -57,8 +59,8 @@ Branch: java7dg (branched from dev commit c7d1537, only in the fork)
 	Note: This branch includes bug fixes up to the issue 715. 
 	It does not include the bug fix to the issue 686.
 
-Artifact Version: 0.36-java7-SNAPSHOT
-
+Artifact Version: 0.36-java7 (without -SNAPSHOT)
+	
 
 Okapi WorldServer Components
 ----------------------------
@@ -66,7 +68,7 @@ Repository: https://github.com/spartansw/okapi-worldserver-components
 
 Branch: markdown-only-M36java7
 
-Artifact Version: 1.8-M36SSjava7-SNAPSHOT
+Artifact Version: 1.8-M36java7-SNAPSHOT (With -SNAPSHOT but without SS after M36)
 
 
 SPECIAL BUILD INSTRUCTIONS
@@ -81,23 +83,25 @@ the mvn command on the computer where Java
 the build process still picks up the Java 8 library.
 
 To avoid this, it is best to run the maven itself
-with Java 7 runtime.  I do this by defining an alias in .bashrc as:
+with Java 7 runtime.  If you have a Java 7 JDK at
+/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home
+for example, you would define mvn7 as alias in your .bashrc like:
+
 alias mvn7='JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_25.jdk/Contents/Home MAVEN_OPTS=-Xmx2g mvn'
 
 and use mvn7 instead of mvn.
 
-MAVEN_OPTS=-Xmx2g was necessary probably because the
-default heap size differ between Java 7 and Java 8.
-The JAVA_HOME location has to be modified to suite your
-Java installations.
+NOTE: MAVEN_OPTS=-Xmx2g was necessary in my environment
+probably because the default heap size differ between Java 7 and Java 8.
+Adjust this for your environment.
 
 Because the Okapi WorldServer Components depends on
-the Okapi Framework components, and they are a SNAPSHOT
-version, they have to be built locally in this order.
+the Okapi Framework components of a private branch,
+you have to build the Okapi components before the WorldServer
+components.
 
 Assuming you have the repositories copied in 
 okapi and okapi-worldserver-components directories:
-
 
 cd okapi/
 mvn7 clean install
@@ -111,7 +115,7 @@ After, this, type the followings:
 cd ../okapi-worldserver-components
 mvn7 clean install
 
-ls -l filters/markdown/target/okapi-ws-filters-markdown-1.8-M36SSjava7-SNAPSHOT-deployable.jar
+ls -l filters/markdown/target/okapi-ws-filters-markdown-1.8-M36java7-SNAPSHOT-deployable.jar
 
 
 This JAR is the Markdown Filter for WorldServer.
@@ -137,7 +141,7 @@ On WorldServer, navigate:
 Management -> Administration -> Customization
 Choose "Filter" from the drop down list.
 Click Add and select:
-okapi-ws-filters-markdown-1.8-M36SSjava7-SNAPSHOT-deployable.jar
+okapi-ws-filters-markdown-1.8-M36java7-SNAPSHOT-deployable.jar
 Press OK.
 
 While still in the Customization window, choose "MIME Types".

@@ -5,7 +5,7 @@
 
   <groupId>com.spartansoftwareinc.ws.okapi</groupId>
   <artifactId>okapi-ws-components</artifactId>
-  <version>1.8-M36SSjava7-SNAPSHOT</version>
+  <version>1.8-M36java7-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -20,7 +20,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <ws.version>10.4.3.195</ws.version>
-    <okapi.version>0.36-java7-SNAPSHOT</okapi.version>
+    <okapi.version>0.36-java7</okapi.version>
     <mainPackage>com.spartansoftwareinc.ws.okapi</mainPackage>
   </properties>
 

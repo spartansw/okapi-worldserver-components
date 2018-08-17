@@ -43,6 +43,7 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
     protected Parameters getDefaultParameters() {
         Parameters parameters = new Parameters();
         parameters.reset();
+        parameters.setNonTranslateBlocks(""); // reset() should do this but it doesn't.
         return parameters;
     }
     
@@ -110,6 +111,20 @@ public class MarkdownFilterConfigurationData extends WSOkapiFilterConfigurationD
         Parameters params = getParameters();
         params.setHtmlSubfilter(htmlSubfilterId);
         setParameters(params);
+    }
+    
+    // nonTranslateBlocks
+    // A comma separated list of strings. If a quoted block starts with one of those
+    // strings, that block will not be extracted.
+    // Should be empty (""), not null, if all blocks are subject to extraction.
+    public String getNonTranslateBlocks() {
+	return getParameters().getNonTranslateBlocks();
+    }
+    
+    public void setNonTranslateBlocks(String nonTranslatableBlocks) {
+	Parameters  params = getParameters();
+	params.setNonTranslateBlocks(nonTranslatableBlocks);
+	setParameters(params);
     }
     
     // useCodeFinder
