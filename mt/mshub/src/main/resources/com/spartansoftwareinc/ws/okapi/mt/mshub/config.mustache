@@ -1,0 +1,50 @@
+{{#errorMessage}}
+<p style="color: red;">{{errorMessage}}</p>
+{{/errorMessage}}
+<table cellpadding="3" cellspacing="1" border="0">
+  <tbody>
+    {{#azureKey}}
+    <tr>
+      <td class="prop_table_left_side">
+        {{param.label}}:
+      </td>
+      <td class="prop_table_right_side">
+        <input type="text" name="{{param.nameAttr}}" value="{{value}}" size="{{size}}">
+      </td>
+    </tr>
+    {{/azureKey}}
+
+    {{#category}}
+    <tr>
+      <td class="prop_table_left_side">
+        {{param.label}}:
+      </td>
+      <td class="prop_table_right_side">
+        <input type="text" name="{{param.nameAttr}}" value="{{value}}" size="{{size}}">
+      </td>
+    </tr>
+    {{/category}}
+
+    {{#matchScore}}
+    <tr>
+      <td class="prop_table_left_side">
+        {{param.label}}:
+      </td>
+      <td class="prop_table_right_side">
+        <input type="number" min="{{min}}" max="{{max}}" name="{{param.nameAttr}}" value="{{value}}">
+      </td>
+    </tr>
+    {{/matchScore}}
+
+    {{#localeMapAISPath}}
+    <tr>
+      <td class="prop_table_left_side">
+        {{param.label}}:
+      </td>
+      <td class="prop_table_right_side">
+        <input type="text" name="{{param.nameAttr}}" value="{{value}}" size="{{size}}">
+      </td>
+    </tr>
+    {{/localeMapAISPath}}
+  </tbody>
+</table>

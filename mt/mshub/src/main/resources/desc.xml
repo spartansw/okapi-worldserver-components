@@ -1,3 +1,4 @@
 <components>
     <mt_adapter class="com.spartansoftwareinc.ws.okapi.mt.mshub.WSMicrosoftMTAdapter" />
+    <mt_adapter class="com.spartansoftwareinc.ws.okapi.mt.mshub.WSMicrosoftMTAdapterV3" />
 </components>
