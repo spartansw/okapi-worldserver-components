@@ -88,7 +88,7 @@ public abstract class MockWSNode implements WSNode {
 
     @Override
     public void lock() throws WSAisException {
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -113,7 +113,7 @@ public abstract class MockWSNode implements WSNode {
 
     @Override
     public void unlock() throws WSAisException {
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -199,7 +199,7 @@ public abstract class MockWSNode implements WSNode {
 
     @Override
     public String getFingerprint() throws WSAisException {
-        throw new UnsupportedOperationException();
+        return Integer.toString(getPath().hashCode(), Character.MIN_RADIX); // Returns a hex string.
     }
 
     @Override

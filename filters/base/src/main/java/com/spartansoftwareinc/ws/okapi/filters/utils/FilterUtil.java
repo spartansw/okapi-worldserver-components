@@ -55,7 +55,7 @@ public class FilterUtil {
         }
         return (WSMarkupSegment)srcAisSegment;
     }
-
+/*
     public static File convertAisContentIntoFile(WSNode aisContent) throws IOException,
             WSAisException {
         return convertContentIntoFile(aisContent.getInputStream(), getFileExtension(aisContent.getName()));
@@ -66,7 +66,7 @@ public class FilterUtil {
         Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
         return tempFile.toFile();
     }
-
+*/
     private static String getFileExtension(String path) {
         int i = path.lastIndexOf('.');
         if (i == -1) {

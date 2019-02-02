@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigurationData> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MarkdownWSOkapiFilter.class);
-    private static final String FILTER_NAME = "Okapi Markdown Filter";
+    private static final String FILTER_NAME = "Okapi Markdown Filter (" + Version.PROJECT_VERSION + ")";
     private static final String FILTER_DESCRIPTION = "World Server Markdown Filter using Okapi Markdown Filter";
     private static final String DEFAULT_ENCODING = "UTF-8";
 
@@ -56,30 +56,30 @@ public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigura
         if (config.getHtmlSubfilter()==null) {
             return filter;
         }
-        
+
         // Make sure custom config dir has filters.
         if (config.getFilterConfigDirPath()==null) {
             LOG.error("No filter config directory specified.");
             return filter;
         }
-        
+
         FilterConfigurationMapper fcm = new FilterConfigurationMapper();
         fcm.addConfigurations(HtmlFilter.class.getCanonicalName());
-		
+
         fcm.setCustomConfigurationsDirectory(config.getFilterConfigDirPath());
         fcm.updateCustomConfigurations();
-        
+
 	if (fcm.getFiltersInfo().size() == 0) {
 	    LOG.warn("No filter found in the directory {}", config.getFilterConfigDirPath());
 	    return filter;
 	}
-	    
+
 	if (LOG.isDebugEnabled()) {
 	    for (FilterInfo fi : fcm.getFiltersInfo()) {
 		LOG.warn("  filter named {} of class {} found", fi.name, fi.className);
 	    }
         }
-        
+
         filter.setFilterConfigurationMapper(fcm);
         return filter;
     }
@@ -99,7 +99,7 @@ public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigura
 	super.parse(context, srcContent, wsSegmentWriter);
     }
 
-    
+
     @Override
     protected MarkdownFilterConfigurationData getOkapiFilterConfiguration() {
         WSFilterConfigurationData config = getConfiguration();

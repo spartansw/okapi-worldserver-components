@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,7 +59,7 @@ public class FilterTestHarness {
             list.add(new MockWSMarkupSegment(OkapiFilterBridge.SEGMENT_SEPARATOR));
         }
         MockWSSegmentWriter expectWriter = new MockWSSegmentWriter(list);
-        filter.parse(mock(WSContext.class), srcNode, expectWriter);
+        filter.parse(mockContext(mockAisManager(srcNode)), srcNode, expectWriter);
         expectWriter.verifyComplete();
     }
 
@@ -70,7 +71,6 @@ public class FilterTestHarness {
         Map<String, WSNode> sourceAisMapping = new HashMap<>();
         sourceAisMapping.put(sourceResource, new ResourceMockWSNode(sourceResource, charset, MockWSLocale.ENGLISH));
         filter.save(mockContext(mockAisManager(sourceAisMapping)), tgtNode, segReader);
-        System.out.println("SourceFile: " + sourceResource + ", Temp file: " + temp);
 
         try (FileInputStream fis = new FileInputStream(temp)) {
             assertTrue(new FileCompare().filesExactlyTheSame(
@@ -103,9 +103,24 @@ public class FilterTestHarness {
         }
     }
 
-    private WSContext mockContext(WSAisManager ais) {
+    // This version of mockAisManager returns WSAisManager that can only getNode(String) and copy(WSNode, String).
+    // The WSAisManager.getNode(String) returns a new ResourceMockWSNode for srcNode, or its saved node.
+    private WSAisManager mockAisManager(WSNode srcNode) {
+        WSAisManager mgr = mock(WSAisManager.class);
+        try {
+            doNothing().when(mgr).copy(isA(WSNode.class), isA(String.class));
+            when(mgr.getNode(any(String.class))).thenReturn(null);
+            when(mgr.getNode(matches(srcNode.getPath() + "(-.*\\.save)?")))
+                .thenReturn(new ResourceMockWSNode(srcNode.getPath(), StandardCharsets.UTF_8, MockWSLocale.ENGLISH));
+            return mgr;
+        } catch (WSAisException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private WSContext mockContext(WSAisManager am) {
         WSContext context = mock(WSContext.class);
-        when(context.getAisManager()).thenReturn(ais);
+        when(context.getAisManager()).thenReturn(am);
         return context;
     }
 }

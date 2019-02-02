@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.okapi</groupId>
     <artifactId>okapi-ws-components</artifactId>
-    <version>1.8-M36java7-SNAPSHOT</version>
+    <version>1.8-M36java7-rev1-SNAPSHOT</version>
   </parent>
 
   <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
