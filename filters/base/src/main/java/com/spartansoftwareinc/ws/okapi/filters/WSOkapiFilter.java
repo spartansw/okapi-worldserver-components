@@ -1,20 +1,16 @@
 package com.spartansoftwareinc.ws.okapi.filters;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.WSRuntimeException;
 import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.ais.WSAisManager;
 import com.idiominc.wssdk.ais.WSNode;
-import com.idiominc.wssdk.asset.WSAssetManager;
 import com.idiominc.wssdk.asset.WSAssetSegmentationException;
-import com.idiominc.wssdk.asset.WSAssetTranslation;
 import com.idiominc.wssdk.asset.WSMarkupSegment;
 import com.idiominc.wssdk.component.filter.WSFilter;
 import com.idiominc.wssdk.component.filter.WSFilterConfigurationData;
@@ -44,13 +40,12 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
      */
     @Override
     public void parse(WSContext context, WSNode srcContent, WSSegmentWriter wsSegmentWriter) {
-        File tempSourceFile = null; //TODO: Remove this and all usage of tempSourceFile if the experiment not using it succeeds.
         String fingerPrint = null;
         try {
             WSAisManager am = context.getAisManager();
             srcContent.lock(); // Lock the node so that it won't be written.
             fingerPrint = srcContent.getFingerprint();
-            getLoggerWithContext().warn("parse() called with srcContent whose finger print is {}.", fingerPrint); // TODO: Downgrade to debug or trace.
+            getLoggerWithContext().debug("parse() called with srcContent whose finger print is {}.", fingerPrint);
             String saveFilePath = srcContent.getPath() + "-" + fingerPrint + ".save";
 
             WSNode savedNode = am.getNode(saveFilePath);
@@ -63,12 +58,11 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
                     return;
                 }
             }
-            getLoggerWithContext().warn("savedNode({}) has been created.", savedNode.getPath()); // TODO: Downgrade to debug or trace.
+            getLoggerWithContext().debug("savedNode({}) has been created.", savedNode.getPath());
 
-            //tempSourceFile = FilterUtil.convertAisContentIntoFile(srcContent);
             LocaleId okapiLocale = FilterUtil.getOkapiLocaleId(srcContent);
 
-            RawDocument srcRawDocument = new RawDocument(srcContent.getInputStream()/*tempSourceFile.toURI()*/,
+            RawDocument srcRawDocument = new RawDocument(srcContent.getInputStream(),
                     FilterUtil.detectEncoding(srcContent, getDefaultEncoding()), okapiLocale);
             srcRawDocument.setTargetLocale(okapiLocale);
 
@@ -76,9 +70,6 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
             writeSourceAisPathSegment(savedNode, getOkapiFilterConfiguration(), wsSegmentWriter);
             filterBridge.writeWsSegments(filter, srcRawDocument, wsSegmentWriter, isApplyingSegmentation());
 
-//        } catch (IOException ex) {
-//            getLoggerWithContext().error("File IO failure when parsing WSNode content", ex);
-//            throw new WSAssetSegmentationException(ex);
         } catch (WSAisException ex) {
             getLoggerWithContext().error("Failure to access content repository", ex);
             throw new WSAssetSegmentationException(ex);
@@ -86,13 +77,6 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
             getLoggerWithContext().error(ex.getMessage(), ex);
             throw new WSAssetSegmentationException(ex);
         } finally {
-            if (tempSourceFile != null) {
-                //noinspection ResultOfMethodCallIgnored
-                if (!tempSourceFile.delete()) {
-                    getLoggerWithContext().warn("Couldn't delete temp file {} for filter source node {}",
-                             tempSourceFile, srcContent.getPath());
-                }
-            }
             try {
                 srcContent.unlock();
             } catch (WSAisException ex) {
@@ -121,10 +105,9 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
 
     @Override
     public void save(WSContext context, WSNode targetContent, WSSegmentReader segmentReader) {
-        File tempSourceFile = null; //TODO: Remove me
 
         try (OutputStream targetFile = targetContent.getOutputStream()) {
-            getLoggerWithContext().warn("save() called with targetContent whose finger print is {}.", targetContent.getFingerprint()); // TODO: Downgrade to debug or trace.
+            getLoggerWithContext().debug("save() called with targetContent whose finger print is {}.", targetContent.getFingerprint());
 
             LocaleId targetOkapiLocale = FilterUtil.getOkapiLocaleId(targetContent);
 
@@ -134,7 +117,7 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
             MarkupSegmentMetadata<T> meta = MarkupSegmentMetadata.fromSegment(segment, configData);
 
             WSNode srcContent = context.getAisManager().getNode(meta.getAsset());
-            getLoggerWithContext().warn("save() is using the saved source node({}) for merge.", srcContent.getPath()); // TODO: Downgrade to debug or trace.
+            getLoggerWithContext().info("save() is using the saved source node({}) for merge.", srcContent.getPath());
 
 
             IFilter filter = getConfiguredFilter(meta.getConfig());
@@ -142,10 +125,9 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
             filterWriter.setOutput(targetFile);
             filterWriter.setOptions(targetOkapiLocale, FilterUtil.detectEncoding(targetContent, getDefaultEncoding()));
 
-            //tempSourceFile = FilterUtil.convertAisContentIntoFile(srcContent);
             LocaleId srcOkapiLocale = FilterUtil.getOkapiLocaleId(srcContent);
 
-            RawDocument srcRawDocument = new RawDocument(srcContent.getInputStream() /*tempSourceFile.toURI()*/,
+            RawDocument srcRawDocument = new RawDocument(srcContent.getInputStream(),
                     FilterUtil.detectEncoding(srcContent, getDefaultEncoding()), srcOkapiLocale);
             srcRawDocument.setTargetLocale(targetOkapiLocale);
 
@@ -157,11 +139,6 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
             getLoggerWithContext().error("Failure to access content repository", ex);
         } catch (WSAisException ex) {
             getLoggerWithContext().error(ex.getMessage(), ex);
-        } finally {
-            if (tempSourceFile != null) {
-                //noinspection ResultOfMethodCallIgnored
-                tempSourceFile.delete();
-            }
         }
     }
 

@@ -76,7 +76,7 @@ public class OkapiFilterBridge {
             SegmentInfoHolder filterSegment = convertToCustomSegment(segment);
             wsSegmentWriter.writeTextSegment(filterSegment.getEncodedText(),
                     filterSegment.getPlaceholders(), breakSentences);
-            LOG.warn("Writing WS segment '{}'", filterSegment.getEncodedText()); // TODO: Demote to debug.
+            LOG.debug("Writing WS segment '{}'", filterSegment.getEncodedText());
             wsSegmentWriter.writeMarkupSegment(SEGMENT_SEPARATOR);
         }
     }
@@ -121,13 +121,7 @@ public class OkapiFilterBridge {
             processWSSegment(okapiSegment, wsTextSegments);
         }
 
-        { //TODO: Remove this block
-            if (wsSegment == null) {
-                LOG.error("wsSegment == null!!!");
-            } else {
-                LOG.warn("wsSegment is instance of {}; wsSegment.getContent() => \"{}\"", wsSegment.getClass().getCanonicalName(), wsSegment.getContent());
-            }
-        }
+        LOG.debug("wsSegment is instance of {}; wsSegment.getContent() => \"{}\"", wsSegment.getClass().getCanonicalName(), wsSegment.getContent());
         require(wsSegment instanceof WSMarkupSegment, String.format(MARKUP_SEG_VALIDATION_ERR_MSG,
                 wsSegment.getClass().toString(), wsSegment.getContent()));
         return textContainer;
@@ -138,8 +132,8 @@ public class OkapiFilterBridge {
         for (WSTextSegment wsTextSegment : wsTextSegments) {
             wsTextContent.append(wsTextSegment.getContent());
         }
-        LOG.warn("Reading WS segment '{}', Okapi Segment '{}'",
-                wsTextContent, okapiSegment.getContent().getCodedText()); //TODO: Demote to debug.
+        LOG.debug("Reading WS segment '{}', Okapi Segment '{}'",
+                wsTextContent, okapiSegment.getContent().getCodedText());
 
         TextFragment okapiFragment = okapiSegment.getContent();
         TextFragment convertedTextFrag = writeToTextSegment(wsTextSegments, okapiFragment);
