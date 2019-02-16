@@ -11,16 +11,21 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Joiner;
 import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.WSRuntimeException;
+import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.component.WSComponentConfigurationData;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
 
 public class WSMicrosoftMTAdapterV3ConfigurationUI extends WSComponentConfigurationUI {
+    private static final Logger LOG = Logger.getLogger(WSMicrosoftMTAdapterV3ConfigurationUI.class);
+
     /** Parameters that can be configured by WS users. */
     public enum Parameter {
         AZURE_KEY("Azure Key", "azureKey"),
@@ -130,10 +135,28 @@ public class WSMicrosoftMTAdapterV3ConfigurationUI extends WSComponentConfigurat
             errors.add(Parameter.MATCH_SCORE.label);
         }
 
+        String aisPath = request.getParameter(Parameter.LOCALE_MAP_AIS_PATH.nameAttr);
+        if (aisPath == null) {
+            errors.add(Parameter.LOCALE_MAP_AIS_PATH.label);
+
+        } else {
+            aisPath = aisPath.trim();
+
+            try {
+                if (wsContext.getAisManager().getMetaDataNode(aisPath) == null) {
+                    errors.add(Parameter.LOCALE_MAP_AIS_PATH.label);
+                }
+            } catch (WSAisException e) {
+                LOG.error("Error saving locale map ais path configuration", e);
+                errors.add(Parameter.LOCALE_MAP_AIS_PATH.label);
+            }
+        }
+
         if (errors.isEmpty()) {
             data.setAzureKey(azureKey.trim());
             data.setCategory(request.getParameter(Parameter.CATEGORY.nameAttr).trim());
             data.setMatchScore(matchScore);
+            data.setLocaleMapAISPath(aisPath);
         }
     }
 
