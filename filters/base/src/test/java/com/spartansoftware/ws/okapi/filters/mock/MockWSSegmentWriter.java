@@ -31,7 +31,7 @@ public class MockWSSegmentWriter implements WSSegmentWriter {
 
     private WSSegment nextSegment() {
         assertTrue("Unexpected segment", expectedIt.hasNext());
-        return expectedIt.next(); 
+        return expectedIt.next();
     }
 
     public void verifyComplete() {
@@ -77,7 +77,7 @@ public class MockWSSegmentWriter implements WSSegmentWriter {
     public void writeMarkupSegment(String content) {
         WSSegment next = nextSegment();
         assertTrue(next instanceof WSMarkupSegment);
-        assertEquals(((WSMarkupSegment)next).getContent(), content);
+        assertEquals(((WSMarkupSegment)next).getContent(), content.replaceFirst("-[\\d\\w]+\\.save", "")); // Ignore the snapshot file suffix.
     }
 
     @Override

@@ -59,7 +59,9 @@ public class FilterTestHarness {
             list.add(new MockWSMarkupSegment(OkapiFilterBridge.SEGMENT_SEPARATOR));
         }
         MockWSSegmentWriter expectWriter = new MockWSSegmentWriter(list);
-        filter.parse(mockContext(mockAisManager(srcNode)), srcNode, expectWriter);
+        WSAisManager mockedAisMgr = mockAisManager(srcNode);
+        WSContext mockedContext = mockContext(mockedAisMgr);
+        filter.parse(mockedContext, srcNode, expectWriter);
         expectWriter.verifyComplete();
     }
 
@@ -109,9 +111,12 @@ public class FilterTestHarness {
         WSAisManager mgr = mock(WSAisManager.class);
         try {
             doNothing().when(mgr).copy(isA(WSNode.class), isA(String.class));
-            when(mgr.getNode(any(String.class))).thenReturn(null);
-            when(mgr.getNode(matches(srcNode.getPath() + "(-.*\\.save)?")))
+            when(mgr.getNode(matches(WSOkapiFilter.ASSET_SNAPSHOT_AIS_ROOT_FOLDER_DEFAULT + srcNode.getPath() + "-[\\d\\w]+\\.save")))
+                .thenReturn(new ResourceMockWSNode(srcNode.getPath() + "-11111.save", StandardCharsets.UTF_8, MockWSLocale.ENGLISH));
+            when(mgr.getNode(eq(srcNode.getPath())))
                 .thenReturn(new ResourceMockWSNode(srcNode.getPath(), StandardCharsets.UTF_8, MockWSLocale.ENGLISH));
+            WSNode mockedFolderNode = mockFolderNode();
+            when(mgr.getNode(eq(WSOkapiFilter.ASSET_SNAPSHOT_AIS_ROOT_FOLDER_DEFAULT))).thenReturn(mockedFolderNode);
             return mgr;
         } catch (WSAisException e) {
             throw new RuntimeException(e);
@@ -122,5 +127,11 @@ public class FilterTestHarness {
         WSContext context = mock(WSContext.class);
         when(context.getAisManager()).thenReturn(am);
         return context;
+    }
+
+    private WSNode mockFolderNode() throws WSAisException {
+        WSNode node = mock(WSNode.class);
+        when(node.isContainer()).thenReturn(true);
+        return node;
     }
 }

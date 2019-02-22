@@ -107,7 +107,10 @@ public abstract class MockWSNode implements WSNode {
     }
 
     @Override
-    public void setProperty(WSSystemPropertyKey arg0, Object arg1) throws WSAisException {
+    public void setProperty(WSSystemPropertyKey key, Object value) throws WSAisException {
+        if (key == WSSystemPropertyKey.LOCALE) {
+            return;
+        }
         throw new UnsupportedOperationException();
     }
 
@@ -199,7 +202,8 @@ public abstract class MockWSNode implements WSNode {
 
     @Override
     public String getFingerprint() throws WSAisException {
-        return Integer.toString(getPath().hashCode(), Character.MIN_RADIX); // Returns a hex string.
+        return Long.toString(getPath().hashCode() & 0xffffffffL, // Ignore the sign bit so that the finger print won't start with "-".
+                Character.MAX_RADIX); // Returns a number in radix 36.
     }
 
     @Override

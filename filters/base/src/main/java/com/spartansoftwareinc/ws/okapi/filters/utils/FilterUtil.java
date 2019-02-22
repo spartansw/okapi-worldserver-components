@@ -1,12 +1,6 @@
 package com.spartansoftwareinc.ws.okapi.filters.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.Locale;
 
 import com.idiominc.wssdk.ais.WSAisException;
@@ -54,25 +48,6 @@ public class FilterUtil {
             throw new IllegalStateException("Expected markup segment, found " + srcAisSegment);
         }
         return (WSMarkupSegment)srcAisSegment;
-    }
-/*
-    public static File convertAisContentIntoFile(WSNode aisContent) throws IOException,
-            WSAisException {
-        return convertContentIntoFile(aisContent.getInputStream(), getFileExtension(aisContent.getName()));
-    }
-
-    public static File convertContentIntoFile(InputStream is, String extension) throws IOException {
-        Path tempFile = Files.createTempFile("wsokapi", getFileExtension(extension));
-        Files.copy(is, tempFile, StandardCopyOption.REPLACE_EXISTING);
-        return tempFile.toFile();
-    }
-*/
-    private static String getFileExtension(String path) {
-        int i = path.lastIndexOf('.');
-        if (i == -1) {
-            return "";
-        }
-        return path.substring(i);
     }
 
     public static String join(String[] array, String delimiter) {

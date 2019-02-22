@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 public class MarkdownWSOkapiFilter extends WSOkapiFilter<MarkdownFilterConfigurationData> {
 
     private static final Logger LOG = LoggerFactory.getLogger(MarkdownWSOkapiFilter.class);
-    private static final String FILTER_NAME = "Okapi Markdown Filter (" + Version.PROJECT_VERSION + ")";
-    private static final String FILTER_DESCRIPTION = "World Server Markdown Filter using Okapi Markdown Filter";
+    private static final String FILTER_NAME = "Okapi Markdown Filter";
+    private static final String FILTER_DESCRIPTION = "Okapi WorldServer Markdown Filter version " + Version.PROJECT_VERSION;
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     @Override

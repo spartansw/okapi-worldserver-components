@@ -10,12 +10,14 @@ import com.idiominc.wssdk.WSRuntimeException;
 import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.ais.WSAisManager;
 import com.idiominc.wssdk.ais.WSNode;
+import com.idiominc.wssdk.ais.WSSystemPropertyKey;
 import com.idiominc.wssdk.asset.WSAssetSegmentationException;
 import com.idiominc.wssdk.asset.WSMarkupSegment;
 import com.idiominc.wssdk.component.filter.WSFilter;
 import com.idiominc.wssdk.component.filter.WSFilterConfigurationData;
 import com.idiominc.wssdk.component.filter.WSSegmentReader;
 import com.idiominc.wssdk.component.filter.WSSegmentWriter;
+import com.idiominc.wssdk.user.WSLocale;
 import com.spartansoftwareinc.ws.okapi.filters.utils.FilterUtil;
 
 import net.sf.okapi.common.LocaleId;
@@ -24,6 +26,8 @@ import net.sf.okapi.common.filterwriter.IFilterWriter;
 import net.sf.okapi.common.resource.RawDocument;
 
 public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>> extends WSFilter{
+    /*package*/static final String ASSET_SNAPSHOT_AIS_ROOT_FOLDER_DEFAULT = "/Okapi/AssetSnapshots";
+    protected String assetSnaoshotAisRootFolder = ASSET_SNAPSHOT_AIS_ROOT_FOLDER_DEFAULT;
     protected OkapiFilterBridge filterBridge = new OkapiFilterBridge();
 
     /**
@@ -39,26 +43,37 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
      * we make a copy of the source node.
      */
     @Override
-    public void parse(WSContext context, WSNode srcContent, WSSegmentWriter wsSegmentWriter) {
+    public void parse(WSContext context, WSNode srcContent, WSSegmentWriter wsSegmentWriter)
+            throws WSAssetSegmentationException {
         String fingerPrint = null;
         try {
             WSAisManager am = context.getAisManager();
             srcContent.lock(); // Lock the node so that it won't be written.
             fingerPrint = srcContent.getFingerprint();
             getLoggerWithContext().debug("parse() called with srcContent whose finger print is {}.", fingerPrint);
-            String saveFilePath = srcContent.getPath() + "-" + fingerPrint + ".save";
+            WSLocale srcLoc = (WSLocale) srcContent.getProperty(WSSystemPropertyKey.LOCALE);
 
-            WSNode savedNode = am.getNode(saveFilePath);
-            if (savedNode == null) {
+            // Verify the root folder where the assets' snapshots will be saved exists.
+            if (am.getNode(assetSnaoshotAisRootFolder)==null || !am.getNode(assetSnaoshotAisRootFolder).isContainer()) {
+                throw new WSAssetSegmentationException(String.format(
+                        "Root folder where source assets' snapshots will be saved, \"%s\", does not exist!", assetSnaoshotAisRootFolder));
+            }
+
+            String saveFilePath = assetSnaoshotAisRootFolder + srcContent.getPath() + "-" + fingerPrint + ".save";
+
+            WSNode savedNode = am.getNode(saveFilePath); // We might have dealt with the same version of the source asset already.
+            if (savedNode == null) { // This is the first time. Make a snapshot copy.
+                getLoggerWithContext().debug("Calling copy({}, {}})...", srcContent.getPath(), saveFilePath);
                 am.copy(srcContent, saveFilePath);
                 savedNode = am.getNode(saveFilePath);
                 if( savedNode == null) {
                     getLoggerWithContext().error("Node {} was copied to {}, but getNode on the saved node returned null. Giving up.",
                             srcContent.getPath(), saveFilePath);
-                    return;
+                    throw new WSAssetSegmentationException("Error obtaining the snapshot copy node.");
                 }
+                savedNode.setProperty(WSSystemPropertyKey.LOCALE, srcLoc); // Copy the locale.
+                getLoggerWithContext().info("Source asset snapshot \"{}\" has been created.", savedNode.getPath());
             }
-            getLoggerWithContext().debug("savedNode({}) has been created.", savedNode.getPath());
 
             LocaleId okapiLocale = FilterUtil.getOkapiLocaleId(srcContent);
 
@@ -80,7 +95,7 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
             try {
                 srcContent.unlock();
             } catch (WSAisException ex) {
-                getLoggerWithContext().error("Unlocking the source node failed: {}", ex);
+                getLoggerWithContext().error("Unlocking the source node \"{}\" failed", srcContent.getPath());
             }
         }
     }
@@ -117,8 +132,8 @@ public abstract class WSOkapiFilter<T extends WSOkapiFilterConfigurationData<?>>
             MarkupSegmentMetadata<T> meta = MarkupSegmentMetadata.fromSegment(segment, configData);
 
             WSNode srcContent = context.getAisManager().getNode(meta.getAsset());
-            getLoggerWithContext().info("save() is using the saved source node({}) for merge.", srcContent.getPath());
-
+            getLoggerWithContext().info("save() is merging the cached segments with the source asset snapshot \"{}\".",
+                                        srcContent.getPath());
 
             IFilter filter = getConfiguredFilter(meta.getConfig());
             IFilterWriter filterWriter = filter.createFilterWriter();
