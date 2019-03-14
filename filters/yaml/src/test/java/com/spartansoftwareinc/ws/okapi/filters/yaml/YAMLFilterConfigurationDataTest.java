@@ -15,6 +15,7 @@ public class YAMLFilterConfigurationDataTest {
             "useKeyAsName.b=true" + TERMINATOR +
             "useFullKeyPath.b=true" + TERMINATOR +
             "useCodeFinder.b=true" + TERMINATOR +
+            "subFilterProcessLiteralAsBlock.b=false" + TERMINATOR +
             "escapeNonAscii.b=false" + TERMINATOR +
             "wrap.b=true" + TERMINATOR +
             "codeFinderRules.count.i=3" + TERMINATOR +

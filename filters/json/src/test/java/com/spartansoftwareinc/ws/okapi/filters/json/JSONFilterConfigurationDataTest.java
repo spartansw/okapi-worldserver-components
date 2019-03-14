@@ -23,6 +23,7 @@ public class JSONFilterConfigurationDataTest {
                 "useLeadingSlashOnKeyPath.b=true" + TERMINATOR +
                 "escapeForwardSlashes.b=true" + TERMINATOR +
                 "useCodeFinder.b=true" + TERMINATOR +
+                "noteProducingKeys=" + TERMINATOR +
                 "subfilter=" + TERMINATOR +
                 "codeFinderRules.count.i=9" + TERMINATOR +
                 "codeFinderRules.rule0=:[a-zA-Z0-9_]+" + TERMINATOR +

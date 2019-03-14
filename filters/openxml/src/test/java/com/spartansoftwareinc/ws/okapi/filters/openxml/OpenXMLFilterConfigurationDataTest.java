@@ -20,6 +20,8 @@ public class OpenXMLFilterConfigurationDataTest {
                     "bPreferenceTranslateWordHeadersFooters.b=true" + LINE_SEPARATOR +
                     "bPreferenceTranslateWordHidden.b=false" + LINE_SEPARATOR +
                     "bPreferenceTranslateWordExcludeGraphicMetaData.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslatePowerpointHidden.b=false" + LINE_SEPARATOR +
+                    "bPreferenceTranslateExcelHidden.b=false" + LINE_SEPARATOR +
                     "bPreferenceTranslateExcelExcludeColors.b=false" + LINE_SEPARATOR +
                     "bPreferenceTranslateExcelExcludeColumns.b=false" + LINE_SEPARATOR +
                     "bPreferenceTranslateExcelSheetNames.b=false" + LINE_SEPARATOR +
@@ -33,6 +35,7 @@ public class OpenXMLFilterConfigurationDataTest {
                     "bPreferencePowerpointIncludedSlideNumbersOnly.b=false" + LINE_SEPARATOR +
                     "bPreferenceTranslateExcelDiagramData.b=false" + LINE_SEPARATOR +
                     "bPreferenceTranslateExcelDrawings.b=false" + LINE_SEPARATOR +
+                    "subfilter=" + LINE_SEPARATOR +
                     "tsComplexFieldDefinitionsToExtract.i=1" + LINE_SEPARATOR +
                     "cfd0=HYPERLINK" + LINE_SEPARATOR +
                     "tsExcelExcludedColors.i=0" + LINE_SEPARATOR +

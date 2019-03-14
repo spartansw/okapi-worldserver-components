@@ -17,7 +17,12 @@ public class IDMLFilterConfigurationDataTest {
                     "extractNotes.b=false" + LINE_SEPARATOR +
                     "extractMasterSpreads.b=true" + LINE_SEPARATOR +
                     "extractHiddenLayers.b=false" + LINE_SEPARATOR +
-                    "skipDiscretionaryHyphens.b=false]]></okapi>" +
+                    "skipDiscretionaryHyphens.b=false" + LINE_SEPARATOR +
+                    "ignoreCharacterKerning.b=false" + LINE_SEPARATOR +
+                    "ignoreCharacterTracking.b=false" + LINE_SEPARATOR +
+                    "ignoreCharacterLeading.b=false" + LINE_SEPARATOR +
+                    "ignoreCharacterBaselineShift.b=false" +
+                    "]]></okapi>" +
                     "<applySentenceBreaking>false</applySentenceBreaking>" +
                     "</params>";
 

@@ -20,19 +20,15 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <ws.version>10.4.3.195</ws.version>
-    <okapi.version>0.35</okapi.version>
+    <okapi.version>0.37-SNAPSHOT</okapi.version>
     <mainPackage>${project.groupId}</mainPackage>
     <git.basedir>${project.basedir}</git.basedir>
   </properties>
 
   <repositories>
     <repository>
-      <id>okapi-release</id>
-      <url>http://repository-okapi.forge.cloudbees.com/release/</url>
-    </repository>
-    <repository>
       <id>okapi-snapshot</id>
-      <url>http://repository-okapi.forge.cloudbees.com/snapshot/</url>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>
 
