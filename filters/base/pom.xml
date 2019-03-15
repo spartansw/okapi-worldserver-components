@@ -42,13 +42,6 @@
       <version>${okapi.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>net.sf.okapi</groupId>
-      <artifactId>okapi-core</artifactId>
-      <version>${okapi.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
   <build>
