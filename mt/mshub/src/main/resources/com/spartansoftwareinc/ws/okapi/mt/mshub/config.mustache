@@ -46,5 +46,17 @@
       </td>
     </tr>
     {{/localeMapAISPath}}
+
+    {{#includeCodes}}
+    <tr>
+      <td class="prop_table_left_side">{{param.label}}:</td>
+      <td class="prop_table_right_side">
+      <nobr><input name="{{param.nameAttr}}" value="on" type="checkbox"
+        {{#value}}
+             checked
+        {{/value}}
+        ></nobr></td>
+    </tr>
+    {{/includeCodes}}
   </tbody>
 </table>

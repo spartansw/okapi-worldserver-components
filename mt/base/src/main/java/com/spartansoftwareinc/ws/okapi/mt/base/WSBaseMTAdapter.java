@@ -27,7 +27,7 @@ public abstract class WSBaseMTAdapter extends WSMTAdapterComponent {
 
     private static final Logger log = LoggerFactory.getLogger(WSBaseMTAdapter.class);
 
-    private final CodesMasker codesMasker;
+    protected final CodesMasker codesMasker;
 
     protected WSBaseMTAdapterConfigurationData configurationData;
     protected LocaleMap localeMap;

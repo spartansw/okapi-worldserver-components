@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class CodesMasker {
 
     private static final Pattern WS_PLACEHOLDER = Pattern.compile("\\{([0-9]+)\\}");
-    private static final Pattern CODE_MARKUP = Pattern.compile("<span\\s+ws_id=\"(\\d+)\">(\\s*</span>)?");
+    private static final Pattern CODE_MARKUP = Pattern.compile("<\\s*span\\s+ws_id\\s*=\\s*\"(\\d+)\"\\s*>(\\s*</span>)?");
     private static final Pattern TRAILING_CODE_MARKUP = Pattern.compile("</span>");
 
     /**

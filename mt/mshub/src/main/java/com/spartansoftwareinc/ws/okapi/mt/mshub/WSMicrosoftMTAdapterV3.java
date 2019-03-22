@@ -24,7 +24,6 @@ import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.component.mt.WSMTRequest;
 import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.linguistic.WSLanguagePair;
-import com.idiominc.wssdk.mt.WSMTResult;
 import com.idiominc.wssdk.mt.WSUnsupportedLanguagePairException;
 import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData;
 
@@ -36,7 +35,7 @@ public class WSMicrosoftMTAdapterV3 extends WSBaseMTAdapter {
     private static final String ADAPTER_NAME = "MS Custom Translator V3 Adapter";
     private static final String ADAPTER_DESCRIPTION = "MT Adapter for Microsoft Custom Translator V3";
 
-    private static final Logger LOG = LoggerFactory.getLogger(WSMicrosoftMTAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WSMicrosoftMTAdapterV3.class);
 
     @Override
     public String getName() {
@@ -150,12 +149,8 @@ public class WSMicrosoftMTAdapterV3 extends WSBaseMTAdapter {
                 continue;
             }
 
-            List<String> texts = new ArrayList<>();
-            for (WSMTRequest request : requestPartition) {
-                String text = request.getSource();
-                LOG.debug("Translating source text: " + text);
-                texts.add(text);
-            }
+            List<String> texts = getRequestStrings(requestPartition.toArray(new WSMTRequest[requestPartition.size()]),
+                    config.getIncludeCodes());
 
             List<List<QueryResult>> responses;
             try {
@@ -166,9 +161,7 @@ public class WSMicrosoftMTAdapterV3 extends WSBaseMTAdapter {
 
             for (int i = 0; i < requestPartition.size(); i++) {
                 WSMTRequest request = requestPartition.get(i);
-                WSMTResult result = new WSMTResult(request.getSource(), responses.get(i).get(0).target.getText(),
-                        config.getMatchScore());
-                request.setResults(new WSMTResult[] { result });
+                request.setResults(getMTResults(request.getSource(), responses.get(i), config.getIncludeCodes()));
             }
         }
     }

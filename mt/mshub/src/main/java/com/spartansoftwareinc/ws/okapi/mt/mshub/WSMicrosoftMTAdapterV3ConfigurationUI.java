@@ -31,7 +31,8 @@ public class WSMicrosoftMTAdapterV3ConfigurationUI extends WSComponentConfigurat
         AZURE_KEY("Azure Key", "azureKey"),
         CATEGORY("Category", "category"),
         MATCH_SCORE("MT Match Score", "matchScore"),
-        LOCALE_MAP_AIS_PATH("AIS Path for Locale Overrides", "localeMapAISPath");
+        LOCALE_MAP_AIS_PATH("AIS Path for Locale Overrides", "localeMapAISPath"),
+        INCLUDE_CODES("Include Codes for MT", "includeCodes");
 
         /** String that is displayed to WS users. */
         public final String label;
@@ -70,6 +71,16 @@ public class WSMicrosoftMTAdapterV3ConfigurationUI extends WSComponentConfigurat
         }
     }
 
+    public static class BooleanParameter {
+        public final Parameter param;
+        public final boolean value;
+
+        public BooleanParameter(Parameter param, boolean value) {
+            this.param = param;
+            this.value = value;
+        }
+    }
+
     static final String ERROR_MESSAGE_ATTRIBUTE = "errorMessage";
     static final String ERROR_MESSAGE = "Error: Please enter valid values for ";
 
@@ -95,6 +106,7 @@ public class WSMicrosoftMTAdapterV3ConfigurationUI extends WSComponentConfigurat
         scopes.put("category", new TextParameter(Parameter.CATEGORY, data.getCategory(), 60));
         scopes.put("matchScore", new NumberParameter(Parameter.MATCH_SCORE, data.getMatchScore(), 0, 100));
         scopes.put("localeMapAISPath", new TextParameter(Parameter.LOCALE_MAP_AIS_PATH, data.getLocaleMapAISPath(), 60));
+        scopes.put("includeCodes", new BooleanParameter(Parameter.INCLUDE_CODES, data.getIncludeCodes()));
 
         StringWriter writer = new StringWriter();
         mustache.execute(writer, scopes);
@@ -152,11 +164,14 @@ public class WSMicrosoftMTAdapterV3ConfigurationUI extends WSComponentConfigurat
             }
         }
 
+        boolean includeCodes = "on".equals(request.getParameter(Parameter.INCLUDE_CODES.nameAttr));
+
         if (errors.isEmpty()) {
             data.setAzureKey(azureKey.trim());
             data.setCategory(request.getParameter(Parameter.CATEGORY.nameAttr).trim());
             data.setMatchScore(matchScore);
             data.setLocaleMapAISPath(aisPath);
+            data.setIncludeCodes(includeCodes);
         }
     }
 
