@@ -24,8 +24,10 @@ import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.component.mt.WSMTRequest;
 import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.linguistic.WSLanguagePair;
+import com.idiominc.wssdk.mt.WSMTResult;
 import com.idiominc.wssdk.mt.WSUnsupportedLanguagePairException;
 import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData;
+import com.spartansoftwareinc.ws.okapi.mt.mshub.service.CodesMaskerV3;
 
 import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.query.QueryResult;
@@ -36,6 +38,8 @@ public class WSMicrosoftMTAdapterV3 extends WSBaseMTAdapter {
     private static final String ADAPTER_DESCRIPTION = "MT Adapter for Microsoft Custom Translator V3";
 
     private static final Logger LOG = LoggerFactory.getLogger(WSMicrosoftMTAdapterV3.class);
+
+    private CodesMaskerV3 codesMaskerV3 = new CodesMaskerV3();
 
     @Override
     public String getName() {
@@ -195,5 +199,40 @@ public class WSMicrosoftMTAdapterV3 extends WSBaseMTAdapter {
         }
         builder.append("]");
         return builder.toString();
+    }
+
+    @Override
+    protected List<String> getRequestStrings(WSMTRequest[] requests, boolean includeCodes) {
+        List<String> requestStrings = new ArrayList<>();
+
+        for (WSMTRequest request : requests) {
+            if (includeCodes) {
+                String maskedString = codesMaskerV3.mask(request.getSource());
+                LOG.info("Request: Masked [" + request.getSource() + "] --> [" + maskedString + "]");
+                requestStrings.add(maskedString);
+                continue;
+            }
+
+            requestStrings.add(request.getSource());
+        }
+
+        return requestStrings;
+    }
+
+    @Override
+    protected WSMTResult[] getMTResults(String source, List<QueryResult> queryResults, boolean includeCodes) {
+        List<WSMTResult> results = new ArrayList<>();
+
+        for (QueryResult queryResult : queryResults) {
+            if (includeCodes) {
+                String unmaskedString = codesMaskerV3.unmask(queryResult.target.getCodedText());
+                results.add(new WSMTResult(source, unmaskedString, getScore(queryResult)));
+                continue;
+            }
+
+            results.add(new WSMTResult(source, queryResult.target.getCodedText(), getScore(queryResult)));
+        }
+
+        return results.toArray(new WSMTResult[results.size()]);
     }
 }

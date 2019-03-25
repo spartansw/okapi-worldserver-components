@@ -64,6 +64,7 @@ public class MicrosoftTextApiClient {
         uriBuilder.addParameter("api-version", "3.0");
         uriBuilder.addParameter("from", source);
         uriBuilder.addParameter("to", target);
+        uriBuilder.addParameter("textType", "html");
         if (category != null && !category.isEmpty()) {
             uriBuilder.addParameter("category", category);
         }
