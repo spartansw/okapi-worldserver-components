@@ -7,7 +7,7 @@
     <version>1.8-SNAPSHOT</version>
   </parent>
 
-  <groupId>com.spartansoftwareinc.ws.autoactions.mt</groupId>
+  <groupId>com.spartansoftwareinc.ws.autoactions.hubmt</groupId>
   <artifactId>okapi-ws-autoactions-mshub</artifactId>
   <packaging>jar</packaging>
 

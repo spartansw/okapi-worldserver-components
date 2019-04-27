@@ -14,7 +14,6 @@ import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.mt.WSMTResult;
 import com.spartansoftwareinc.ws.autoactions.SegmentMTAutomaticAction;
 import com.spartansoftwareinc.ws.autoactions.hubmt.WSPlaceholderUtil.PHData;
-import com.spartansoftwareinc.ws.autoactions.mt.Version;
 
 /**
  * <p>
