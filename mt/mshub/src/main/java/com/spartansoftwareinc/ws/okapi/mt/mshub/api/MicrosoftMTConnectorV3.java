@@ -74,7 +74,7 @@ public class MicrosoftMTConnectorV3 extends BaseConnector {
             List<TranslateResponse> response = apiClient.translate(plainTexts, srcCode, trgCode,
                     getParameters().getAzureKey(), getParameters().getCategory());
             return convertResults(plainTexts, response);
-        } catch (IOException | URISyntaxException ex) {
+        } catch (IOException | URISyntaxException | InterruptedException ex) {
             LOG.error(ex);
             throw new RuntimeException("Translation request failed", ex);
         }

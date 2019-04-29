@@ -33,6 +33,10 @@ public class MicrosoftTextApiClient {
     // https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-translate?tabs=curl
     public static final int MAX_STRINGS_PER_REQUEST = 25;
     public static final int MAX_TOTAL_CHARS_PER_REQUEST = 4800; // API limit is actually 5000, but allow for some padding
+    public static final int MAX_CONNECTION_ATTEMPTS = 5;
+    public static final int HTTP_REQUEST_DELAY_INITIAL_MS = 5*1000;
+    public static final int HTTP_REQUEST_DELAY_CAP_MS = 60*1000;
+    public static final int HTTP_REQUEST_DELAY_MULTIPLIER = 2; // After every failed attempt, current delay will be multiplied by this
 
     private final String baseURL;
 
@@ -58,7 +62,7 @@ public class MicrosoftTextApiClient {
     }
 
     public List<TranslateResponse> translate(List<String> texts, String source, String target,
-            String subscriptionKey, String category) throws URISyntaxException, ClientProtocolException, IOException {
+            String subscriptionKey, String category) throws URISyntaxException, ClientProtocolException, IOException, InterruptedException {
 
         URIBuilder uriBuilder = new URIBuilder(getBaseURL());
         uriBuilder.addParameter("api-version", "3.0");
@@ -87,23 +91,58 @@ public class MicrosoftTextApiClient {
     }
 
     private <T> T execute(HttpUriRequest request, TypeReference<T> responseType, String requestBody)
-            throws IOException {
-        HttpResponse response = httpClient.execute(request);
+            throws IOException, InterruptedException {
 
-        // Read as a string first so that in an error case, we can log the response in a readable format
-        String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+        int connectionAttempts = 0;
+        int retryDelayMilliseconds = HTTP_REQUEST_DELAY_INITIAL_MS;
+        HttpResponse response = null;
+        String responseBody = null;
+        boolean failedResponse = false;
 
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            String message = String.format("Call to %s \"%s\" failed with code \"%d\", reason \"%s\", and response"
-                    + " body %s for request body %s",
-                    request.getMethod(),
-                    request.getURI().toString(),
-                    response.getStatusLine().getStatusCode(),
-                    response.getStatusLine().getReasonPhrase(),
-                    responseBody,
-                    requestBody);
-            throw new IOException(message);
-        }
+        // Will attempt to connect up to MAX_CONNECTION_ATTEMPTS if an exception happens during execution
+        do {
+            failedResponse = false;
+
+            connectionAttempts++;
+            try {
+                response = httpClient.execute(request);
+
+                // Read as a string first so that in an error case, we can log the response in a readable format
+                responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+
+                // Check if response is good
+                if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                    String message = String.format("Call to %s \"%s\" failed with code \"%d\", reason \"%s\", and response"
+                                    + " body %s for request body %s",
+                            request.getMethod(),
+                            request.getURI().toString(),
+                            response.getStatusLine().getStatusCode(),
+                            response.getStatusLine().getReasonPhrase(),
+                            responseBody,
+                            requestBody);
+                    throw new IOException(message);
+                }
+
+            } catch (IOException e) {
+                failedResponse = true;
+
+                // Retry with increasing delay, up to a maximum amount of attempts and capped delay time
+                if (connectionAttempts < MAX_CONNECTION_ATTEMPTS) {
+                    LOG.warn(String.format("Error when connecting to Microsoft translator on attempt %d/%d: " +
+                            "\"%s\" Will try to connect in %dms ",
+                            connectionAttempts, MAX_CONNECTION_ATTEMPTS, e.getMessage(), retryDelayMilliseconds));
+                    Thread.sleep(retryDelayMilliseconds);
+                    retryDelayMilliseconds = Math.min(retryDelayMilliseconds * HTTP_REQUEST_DELAY_MULTIPLIER, HTTP_REQUEST_DELAY_CAP_MS);
+                } else {
+                    LOG.error(String.format("Error when connecting to Microsoft translator on attempt %d/%d: " +
+                            "\"%s\". Because this is the last attempt, no more attempts will be made.",
+                            connectionAttempts, MAX_CONNECTION_ATTEMPTS, e.getMessage()));
+                    throw e;
+                }
+            }
+
+        } while (failedResponse);
+
 
         try {
             return objectMapper.readValue(responseBody, responseType);
