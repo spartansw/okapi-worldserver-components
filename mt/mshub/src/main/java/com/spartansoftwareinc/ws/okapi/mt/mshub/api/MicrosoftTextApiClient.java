@@ -33,6 +33,7 @@ public class MicrosoftTextApiClient {
     // https://docs.microsoft.com/en-us/azure/cognitive-services/translator/reference/v3-0-translate?tabs=curl
     public static final int MAX_STRINGS_PER_REQUEST = 25;
     public static final int MAX_TOTAL_CHARS_PER_REQUEST = 4800; // API limit is actually 5000, but allow for some padding
+    public static final int MAX_CONNECTION_ATTEMPTS = 3;
 
     private final String baseURL;
 
@@ -88,7 +89,24 @@ public class MicrosoftTextApiClient {
 
     private <T> T execute(HttpUriRequest request, TypeReference<T> responseType, String requestBody)
             throws IOException {
-        HttpResponse response = httpClient.execute(request);
+
+        int connectionAttempts = 0;
+        HttpResponse response = null;
+
+        // Will attempt to connect up to MAX_CONNECTION_ATTEMPTS if an exception happens during execution
+        do {
+            connectionAttempts++;
+            try {
+                response = httpClient.execute(request);
+            } catch (IOException e) {
+                if (connectionAttempts < MAX_CONNECTION_ATTEMPTS) {
+                    LOG.warn(String.format("Error when connecting to Microsoft translator on attempt %d/%d: \"%s\" Trying to connect again... ", connectionAttempts, MAX_CONNECTION_ATTEMPTS, e.getMessage()));
+                } else {
+                    LOG.error(String.format("Error when connecting to Microsoft translator on attempt %d/%d: \"%s\". Because this is the last attempt, no more attempts will be made.", connectionAttempts, MAX_CONNECTION_ATTEMPTS, e.getMessage()));
+                    throw e;
+                }
+            }
+        } while (response == null);
 
         // Read as a string first so that in an error case, we can log the response in a readable format
         String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
