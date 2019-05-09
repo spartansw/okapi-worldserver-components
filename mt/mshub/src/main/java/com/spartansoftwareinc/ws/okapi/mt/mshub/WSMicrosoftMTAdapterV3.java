@@ -137,7 +137,7 @@ public class WSMicrosoftMTAdapterV3 extends WSBaseMTAdapter {
         List<List<WSMTRequest>> requestPartitions;
         RequestPartitioner partitioner = new RequestPartitioner();
         try {
-            requestPartitions = partitioner.partition(requests);
+            requestPartitions = partitioner.partition(requests, config.getIncludeCodes());
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
