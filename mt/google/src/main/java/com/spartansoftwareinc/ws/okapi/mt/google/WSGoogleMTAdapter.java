@@ -36,6 +36,11 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
     }
 
     @Override
+    public String getVersion() {
+        return Version.BANNER;
+    }
+
+    @Override
     public WSComponentConfigurationUI getConfigurationUI() {
         return new WSGoogleMTAdapterConfigurationUI();
     }

@@ -27,10 +27,7 @@ import com.spartansoftware.ws.okapi.filters.mock.MockWSSegmentReader;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSSegmentReaderBuilder;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSSegmentWriter;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSTextSegment;
-import com.spartansoftwareinc.ws.okapi.filters.OkapiFilterBridge;
 import com.spartansoftwareinc.ws.okapi.filters.model.SegmentInfoHolder;
-
-import net.sf.okapi.common.FileCompare;
 
 /**
  * Extendable test harness for verifying that a WSOkapiFilter subclass produces

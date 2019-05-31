@@ -13,6 +13,10 @@
 
   <name>Bilingual XILFF Automatic Action</name>
 
+  <properties>
+    <git.basedir>${project.basedir}/../../</git.basedir>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.filters.xliff</groupId>
@@ -30,6 +34,11 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>net.mgorski.quicktag</groupId>
+        <artifactId>quicktag</artifactId>
+        <version>2.1.5</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>

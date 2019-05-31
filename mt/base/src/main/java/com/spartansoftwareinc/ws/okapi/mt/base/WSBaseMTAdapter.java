@@ -3,7 +3,6 @@ package com.spartansoftwareinc.ws.okapi.mt.base;
 import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.WSVersion;
 import com.idiominc.wssdk.ais.WSNode;
-import com.idiominc.wssdk.component.WSComponentConfiguration;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
 import com.idiominc.wssdk.component.mt.WSMTAdapterComponent;
 import com.idiominc.wssdk.component.mt.WSMTRequest;
@@ -11,7 +10,6 @@ import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.linguistic.WSLanguagePair;
 import com.idiominc.wssdk.linguistic.WSLinguisticManager;
 import com.idiominc.wssdk.mt.WSMTResult;
-import com.spartansoftwareinc.ws.okapi.Version;
 import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.query.QueryResult;
 import net.sf.okapi.lib.translation.BaseConnector;
@@ -29,7 +27,7 @@ public abstract class WSBaseMTAdapter extends WSMTAdapterComponent {
 
     private static final Logger log = LoggerFactory.getLogger(WSBaseMTAdapter.class);
 
-    private final CodesMasker codesMasker;
+    protected final CodesMasker codesMasker;
 
     protected WSBaseMTAdapterConfigurationData configurationData;
     protected LocaleMap localeMap;

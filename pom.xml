@@ -21,17 +21,14 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <ws.version>10.4.3.195</ws.version>
     <okapi.version>0.36-java7</okapi.version>
-    <mainPackage>com.spartansoftwareinc.ws.okapi</mainPackage>
+    <mainPackage>${project.groupId}</mainPackage>
+    <git.basedir>${project.basedir}</git.basedir>
   </properties>
 
   <repositories>
     <repository>
-      <id>okapi-release</id>
-      <url>http://repository-okapi.forge.cloudbees.com/release/</url>
-    </repository>
-    <repository>
       <id>okapi-snapshot</id>
-      <url>http://repository-okapi.forge.cloudbees.com/snapshot/</url>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>
 
@@ -91,11 +88,59 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>net.mgorski.quicktag</groupId>
+          <artifactId>quicktag</artifactId>
+          <version>2.1.5</version>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals>
+                <goal>quicktag</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <outputPackage>${mainPackage}</outputPackage>
+            <vcsRepositoryPath>${git.basedir}/.git</vcsRepositoryPath>
+          </configuration>
+        </plugin>
+
+	<plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>net.mgorski.quicktag</groupId>
+                    <artifactId>quicktag</artifactId>
+                    <versionRange>[1.0.0,)</versionRange>
+                    <goals>
+                      <goal>quicktag</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.1</version>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -105,6 +150,7 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -129,6 +175,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>

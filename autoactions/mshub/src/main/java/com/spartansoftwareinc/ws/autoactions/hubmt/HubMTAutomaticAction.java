@@ -12,7 +12,6 @@ import com.idiominc.wssdk.asset.WSTextSegmentTranslation;
 import com.idiominc.wssdk.component.WSParameter;
 import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.mt.WSMTResult;
-import com.spartansoftwareinc.ws.autoactions.Version;
 import com.spartansoftwareinc.ws.autoactions.SegmentMTAutomaticAction;
 import com.spartansoftwareinc.ws.autoactions.hubmt.WSPlaceholderUtil.PHData;
 

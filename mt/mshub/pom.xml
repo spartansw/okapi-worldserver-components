@@ -16,6 +16,7 @@
 
   <properties>
     <mainPackage>com.spartansoftwareinc.ws.okapi.mt.mshub</mainPackage>
+    <git.basedir>${project.basedir}/../../</git.basedir>
   </properties>
 
   <dependencies>
@@ -45,6 +46,16 @@
       <artifactId>slf4j-log4j12</artifactId>
       <version>1.7.13</version>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.9.8</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
+      <version>0.8.18</version>
+    </dependency>
 
     <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.mt.base</groupId>
@@ -57,6 +68,11 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>net.mgorski.quicktag</groupId>
+        <artifactId>quicktag</artifactId>
+        <version>2.1.5</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>

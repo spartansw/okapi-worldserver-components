@@ -33,8 +33,21 @@ public class XLIFFFilterConfigurationDataTest {
             "quoteMode.i=0" + TERMINATOR +
             "useSdlXliffWriter.b=false" + TERMINATOR +
             "preserveSpaceByDefault.b=false" + TERMINATOR +
+            "useIwsXliffWriter.b=false" + TERMINATOR +
+            "iwsBlockFinished.b=true" + TERMINATOR +
+            "iwsTransStatusValue=finished" + TERMINATOR +
+            "iwsTransTypeValue=manual_translation" + TERMINATOR +
+            "iwsBlockLockStatus.b=false" + TERMINATOR +
+            "iwsBlockTmScore.b=false" + TERMINATOR +
+            "iwsBlockTmScoreValue=100.00" + TERMINATOR +
+            "iwsBlockMultipleExact.b=false" + TERMINATOR +
             "inlineCdata.b=false" + TERMINATOR +
-            "skipNoMrkSegSource.b=false" +
+            "skipNoMrkSegSource.b=false" + TERMINATOR +
+            "useCodeFinder.b=false" + TERMINATOR +
+            "codeFinderRules.count.i=1" + TERMINATOR +
+            "codeFinderRules.rule0=</?([A-Z0-9a-z]*)\\b[^>]*>" + TERMINATOR +
+            "codeFinderRules.sample=&name; <tag></at><tag/> <tag attr='val'> </tag=\"val\">" + TERMINATOR +
+            "codeFinderRules.useAllRulesWhenTesting.b=true"+
             "]]></okapi><applySentenceBreaking>false</applySentenceBreaking></params>";
 
     @Test

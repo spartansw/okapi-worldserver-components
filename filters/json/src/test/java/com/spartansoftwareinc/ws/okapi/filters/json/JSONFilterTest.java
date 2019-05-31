@@ -27,7 +27,7 @@ public class JSONFilterTest {
                                       ":colon", ":1", ":alpha1"), 
                 new SegmentInfoHolder("Test " + WSFilter.PLACEHOLDER + "HTML" + WSFilter.PLACEHOLDER +
                                       " entity " + WSFilter.PLACEHOLDER + " escaping",
-                                      "<b>", "</b>", "&amp;"),
+                                      "<b>", "<\\/b>", "&amp;"),
                 new SegmentInfoHolder("Test")
             }
         }};

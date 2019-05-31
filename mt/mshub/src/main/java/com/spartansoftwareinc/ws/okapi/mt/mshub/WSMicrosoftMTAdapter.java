@@ -4,7 +4,6 @@ import com.idiominc.wssdk.component.WSComponentConfiguration;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
 
 import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapter;
-import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData;
 import net.sf.okapi.connectors.microsoft.MicrosoftMTConnector;
 
 import net.sf.okapi.lib.translation.BaseConnector;
@@ -24,6 +23,11 @@ public class WSMicrosoftMTAdapter extends WSBaseMTAdapter {
 
     public String getDescription() {
         return ADAPTER_DESCRIPTION;
+    }
+
+    @Override
+    public String getVersion() {
+        return Version.BANNER;
     }
 
     @Override

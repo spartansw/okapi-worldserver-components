@@ -9,14 +9,14 @@
         <version>1.8-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.spartansoftwareinc.ws.okapi.mt.google</groupId>
-    <artifactId>okapi-ws-mt-google</artifactId>
+    <groupId>com.spartansoftwareinc.ws.okapi.mt.googleautoml</groupId>
+    <artifactId>okapi-ws-mt-googleautoml</artifactId>
 
-    <name>Okapi Google MT Adapter for WorldServer</name>
+    <name>Okapi Google AutoML Translation Adapter for WorldServer</name>
 
     <properties>
-        <mainPackage>com.spartansoftwareinc.ws.okapi.mt.google</mainPackage>
         <git.basedir>${project.basedir}/../../</git.basedir>
+        <mainPackage>com.spartansoftwareinc.ws.okapi.mt.googleautoml</mainPackage>
     </properties>
 
     <dependencies>
@@ -32,7 +32,7 @@
         </dependency>
         <dependency>
             <groupId>net.sf.okapi.connectors</groupId>
-            <artifactId>okapi-connector-google</artifactId>
+            <artifactId>okapi-connector-googleautoml</artifactId>
             <version>${okapi.version}</version>
             <exclusions>
                 <exclusion>
@@ -89,13 +89,6 @@
                                     <pattern>net.sf.okapi</pattern>
                                     <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
                                 </relocation>
-				<relocation> <!-- Comon code needs to be relocated also to prevent from overloading the previous version. -->
-				  <pattern>com.spartansoftwareinc</pattern>
-				  <shadedPattern>${project.version}.com.spartansoftwareinc</shadedPattern>
-				  <excludes>
-				    <exclude>com.spartansoftwareinc.ws.okapi.mt.google.*</exclude>
-				  </excludes>		   
-				</relocation>
                                 <relocation>
                                     <pattern>org.apache.commons</pattern>
                                     <shadedPattern>okapi_ws_components.org.apache.commons</shadedPattern>

@@ -1,16 +1,14 @@
-package com.spartansoftwareinc.ws.okapi.mt.base;
+package com.spartansoftwareinc.ws.okapi.mt.mshub.service;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CodesMasker {
-
+public class CodesMaskerV3 {
     private static final Pattern WS_PLACEHOLDER = Pattern.compile("\\{([0-9]+)\\}");
-    private static final Pattern CODE_MARKUP = Pattern.compile("<\\s*span\\s+ws_id\\s*=\\s*\"(\\d+)\"\\s*>(\\s*</span>)?");
-    private static final Pattern TRAILING_CODE_MARKUP = Pattern.compile("</span>");
+    private static final Pattern MS_MASKED_CODE_MARKUP = Pattern.compile("<\\s*div\\s+ws_id\\s*=\\s*\"(\\d+)\"\\s*>(\\s*</div>)?");
 
     /**
-     * Replace WorldServer placeholder codes in &lt;span&gt;...&lt;/span&gt; markup
+     * Replace WorldServer placeholder code curly braces with parenthesis
      * in order to protect them from translation.
      */
     public String mask(String source) {
@@ -19,9 +17,9 @@ public class CodesMasker {
         Matcher m = WS_PLACEHOLDER.matcher(source);
         while (m.find()) {
             sb.append(source.substring(start, m.start()));
-            sb.append("<span ws_id=\"");
+            sb.append("<div ws_id=\"");
             sb.append(m.group(1));
-            sb.append("\"></span>");
+            sb.append("\"></div>");
             start = m.end();
         }
         sb.append(source.substring(start, source.length()));
@@ -29,29 +27,16 @@ public class CodesMasker {
     }
 
     public String unmask(String s) {
-        s = removeWellformedCodes(s);
-        return removeNonWellformedCodes(s);
+        return removeWellformedCodes(s);
     }
 
     private String removeWellformedCodes(String s) {
         StringBuilder sb = new StringBuilder();
         int start = 0;
-        Matcher m = CODE_MARKUP.matcher(s);
+        Matcher m = MS_MASKED_CODE_MARKUP.matcher(s);
         while (m.find()) {
             sb.append(s.substring(start, m.start()));
             sb.append("{").append(m.group(1)).append("}");
-            start = m.end();
-        }
-        sb.append(s.substring(start, s.length()));
-        return sb.toString();
-    }
-
-    private String removeNonWellformedCodes(String s) {
-        StringBuilder sb = new StringBuilder();
-        int start = 0;
-        Matcher m = TRAILING_CODE_MARKUP.matcher(s);
-        while (m.find()) {
-            sb.append(s.substring(start, m.start()));
             start = m.end();
         }
         sb.append(s.substring(start, s.length()));

@@ -19,7 +19,6 @@ import com.idiominc.wssdk.component.WSParameterFactory;
 import com.idiominc.wssdk.component.autoaction.WSActionResult;
 import com.idiominc.wssdk.component.autoaction.WSTaskAutomaticAction;
 import com.idiominc.wssdk.workflow.WSTask;
-import com.spartansoftwareinc.ws.okapi.Version;
 import com.spartansoftwareinc.ws.okapi.filters.utils.FilterUtil;
 import com.spartansoftwareinc.ws.okapi.filters.xliff.XLIFFWSOkapiFilter;
 
