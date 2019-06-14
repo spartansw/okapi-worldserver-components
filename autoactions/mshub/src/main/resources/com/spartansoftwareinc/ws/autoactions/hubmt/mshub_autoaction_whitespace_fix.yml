@@ -1,0 +1,2 @@
+regex: "(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*\\{(\\d+)\\}(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*"
+captureGroup: 1
