@@ -2,6 +2,7 @@ package com.spartansoftwareinc.ws.okapi.mt.googleautoml;
 
 import com.idiominc.wssdk.component.WSComponentConfiguration;
 import com.idiominc.wssdk.component.WSComponentConfigurationUI;
+import com.spartansoftwareinc.ws.okapi.mt.base.CustomCodesMasker;
 import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapter;
 
 import net.sf.okapi.connectors.googleautoml.GoogleAutoMLTranslationConnector;
@@ -9,6 +10,10 @@ import net.sf.okapi.lib.translation.BaseConnector;
 
 public class WSGoogleAutoMLAdapter extends WSBaseMTAdapter {
     private GoogleAutoMLTranslationConnector connector;
+
+    public WSGoogleAutoMLAdapter() {
+        setCodesMasker(new CustomCodesMasker("<\\s*div\\s+ws_id\\s*=\\s*\"(\\d+)\"\\s*>(\\s*<\\s*/\\s*div>)?"));
+    }
 
     @Override
     public String getName() {

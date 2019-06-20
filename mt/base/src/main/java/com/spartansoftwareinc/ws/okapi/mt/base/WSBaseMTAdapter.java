@@ -27,13 +27,21 @@ public abstract class WSBaseMTAdapter extends WSMTAdapterComponent {
 
     private static final Logger log = LoggerFactory.getLogger(WSBaseMTAdapter.class);
 
-    protected final CodesMasker codesMasker;
+    protected CodesMasker codesMasker;
 
     protected WSBaseMTAdapterConfigurationData configurationData;
     protected LocaleMap localeMap;
 
     public WSBaseMTAdapter() {
         codesMasker = new CodesMasker();
+    }
+
+    public CodesMasker getCodesMasker() {
+        return codesMasker;
+    }
+
+    public void setCodesMasker(CodesMasker codesMasker) {
+        this.codesMasker = codesMasker;
     }
 
     @Override
@@ -136,7 +144,7 @@ public abstract class WSBaseMTAdapter extends WSMTAdapterComponent {
         return new WSVersion(9, 0, 0);
     }
 
-    protected void process(BaseConnector mtConnector, WSMTRequest[] requests, boolean includeCodes) {
+    public void process(BaseConnector mtConnector, WSMTRequest[] requests, boolean includeCodes) {
         List<String> requestStrings = getRequestStrings(requests, includeCodes);
 
         List<List<QueryResult>> batchResults = mtConnector.batchQueryText(requestStrings);

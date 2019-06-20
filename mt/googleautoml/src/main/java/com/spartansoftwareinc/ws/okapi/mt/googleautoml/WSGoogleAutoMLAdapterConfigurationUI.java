@@ -14,6 +14,7 @@ import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.ais.WSAisException;
 import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.component.WSComponentConfigurationData;
+import com.spartansoftwareinc.ws.okapi.base.ui.UICheckbox;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIElement;
 import com.spartansoftwareinc.ws.okapi.base.ui.UIRadioButton;
 import com.spartansoftwareinc.ws.okapi.base.ui.UITextField;
@@ -27,6 +28,7 @@ public class WSGoogleAutoMLAdapterConfigurationUI extends WSBaseMTAdapterConfigu
     private static final String CREDENTIAL_AIS_PATH = "credentialAisPath";
     private static final String LABEL_MODEL_MAP = "Model JSON Map";
     private static final String MODEL_MAP = "modelMap";
+    private static final String INCLUDE_CODES = "includeCodes";
 
     private static final int TEXT_FIELD_SIZE = 50;
 
@@ -55,6 +57,7 @@ public class WSGoogleAutoMLAdapterConfigurationUI extends WSBaseMTAdapterConfigu
 
         elements.add(new UITextField(LABEL_MODEL_MAP, MODEL_MAP, googleConfigData.getModelMap())
                 .setSize(TEXT_FIELD_SIZE));
+        elements.add(new UICheckbox(LABEL_INCLUDE_CODES, INCLUDE_CODES, googleConfigData.getIncludeCodes()));
 
         return elements;
     }
@@ -83,6 +86,8 @@ public class WSGoogleAutoMLAdapterConfigurationUI extends WSBaseMTAdapterConfigu
             errors = addError(LABEL_MODEL_MAP, errors);
         }
 
+        boolean includeCodes = "on".equals(request.getParameter(INCLUDE_CODES));
+
         errors = parentValidateAndSave(request, configData, errors);
 
         if (errors == null) {
@@ -91,6 +96,7 @@ public class WSGoogleAutoMLAdapterConfigurationUI extends WSBaseMTAdapterConfigu
             googleConfigData.setCredentialAisPath(credentialAisPath);
             googleConfigData.setCredentialAbsolutePath(credentialNode.getFile().getAbsolutePath());
             googleConfigData.setModelMap(modelMap);
+            googleConfigData.setIncludeCodes(includeCodes);
         }
         return errors;
     }
