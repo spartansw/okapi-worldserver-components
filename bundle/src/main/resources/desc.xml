@@ -5,6 +5,7 @@
     <filter class="com.spartansoftwareinc.ws.okapi.filters.po.PoWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.xliff.XLIFFWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.yaml.YAMLWSOkapiFilter"/>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.aemtranslation.AEMTranslationFilter"/>
     <mt_adapter class="com.spartansoftwareinc.ws.okapi.mt.google.WSGoogleMTAdapter" />
     <mt_adapter class="com.spartansoftwareinc.ws.okapi.mt.mshub.WSMicrosoftMTAdapter" />
     <auto_action class="com.spartansoftwareinc.ws.autoactions.hubmt.HubMTAutomaticAction"/>

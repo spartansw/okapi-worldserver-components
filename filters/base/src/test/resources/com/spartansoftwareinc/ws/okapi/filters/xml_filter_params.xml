@@ -1,0 +1,20 @@
+<?xml version='1.0' ?>
+<its:rules version='1.0'
+           xmlns:its='http://www.w3.org/2005/11/its'
+           xmlns:okp='okapi-framework:xmlfilter-options'
+           xmlns:itsx="http://www.w3.org/2008/12/its-extensions"
+>
+ <!-- Do not translate anything by default-->
+ <its:translateRule selector="//*" translate="no"/>
+
+ <!-- These elements can be translated. Ignores <translationObjectFile fileType=translation_export_summary>-->
+ <its:translateRule selector="//translationObjectFile[not(@fileType='translation_export_summary')]//translationObjectProperties//property" translate="yes" itsx:whiteSpaces="preserve"/>
+
+ <!-- More specific rule that will ignore both <translationObjectFile fileType=translation_export_summary> and <property fileUniqueID> -->
+ <!-- <its:translateRule selector="//translationObjectFile[not(@fileType='translation_export_summary')]//translationObjectProperties//property[not(@fileUniqueID)]" translate="yes"/>-->
+
+ <!-- Fixes issues with escaped characters -->
+ <okp:options escapeQuotes="no" escapeGT="yes" escapeNbsp="no"/>
+
+ <!-- See ITS specification at: http://www.w3.org/TR/its/ -->
+</its:rules>

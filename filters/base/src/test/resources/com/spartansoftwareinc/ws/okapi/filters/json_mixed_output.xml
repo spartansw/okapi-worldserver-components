@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translationObjectFile fileType="PAGE" sourcePath="/test/ab:content">
+    <translationObjectProperties>
+        <property isMultiValue="false" nodePath="/test/ab:content" propertyName="xy">TEST Title</property>
+        <property isMultiValue="false" nodePath="/test/ab:content" propertyName="xy">Some conent</property>
+        <property isMultiValue="false" nodePath="/test/ab:content" propertyName="xy">More content</property>
+        <property isMultiValue="false" nodePath="/test/ab:content" propertyName="xy">Application Note</property>
+        <property isMultiValue="false" nodePath="/test/ab:content" propertyName="xy">Abstract</property>
+        <property isMultiValue="false" nodePath="/test/ab:content" propertyName="xy">&lt;p&gt;Sentence one.&lt;sup&gt;1&lt;/sup&gt;&lt;sup&gt;2&lt;/sup&gt; Sentence two.&lt;sup&gt;3&lt;/sup&gt;&lt;/p&gt;&#13;
+            &lt;p&gt;That was a great sentence. Now heres another! &lt;sup&gt;4,5,6&lt;/sup&gt;&lt;/p&gt;&#13;
+        </property>
+        <property isMultiValue="false" nodePath="/test/ab:content" propertyName="xy">&lt;p&gt;These things are evil:&lt;/p&gt;
+            &lt;ul&gt;
+            &lt;li&gt;See&lt;/li&gt;
+            &lt;li&gt;Hear&lt;/li&gt;
+            &lt;li&gt;Speak&lt;/li&gt;
+            &lt;/ul&gt;
+        </property>
+        <property isMultiValue="false" nodePath="/test/ab:content" propertyName="xy">[{"0":["x"],"1":["y"]},{"0":["a"],"1":["b"]}]</property>
+    </translationObjectProperties>
+</translationObjectFile>

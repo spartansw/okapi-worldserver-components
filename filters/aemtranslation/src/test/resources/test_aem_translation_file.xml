@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><translationObjectFile fileType="PAGE" sourcePath="/mock/source">
+  <translationObjectProperties>
+    <invalid_property>THIS SHOULDN'T BE TRANSLATED</invalid_property>
+    <property isMultiValue="false" nodePath="/mock/path" propertyName="jcr:title">Test</property>
+    <property isMultiValue="false" nodePath="/mock/path" propertyName="jcr:description">This is a great test. Or is it?&lt;br/> Haha that's fine.</property>
+    <property isMultiValue="false" nodePath="/mock/path/table" propertyName="tableRowsJson">[{"0":["Good:"],"1":["None"]}]</property>
+    <property isMultiValue="false" nodePath="/mock/path/table" propertyName="tableRowsJson">[{"0":["Bad:"],"1":["&lt;strong>big&lt;/strong>"]}]</property>
+  </translationObjectProperties>
+</translationObjectFile>
+

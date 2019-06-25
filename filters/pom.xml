@@ -24,5 +24,6 @@
     <module>xliff</module>
     <module>yaml</module>
     <module>bundle</module>
+    <module>aemtranslation</module>
   </modules>
 </project>

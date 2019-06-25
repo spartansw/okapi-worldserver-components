@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <url>http://maven.apache.org</url>
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+    <artifactId>okapi-ws-filters</artifactId>
+    <version>1.8-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.spartansoftwareinc.ws.okapi.filters.aemtranslation</groupId>
+  <artifactId>okapi-ws-filters-aemtranslation</artifactId>
+  <name>Okapi AEM Translation File Filter for WorldServer</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+      <artifactId>okapi-ws-filters-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.okapi.filters</groupId>
+      <artifactId>okapi-filter-its</artifactId>
+      <version>${okapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.okapi.filters</groupId>
+      <artifactId>okapi-filter-json</artifactId>
+      <version>${okapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.okapi.filters</groupId>
+      <artifactId>okapi-filter-html</artifactId>
+      <version>${okapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.okapi.filters</groupId>
+      <artifactId>okapi-filter-xmlstream</artifactId>
+      <version>${okapi.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.okapi</groupId>
+      <artifactId>okapi-core</artifactId>
+      <version>${okapi.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
+      <artifactId>okapi-ws-filters-base</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.4.1</version>
+        <configuration>
+          <createDependencyReducedPom>false</createDependencyReducedPom>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                </transformer>
+              </transformers>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>deployable</shadedClassifierName>
+              <relocations>
+                <relocation>
+                  <pattern>net.sf.okapi</pattern>
+                  <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>com.ibm.icu</pattern>
+                  <shadedPattern>okapi_ws_components.com.ibm.icu</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.slf4j</pattern>
+                  <shadedPattern>okapi_ws_components.org.slf4j</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.yaml</pattern>
+                  <shadedPattern>okapi_ws_components.org.yaml</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

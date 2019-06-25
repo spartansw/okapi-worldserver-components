@@ -42,6 +42,18 @@
       <version>${okapi.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>net.sf.okapi.filters</groupId>
+      <artifactId>okapi-filter-json</artifactId>
+      <version>${okapi.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.okapi.filters</groupId>
+      <artifactId>okapi-filter-its</artifactId>
+      <version>${okapi.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
