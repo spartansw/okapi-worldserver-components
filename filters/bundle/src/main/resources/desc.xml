@@ -1,4 +1,5 @@
 <components>
+    <filter class="com.spartansoftwareinc.ws.okapi.filters.aemtranslation.AEMTranslationFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.idml.IDMLWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.json.JSONWSOkapiFilter"/>
     <filter class="com.spartansoftwareinc.ws.okapi.filters.openxml.OpenXMLWSOkapiFilter"/>

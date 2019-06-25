@@ -1,7 +1,8 @@
 package com.spartansoftwareinc.ws.okapi.filters;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,13 +20,13 @@ import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.asset.WSSegment;
 import com.idiominc.wssdk.component.filter.WSFilter;
 import com.spartansoftware.ws.okapi.filters.mock.FileMockWSNode;
-import com.spartansoftware.ws.okapi.filters.mock.ResourceMockWSNode;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSLocale;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSMarkupSegment;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSSegmentReader;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSSegmentReaderBuilder;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSSegmentWriter;
 import com.spartansoftware.ws.okapi.filters.mock.MockWSTextSegment;
+import com.spartansoftware.ws.okapi.filters.mock.ResourceMockWSNode;
 import com.spartansoftwareinc.ws.okapi.filters.model.SegmentInfoHolder;
 
 /**
@@ -45,11 +46,16 @@ public class FilterTestHarness {
     }
 
     public void extractAndExpectSegments(String resourceToTest, WSOkapiFilterConfigurationData<?> config,
-            Charset charset, SegmentInfoHolder[] expected) throws Exception {
+                                         Charset charset, SegmentInfoHolder[] expected) throws Exception {
         WSNode srcNode = new ResourceMockWSNode(resourceToTest, charset, MockWSLocale.ENGLISH);
         List<WSSegment> list = new ArrayList<>();
-        MarkupSegmentMetadata meta = MarkupSegmentMetadata.fromAsset(srcNode, config);
-        list.add(new MockWSMarkupSegment(meta.toXML()));
+        String meta;
+        if (config != null) {
+            meta = MarkupSegmentMetadata.fromAsset(srcNode, config).toXML();
+        } else {
+            meta = srcNode.getPath();
+        }
+        list.add(new MockWSMarkupSegment(meta));
         for (SegmentInfoHolder holder : expected) {
             list.add(new MockWSTextSegment(holder.getEncodedText(), holder.getPlaceholders()));
             list.add(new MockWSMarkupSegment(OkapiFilterBridge.SEGMENT_SEPARATOR));
@@ -59,8 +65,13 @@ public class FilterTestHarness {
         expectWriter.verifyComplete();
     }
 
+    public void extractAndExpectSegments(String resourceToTest,
+                                         Charset charset, SegmentInfoHolder[] expected) throws Exception {
+        extractAndExpectSegments(resourceToTest, null, charset, expected);
+    }
+
     public void mergeAndVerifyOutput(String sourceResource, String mergedGoldResource, Charset charset,
-                                        List<SegmentInfoHolder> translatedSegmentContent) throws IOException {
+                                     List<SegmentInfoHolder> translatedSegmentContent) throws IOException {
         MockWSSegmentReader segReader = prepareSegmentReader(sourceResource, translatedSegmentContent);
         File temp = File.createTempFile("merge", ".tmp");
         WSNode tgtNode = new FileMockWSNode(temp, charset, MockWSLocale.FRENCH);
@@ -82,7 +93,7 @@ public class FilterTestHarness {
         factory.addMarkupSegment(sourceFileResource);
         for (SegmentInfoHolder s : translatedSegmentContent) {
             factory.addTextSegment(s.getEncodedText(), s.getPlaceholders())
-                   .addMarkupSegment(OkapiFilterBridge.SEGMENT_SEPARATOR);
+                    .addMarkupSegment(OkapiFilterBridge.SEGMENT_SEPARATOR);
         }
         return factory.build();
     }
@@ -94,8 +105,7 @@ public class FilterTestHarness {
                 when(mgr.getNode(e.getKey())).thenReturn(e.getValue());
             }
             return mgr;
-        }
-        catch (WSAisException e) {
+        } catch (WSAisException e) {
             throw new RuntimeException(e);
         }
     }
