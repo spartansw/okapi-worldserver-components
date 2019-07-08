@@ -3,6 +3,7 @@ package com.spartansoftwareinc.ws.autoactions.hubmt;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -23,7 +24,6 @@ import com.idiominc.wssdk.asset.WSTextSegmentTranslation;
 import com.idiominc.wssdk.component.autoaction.WSActionResult;
 import com.idiominc.wssdk.component.autoaction.WSTaskAutomaticAction;
 import com.idiominc.wssdk.workflow.WSTask;
-import com.spartansoftwareinc.ws.autoactions.Version;
 import com.spartansoftwareinc.ws.autoactions.hubmt.config.SegmentWhitespaceFixYAMLConfig;
 
 /**
@@ -45,8 +45,8 @@ public class SegmentFixMTWhitespaceRemoval extends WSTaskAutomaticAction {
     // This determines what to look for. The first and third capture groups determine what to restore from source,
     // and the second capture group is used to compare equality.
     private Pattern regexPatternTokens;
-    // Specifies the capture group to compare for validity. The specified capture group must match exactly.
-    private int captureGroupCompare;
+
+    protected SegmentWhitespaceFixYAMLConfig config;
 
     @Override
     public String getDescription() {
@@ -130,24 +130,76 @@ public class SegmentFixMTWhitespaceRemoval extends WSTaskAutomaticAction {
      */
     public String fixWhitespace(String source, String target) {
 
-        Matcher source_matcher = regexPatternTokens.matcher(source);
-        Matcher target_matcher = regexPatternTokens.matcher(target);
+        final Matcher source_matcher = regexPatternTokens.matcher(source);
+        final Matcher target_matcher = regexPatternTokens.matcher(target);
+        final int leftCaptureGroup = config.getLeftCaptureGroup();
+        final int leftIgnoreCaptureGroup = config.getLeftIgnoreCaptureGroup();
+        final int centerCaptureGroup = config.getCenterCaptureGroup();
+        final int compareCaptureGroup = config.getCompareCaptureGroup();
+        final int rightIgnoreCaptureGroup = config.getRightIgnoreCaptureGroup();
+        final int rightCaptureGroup = config.getRightCaptureGroup();
 
-        StringBuffer final_target = new StringBuffer();
+        final Map<String, String[]> sourceMatches = new HashMap<>();
 
-        while (source_matcher.find() && target_matcher.find()) {
+        // Create source map. Each match has an array of of Capture groups. 0 = entire match, 1-n = Capture groups
+        while (source_matcher.find()) {
+            final int numberOfGroups = source_matcher.groupCount();
+            final String[] groups = new String[numberOfGroups + 1];
+            for (int i = 0; i <= numberOfGroups; i++) {
+                groups[i] = source_matcher.group(i);
+            }
+            sourceMatches.put(groups[compareCaptureGroup], groups);
+        }
 
-            String source_item = source_matcher.group();
-            String target_item = target_matcher.group();
 
-            String source_value = source_matcher.group(captureGroupCompare);
-            String target_value = target_matcher.group(captureGroupCompare);
+        final StringBuffer final_target = new StringBuffer();
+        while (target_matcher.find()) {
 
-            if (!source_value.equals(target_value)) {
+            final String target_match = target_matcher.group(0);
+            final String target_value = target_matcher.group(compareCaptureGroup);
 
-                LOG.warn(String.format("Source value %s did not match target value %s when comparing strings", source_item, target_item));
-            } else if (!source_item.equals(target_item)) {
-                target_matcher.appendReplacement(final_target, Matcher.quoteReplacement(source_item));
+
+            // If the values are different, then apply this fix.
+            if (!sourceMatches.containsKey(target_value)) {
+                LOG.warn(String.format("The target contained the placeholder {%s}, which was not found in the source: \"%s\". No fix will be applied.", target_match, source));
+
+            } else if (!sourceMatches.get(target_value)[0].equals(target_match)) {
+
+                final StringBuilder replacement = new StringBuilder();
+
+                final String target_left = target_matcher.group(leftCaptureGroup);
+                final String target_ignore_left = target_matcher.group(leftIgnoreCaptureGroup);
+                final String target_center = target_matcher.group(centerCaptureGroup);
+                final String target_ignore_right = target_matcher.group(rightIgnoreCaptureGroup);
+                final String target_right = target_matcher.group(rightCaptureGroup);
+
+                final String[] sourceGroups = sourceMatches.get(target_value);
+                final String source_match = sourceGroups[0];
+                final String source_left = sourceGroups[leftCaptureGroup];
+                final String source_ignore_left = sourceGroups[leftIgnoreCaptureGroup];
+                final String source_value = sourceGroups[compareCaptureGroup];
+                final String source_ignore_right = sourceGroups[rightIgnoreCaptureGroup];
+                final String source_right = sourceGroups[rightCaptureGroup];
+
+
+                // Replace the left side's whitespace if nothing in the ignore capture group was detected hugging the placeholder
+                if (target_ignore_left.length() == 0) {
+                    replacement.append(source_left);
+                } else {
+                    replacement.append(target_ignore_left).append(target_left);
+                }
+
+                // Add the placeholder
+                replacement.append(target_center);
+
+                // Replace the right side's whitespace if nothing in the ignore capture group was detected hugging the placeholder
+                if (target_ignore_right.length() == 0) {
+                    replacement.append(source_right);
+                } else {
+                    replacement.append(target_ignore_right).append(target_right);
+                }
+
+                target_matcher.appendReplacement(final_target, Matcher.quoteReplacement(replacement.toString()));
             }
 
         }
@@ -223,6 +275,7 @@ public class SegmentFixMTWhitespaceRemoval extends WSTaskAutomaticAction {
         if (resource == null) {
             throw new WSException(new FileNotFoundException("Unable to load Resource " + CONFIG_FILE_NAME
                     + " stored in package resources."));
+
         }
 
         return resource;
@@ -234,17 +287,20 @@ public class SegmentFixMTWhitespaceRemoval extends WSTaskAutomaticAction {
                 loadAs(inputStream, SegmentWhitespaceFixYAMLConfig.class);
 
         String pattern = config.getRegex();
+        Integer leftCaptureGroup = config.getLeftCaptureGroup();
+        Integer centerCaptureGroup = config.getCenterCaptureGroup();
+        Integer compareCaptureGroup = config.getCompareCaptureGroup();
+        Integer rightCaptureGroup = config.getRightCaptureGroup();
         if (pattern == null) {
             throw new WSException("Unable to load \"regex\" from config file located at " + CONFIG_WS_LOCATION);
         }
-        regexPatternTokens = Pattern.compile(pattern);
-
-
-        Integer group = config.getCaptureGroup();
-        if (group == null) {
-            throw new WSException("Unable to load \"captureGroup\" from config file located at " + CONFIG_WS_LOCATION);
+        if (leftCaptureGroup == null || centerCaptureGroup == null ||
+                compareCaptureGroup == null || rightCaptureGroup == null) {
+            throw new WSException(String.format("Unable to load all capture groups from config file located at " + CONFIG_WS_LOCATION + ": leftCaptureGroup = %d, centerCaptureGroup = %d, compareCaptureGroup = %d, rightCaptureGroup = %d", leftCaptureGroup, centerCaptureGroup, compareCaptureGroup, rightCaptureGroup));
         }
-        captureGroupCompare = group;
+
+        regexPatternTokens = Pattern.compile(pattern);
+        this.config = config;
 
     }
 

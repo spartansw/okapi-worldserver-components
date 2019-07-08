@@ -1,2 +1,10 @@
-regex: "(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*\\{(\\d+)\\}(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*"
-captureGroup: 1
+# (?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*) Captures every single possible whitespace that surrounds the placeholder
+# ([\\p{P}&&[^{}]]?) Captures any punctuation, except { and }. It is the intersection of the set of all punctuation and the set with every character except { and }.
+# (\\{(\\d+)\\}) Captures placeholder and its value.
+regex: "((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*)([\\p{P}&&[^{}]]?)(\\{(\\d+)\\})([\\p{P}&&[^{}]]?)((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*)"
+leftCaptureGroup: 1
+leftIgnoreCaptureGroup: 2
+centerCaptureGroup: 3
+compareCaptureGroup: 4
+rightIgnoreCaptureGroup: 5
+rightCaptureGroup: 6
