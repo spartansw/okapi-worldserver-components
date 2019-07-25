@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<translationObjectFile fileType="PAGE" sourcePath="/xyz">
+ <translationObjectProperties>
+  <property isMultiValue="false" nodePath="/xyz" propertyName="text">&lt;p&gt;Test words.&lt;sup&gt;1-5&lt;/sup&gt;&lt;/p&gt; &lt;p&gt; well whadda you know.&lt;sup&gt;6-10&lt;/sup&gt;</property>
+ </translationObjectProperties>
+</translationObjectFile>

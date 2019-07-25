@@ -20,7 +20,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <ws.version>10.4.3.195</ws.version>
-    <okapi.version>0.37-SNAPSHOT</okapi.version>
+    <okapi.version>0.37</okapi.version>
     <mainPackage>${project.groupId}</mainPackage>
     <git.basedir>${project.basedir}</git.basedir>
   </properties>
