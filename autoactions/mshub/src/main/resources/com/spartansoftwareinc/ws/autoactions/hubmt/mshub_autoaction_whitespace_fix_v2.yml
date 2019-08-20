@@ -1,0 +1,35 @@
+# (?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*) Captures every single possible whitespace that surrounds the placeholder
+# [\\p{P}&&[^{}]] Captures any punctuation, except { and }. It is the intersection of the set of all punctuation and the set with every character except { and }.
+segmentRules:
+
+    # Marks placeholders at the beginning and end of target segments as already processed, so that they are skipped over by future patterns.
+  - targetLeft: "^(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*"
+    replacementLeft: "$t0" # replacing with $t0 means no changes are made to the target
+    targetRight: "[\\p{P}&&[^{}]]?(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*$"
+    replacementRight: "$t0" # replacing with $t0 means no changes are made to the target
+    leftRightIndependent: true
+    allowFurtherReplacementsLeft: false
+    allowFurtherReplacementsRight: false
+
+    # If a placeholder was at the end of a sentence, then moved to the middle with no punctuation or spacing next to it, add a space to the right side66
+  - sourceRight: "[\\p{P}&&[^{}]]?(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*$"
+    targetRight: "(?![\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20|[\\p{P}&&[^{}]])"
+    replacementRight: " $t0"
+    allowFurtherReplacementsRight: false
+    leftRightIndependent: true
+
+    # Mark all placeholders that were at the end of source sentences as processed
+  - sourceRight: "[\\p{P}&&[^{}]]?(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*$"
+    replacementRight: "$t0"
+    allowFurtherReplacementsRight: false
+    leftRightIndependent: true
+
+    # Restores the whitespaces, that were in the source, back in the target. If a punctuation mark has been added, it will put the spacing on the other side of the punctuation.
+  - sourceLeft: "((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)+)[\\p{P}&&[^{}]]?"
+    targetLeft: "(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*([\\p{P}&&[^{}]]?)"
+    replacementLeft: "$s1$t1"
+    sourceRight: "[\\p{P}&&[^{}]]?((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)+)"
+    targetRight: "([\\p{P}&&[^{}]])?(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*"
+    replacementRight: "$t1$s1"
+    leftRightIndependent: true
+

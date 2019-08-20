@@ -1,0 +1,10 @@
+# This contains a few random examples
+segmentRules:
+
+    # For French, if number exists on the left side source, but not in the target, restore it.
+  - sourceLeft: "[0-9]*\.?[0-9]+" # matches numbers like 5, 22, 0, 37.0123, 2908392
+    targetLeft: "[^0-9]+" # matches anything that isn't a number
+    replacementLeft: "$t0$s0" # puts the target to the left, and then the number to the right of that
+    leftRightIndependent: true
+    allowFurtherReplacementsLeft: false
+    targetLanguages: [ "French (France)" , "French (Canada)"]
