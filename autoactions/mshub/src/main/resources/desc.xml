@@ -1,4 +1,5 @@
 <components>
     <auto_action class="com.spartansoftwareinc.ws.autoactions.hubmt.HubMTAutomaticAction"/>
+    <auto_action class="com.spartansoftwareinc.ws.autoactions.hubmt.SegmentFixMTWhitespaceRemoval"/>
     <auto_action class="com.spartansoftwareinc.ws.autoactions.hubmt.SegmentFixMTWhitespaceRemovalV2"/>
 </components>
