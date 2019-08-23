@@ -27,7 +27,7 @@ import com.idiominc.wssdk.component.WSParameterFactory;
 import com.idiominc.wssdk.component.autoaction.WSActionResult;
 import com.idiominc.wssdk.component.autoaction.WSTaskAutomaticAction;
 import com.idiominc.wssdk.workflow.WSTask;
-import com.spartansoftwareinc.ws.autoactions.hubmt.config.SegmentWhitespaceFixYAMLConfig;
+import com.spartansoftwareinc.ws.autoactions.hubmt.config.SegmentWhitespaceFixYAMLConfigV2;
 
 /**
  * <p>During Machine Translation, white spaces next to tags can be removed. This Auto Action can be added after a Machine Translation to fix those whitespaces</p>
@@ -55,7 +55,7 @@ public class SegmentFixMTWhitespaceRemovalV2 extends WSTaskAutomaticAction {
     private static final String PARAM_IGNORE_100_PERCENT = "ignore_100";
     private static final String PARAM_CONFIG_LOCATION = "config_location";
 
-    protected SegmentWhitespaceFixYAMLConfig config;
+    protected SegmentWhitespaceFixYAMLConfigV2 config;
 
     @Override
     public String getDescription() {
@@ -106,7 +106,7 @@ public class SegmentFixMTWhitespaceRemovalV2 extends WSTaskAutomaticAction {
             final String configFileLocation = (String) parameters.get(PARAM_CONFIG_LOCATION);
 
             // Load config file
-            final SegmentWhitespaceFixYAMLConfig config = getConfig(context.getAisManager(), configFileLocation);
+            final SegmentWhitespaceFixYAMLConfigV2 config = getConfig(context.getAisManager(), configFileLocation);
 
             // cast task to asset task
             if (task instanceof WSAssetTask) {
@@ -178,14 +178,14 @@ public class SegmentFixMTWhitespaceRemovalV2 extends WSTaskAutomaticAction {
      * @param target The string that is being checked for differences
      * @return The target string with the updates to the placeholders
      */
-    public String fixSegment(String source, String target, SegmentWhitespaceFixYAMLConfig config,
+    public String fixSegment(String source, String target, SegmentWhitespaceFixYAMLConfigV2 config,
         String targetLanguage) {
 
         String currentTarget = target;
         final Map<String, Boolean> processedLeftTargets = new HashMap<>(), processedRightTargets = new HashMap<>();
 
         // Loop through every pattern group in the config
-        for(SegmentWhitespaceFixYAMLConfig.SegmentRule segmentRule : config.getSegmentRules()) {
+        for(SegmentWhitespaceFixYAMLConfigV2.SegmentRule segmentRule : config.getSegmentRules()) {
             final Matcher source_matcher = segmentRule.getSourcePatternComplete().matcher(source);
             final Matcher targetMatcher = segmentRule.getTargetPatternComplete().matcher(currentTarget);
             final int sourceCaptureGroup = segmentRule.getSourceCaptureGroupPlaceholder()+1;
@@ -339,7 +339,7 @@ public class SegmentFixMTWhitespaceRemovalV2 extends WSTaskAutomaticAction {
         return generatedString.toString();
     }
 
-    protected SegmentWhitespaceFixYAMLConfig getConfig(WSAisManager aisManager, String configFileLocation)
+    protected SegmentWhitespaceFixYAMLConfigV2 getConfig(WSAisManager aisManager, String configFileLocation)
         throws WSException {
 
         InputStream wsConfigFile;
@@ -399,8 +399,8 @@ public class SegmentFixMTWhitespaceRemovalV2 extends WSTaskAutomaticAction {
         }
 
         // Load the config file then construct it
-        final SegmentWhitespaceFixYAMLConfig config = new Yaml().
-            loadAs(wsConfigFile, SegmentWhitespaceFixYAMLConfig.class);
+        final SegmentWhitespaceFixYAMLConfigV2 config = new Yaml().
+            loadAs(wsConfigFile, SegmentWhitespaceFixYAMLConfigV2.class);
         config.construct();
 
         try {

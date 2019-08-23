@@ -7,14 +7,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import com.idiominc.wssdk.ais.WSAisManager;
-import com.spartansoftwareinc.ws.autoactions.hubmt.config.SegmentWhitespaceFixYAMLConfig;
+import com.spartansoftwareinc.ws.autoactions.hubmt.config.SegmentWhitespaceFixYAMLConfigV2;
 
 public class SegmentFixMTWhitespaceRemovalV2Test {
 
     private SegmentFixMTWhitespaceRemovalV2 mtWhitespaceRemoval;
     @Mock
     private WSAisManager aisManager;
-    private SegmentWhitespaceFixYAMLConfig config;
+    private SegmentWhitespaceFixYAMLConfigV2 config;
 
     @Before
     public void init() throws Exception {
@@ -60,7 +60,7 @@ public class SegmentFixMTWhitespaceRemovalV2Test {
         fixTargetThenAssertMatchFixed("From the {1}Transfer Funds{2} {3}From{4} drop-down, choose the bank account the credit card "
             + "was paid from.","Dans la liste déroulante {1}Transférer des fonds{2} {3}depuis{4}, choisissez le compte bancaire d'où le paiement a été émis.","Dans la liste déroulante {1}Transférer des fonds{2} {3}depuis{4}, choisissez le compte bancaire d'où le paiement a été émis.");
 
-        fixTargetThenAssertMatchFixed("{1}Note:{2}The word {3}Sales{4} and {5}Invoice{6}","{1}Nota:{2} Los términos “{3}ventas{4}” y “{5}factura de ingreso{6}” se usarán indistintamente en este artículo.","{1}Nota:{2} Los términos “{3}ventas{4}” y “{5}factura de ingreso{6}” se usarán indistintamente en este artículo.");
+        fixTargetThenAssertMatchFixed("{1}Note:{2}The word {3}Sales{4} and {5}Invoice{6}","{1}Nota:{2} Los términos “{3}ventas{4}” y “{5}factura de ingreso{6}” se usarán indistintamente en este artículo.","{1}Nota:{2}Los términos “{3}ventas{4}” y “{5}factura de ingreso{6}” se usarán indistintamente en este artículo.");
 
     }
     @Test
@@ -93,6 +93,16 @@ public class SegmentFixMTWhitespaceRemovalV2Test {
         fixTargetThenAssertMatchFixed("{1}Beginning and end{2}.\t",
             "Not {1}beginning{2} or end.", "Not {1}beginning{2} or end.", "French (France)");
         fixTargetThenAssertMatchFixed("Not {1}beginning{2} or end.", "{1}Beginning and end{2}.", "{1}Beginning and end{2}.");
+    }
+
+    @Test
+    public void tempTest() throws Exception{
+        fixTargetThenAssertMatchFixed("{13}Note:{14}The word {15}Sales{16} and {17}Invoice{18}", "{13} Note: {14} Mot {15} Ventes {16} et {17} Facture {18}", "{13}Note:{14}Mot {15}Ventes{16} et {17}Facture{18}");
+
+        fixTargetThenAssertMatchFixed("This is a simple {1}test{2}.", "C'est un outil simple {1} test {2} .", "C'est un outil simple {1}test{2}.");
+
+        fixTargetThenAssertMatchFixed("This sentence has a {1}word{2}.", "This {1}word{2} has its spaces.",
+            "This {1}word{2} has its spaces.");
     }
 
 
