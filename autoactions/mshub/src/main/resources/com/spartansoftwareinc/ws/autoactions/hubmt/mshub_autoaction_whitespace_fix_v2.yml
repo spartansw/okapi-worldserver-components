@@ -34,12 +34,28 @@ segmentRules:
     allowFurtherReplacementsLeft: false
     leftRightIndependent: true
 
-    # Restores the whitespaces, that were in the source, back in the target. If a punctuation mark has been added, it will put the spacing on the other side of the punctuation.
-  - sourceLeft: "((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*)[\\p{P}&&[^{}]]?"
-    targetLeft: "(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*([\\p{P}&&[^{}]]?)"
-    replacementLeft: "$s1$t1"
-    sourceRight: "[\\p{P}&&[^{}]]?((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*)"
-    targetRight: "([\\p{P}&&[^{}]])?(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*"
-    replacementRight: "$t1$s1"
+  # Ignores if punctuation is right next to a placeholder
+  - targetLeft: "[\\p{P}&&[^{}]]"
+    replacementLeft: "$t0"
+    targetRight: "[\\p{P}&&[^{}]]"
+    replacementRight: "$t0"
+    allowFurtherReplacementsLeft: false
+    allowFurtherReplacementsRight: false
+    leftRightIndependent: true
+
+  # If punctuation is removed, and there's spaces followed by a non-comma character, keep the space
+  - sourceRight: "[\\p{P}&&[^{}]]((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)+)"
+    targetRight: "(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)+(?![\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20|[\\p{P}&&[^{}]])"
+    replacementRight: "$s1"
+    allowFurtherReplacementsRight: false
+    leftRightIndependent: true
+
+    # Restores the whitespaces, that were in the source, back in the target.
+  - sourceLeft: "((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*)"
+    targetLeft: "(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*"
+    replacementLeft: "$s1"
+    sourceRight: "((?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*)"
+    targetRight: "(?:[\\s\\h\\v\\u2009\\u200B]|\\uDB40\\uDC20)*"
+    replacementRight: "$s1"
     leftRightIndependent: true
 

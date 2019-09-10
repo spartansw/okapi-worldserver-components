@@ -103,6 +103,24 @@ public class SegmentFixMTWhitespaceRemovalV2Test {
 
         fixTargetThenAssertMatchFixed("This sentence has a {1}word{2}.", "This {1}word{2} has its spaces.",
             "This {1}word{2} has its spaces.");
+        fixTargetThenAssertMatchFixed(
+            "{73}{74}{75}In the {76}Open {77}{78}{79}{80}{81}Estimates{82} {83}{84}{85}column, select the  estimate(s) to navigate to them.{86}{87}{88}",
+            "{73}{74}{75}En la columna {76}Abrir {77}{78}{79}{80}{81}presupuestos{82} {83}{84}{85}, selecciona el "
+                + "(los) presupuesto(s) para dirigirte a él (ellos).{86}{87}{88}",
+            "{73}{74}{75}En la columna {76}Abrir {77}{78}{79}{80}{81}presupuestos{82} {83}{84}{85}, selecciona el (los) presupuesto(s) para dirigirte a él (ellos).{86}{87}{88}");
+
+        fixTargetThenAssertMatchFixed("Select {5}Save{6}, {7}Save and print{8}, or {9}Save and close{10}.",
+            "Sélectionner {5} Enregistrer {6} , {7} Enregistrer et imprimer {8} , ou {9} Enregistrer et fermer {10}.",
+            "Sélectionner {5}Enregistrer{6}, {7}Enregistrer et imprimer{8}, ou {9}Enregistrer et fermer{10}.");
+
+        fixTargetThenAssertMatchFixed("Select {15}Save{16}, {17}Save and print{18}, or {19}Save and close{20}.",
+            "Sélectionnez {15}Enregistrer et imprimer{16}, {17}Enregistrer{18} ou {19}Enregistrer et fermer{20}.",
+            "Sélectionnez {15}Enregistrer et imprimer{16}, {17}Enregistrer{18} ou {19}Enregistrer et fermer{20}.");
+    }
+
+    @Test
+    public void tempTest2() throws Exception {
+
     }
 
 
@@ -125,6 +143,8 @@ public class SegmentFixMTWhitespaceRemovalV2Test {
     private void fixTargetThenAssertMatchFixed(final String source, final String brokenTarget, final String expectedTarget,
         final String targetLanguage) {
 
+//        System.out.println(String.format("Source:    %s\nMT:        %s\nExpected:  %s\n\n",source, brokenTarget,
+//            expectedTarget));
         String test_fixed = mtWhitespaceRemoval.fixSegment(source, brokenTarget, config, targetLanguage);
         assertEquals(expectedTarget, test_fixed);
     }
