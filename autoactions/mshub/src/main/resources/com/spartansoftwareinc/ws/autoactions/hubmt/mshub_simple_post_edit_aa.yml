@@ -1,0 +1,10 @@
+actions:
+  # Ensure that the space to the left of a colon, semi-colon, question mark, and exclamation mark is a non breaking space
+  French (France):
+    - search: '(?:[\s\h\v\u2009\u200B]|\uDB40\uDC20)?([:;?!])'
+      replace: "\u00A0$1"
+
+  # Same as above, but just with colons
+  French (Canada):
+    - search: '(?:[\s\h\v\u2009\u200B]|\uDB40\uDC20)?([:])'
+      replace: "\u00A0$1"
