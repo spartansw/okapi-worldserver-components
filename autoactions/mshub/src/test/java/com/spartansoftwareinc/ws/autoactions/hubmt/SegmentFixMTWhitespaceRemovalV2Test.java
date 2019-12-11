@@ -4,26 +4,29 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 
-import com.idiominc.wssdk.ais.WSAisManager;
 import com.spartansoftwareinc.ws.autoactions.hubmt.config.SegmentWhitespaceFixYAMLConfigV2;
 
 public class SegmentFixMTWhitespaceRemovalV2Test {
 
     private SegmentFixMTWhitespaceRemovalV2 mtWhitespaceRemoval;
-    @Mock
-    private WSAisManager aisManager;
+
     private SegmentWhitespaceFixYAMLConfigV2 config;
+
+    // If you want to generate a CSV for review, set this to true and copy the console output to
+    // a .csv file.
+    private static boolean printOutCSV = false;
 
     @Before
     public void init() throws Exception {
 
-        // Should fallback on default location
-        final String configFileLocation = "";
+        final String configFileLocation = "mshub_autoaction_whitespace_fix_v2.yml";
 
         mtWhitespaceRemoval = new SegmentFixMTWhitespaceRemovalV2();
-        config = mtWhitespaceRemoval.getConfig(aisManager, configFileLocation);
+        config = mtWhitespaceRemoval.getConfig(null, configFileLocation);
+        if (printOutCSV) {
+            System.out.println(String.format("source,mt result,fixed"));
+        }
     }
 
     @Test
@@ -90,63 +93,38 @@ public class SegmentFixMTWhitespaceRemovalV2Test {
 
 
         // Theoretical sentence beginning/end case
-        fixTargetThenAssertMatchFixed("{1}Beginning and end{2}.\t",
-            "Not {1}beginning{2} or end.", "Not {1}beginning{2} or end.", "French (France)");
-        fixTargetThenAssertMatchFixed("Not {1}beginning{2} or end.", "{1}Beginning and end{2}.", "{1}Beginning and end{2}.");
-    }
-
-    @Test
-    public void tempTest() throws Exception{
-        fixTargetThenAssertMatchFixed("{13}Note:{14}The word {15}Sales{16} and {17}Invoice{18}", "{13} Note: {14} Mot {15} Ventes {16} et {17} Facture {18}", "{13}Note:{14}Mot {15}Ventes{16} et {17}Facture{18}");
-
-        fixTargetThenAssertMatchFixed("This is a simple {1}test{2}.", "C'est un outil simple {1} test {2} .", "C'est un outil simple {1}test{2}.");
-
-        fixTargetThenAssertMatchFixed("This sentence has a {1}word{2}.", "This {1}word{2} has its spaces.",
-            "This {1}word{2} has its spaces.");
-        fixTargetThenAssertMatchFixed(
-            "{73}{74}{75}In the {76}Open {77}{78}{79}{80}{81}Estimates{82} {83}{84}{85}column, select the  estimate(s) to navigate to them.{86}{87}{88}",
-            "{73}{74}{75}En la columna {76}Abrir {77}{78}{79}{80}{81}presupuestos{82} {83}{84}{85}, selecciona el "
-                + "(los) presupuesto(s) para dirigirte a él (ellos).{86}{87}{88}",
-            "{73}{74}{75}En la columna {76}Abrir {77}{78}{79}{80}{81}presupuestos{82} {83}{84}{85}, selecciona el (los) presupuesto(s) para dirigirte a él (ellos).{86}{87}{88}");
-
-        fixTargetThenAssertMatchFixed("Select {5}Save{6}, {7}Save and print{8}, or {9}Save and close{10}.",
-            "Sélectionner {5} Enregistrer {6} , {7} Enregistrer et imprimer {8} , ou {9} Enregistrer et fermer {10}.",
-            "Sélectionner {5}Enregistrer{6}, {7}Enregistrer et imprimer{8}, ou {9}Enregistrer et fermer{10}.");
-
-        fixTargetThenAssertMatchFixed("Select {15}Save{16}, {17}Save and print{18}, or {19}Save and close{20}.",
-            "Sélectionnez {15}Enregistrer et imprimer{16}, {17}Enregistrer{18} ou {19}Enregistrer et fermer{20}.",
-            "Sélectionnez {15}Enregistrer et imprimer{16}, {17}Enregistrer{18} ou {19}Enregistrer et fermer{20}.");
-    }
-
-    @Test
-    public void tempTest2() throws Exception {
-
+        fixTargetThenAssertMatchFixed("{1}Beginning and end{2}.\t", "Not {1}beginning{2} or end.",
+            "Not {1}beginning{2} or end.", "French (France)");
+        fixTargetThenAssertMatchFixed("Not {1}beginning{2} or end.", "{1}Beginning and end{2}.",
+            "{1}Beginning and end{2}.");
     }
 
 
     /**
-     * @param source Original string
-     * @param brokenTarget Translated string
-     * @param expectedTarget  The expected fixed string
+     * @param source         Original string
+     * @param brokenTarget   Translated string
+     * @param expectedTarget The expected fixed string
      */
-    private void fixTargetThenAssertMatchFixed(final String source, final String brokenTarget, final String expectedTarget) {
+    private void fixTargetThenAssertMatchFixed(final String source, final String brokenTarget,
+        final String expectedTarget) {
 
         fixTargetThenAssertMatchFixed(source, brokenTarget, expectedTarget, "");
     }
 
     /**
      * @param source         Original string
-     * @param brokenTarget         Translated string
-     * @param expectedTarget       The expected fixed string
+     * @param brokenTarget   Translated string
+     * @param expectedTarget The expected fixed string
      * @param targetLanguage The target translation language
      */
-    private void fixTargetThenAssertMatchFixed(final String source, final String brokenTarget, final String expectedTarget,
-        final String targetLanguage) {
+    private void fixTargetThenAssertMatchFixed(final String source, final String brokenTarget,
+        final String expectedTarget, final String targetLanguage) {
 
-//        System.out.println(String.format("Source:    %s\nMT:        %s\nExpected:  %s\n\n",source, brokenTarget,
-//            expectedTarget));
         String test_fixed = mtWhitespaceRemoval.fixSegment(source, brokenTarget, config, targetLanguage);
-        assertEquals(expectedTarget, test_fixed);
+        assertEquals("\nSource   :" + source + "\nMT Result:" + brokenTarget, expectedTarget, test_fixed);
+        if (printOutCSV) {
+            System.out.println(String.format("\"%s\",\"%s\",\"%s\"", source, brokenTarget, expectedTarget));
+        }
     }
 
 

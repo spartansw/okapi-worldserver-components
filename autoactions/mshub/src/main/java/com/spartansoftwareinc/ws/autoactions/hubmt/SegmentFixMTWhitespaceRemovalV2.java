@@ -395,7 +395,7 @@ public class SegmentFixMTWhitespaceRemovalV2 extends WSTaskAutomaticAction {
             wsConfigFile = configFile.getInputStream();
         } else {
             // If not AIS manager (ran outside of Worldserver), just use resources file
-            wsConfigFile = loadConfigFromResources();
+            wsConfigFile = loadConfigFromResources(configFileLocation);
         }
 
         // Load the config file then construct it
@@ -413,14 +413,22 @@ public class SegmentFixMTWhitespaceRemovalV2 extends WSTaskAutomaticAction {
 
     }
 
-
-    private InputStream loadConfigFromResources() throws WSException {
-        InputStream resource = getClass().getResourceAsStream(INCLUDED_CONFIG_RESOURCES_FILE_NAME);
+    private InputStream loadConfigFromResources(String configFileLocation)  throws WSException {
+        InputStream resource = getClass().getResourceAsStream(configFileLocation);
         if (resource == null) {
             throw new WSException(new FileNotFoundException(
-                "Unable to load Resource " + INCLUDED_CONFIG_RESOURCES_FILE_NAME + " stored in package resources."));
+                "Unable to load Resource " + configFileLocation + " stored in package resources."));
         }
         return resource;
+    }
+
+
+    private InputStream loadConfigFromResources() throws WSException {
+        return loadConfigFromResources(getIncludedConfigResourcesFileName());
+    }
+
+    protected String getIncludedConfigResourcesFileName(){
+        return INCLUDED_CONFIG_RESOURCES_FILE_NAME;
     }
 
 }
