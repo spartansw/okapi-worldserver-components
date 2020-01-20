@@ -19,7 +19,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <ws.version>10.4.3.195</ws.version>
+    <ws.version>11.4.0.56</ws.version>
     <okapi.version>0.37</okapi.version>
     <mainPackage>${project.groupId}</mainPackage>
     <git.basedir>${project.basedir}</git.basedir>
@@ -144,8 +144,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
 
