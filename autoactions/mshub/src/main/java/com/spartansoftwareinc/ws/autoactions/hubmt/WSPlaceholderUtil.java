@@ -56,7 +56,7 @@ public class WSPlaceholderUtil
      * from the map.
      * 
      * @param s Input string with placeholders. e.g. "Click {1}here{2} or {3}cancel{4} the operation.{5}")
-     * @param placeholderMap An int-to-String map.
+     * @param phmap An int-to-String map.
      * @return a String where all placeholders are replaced by the corresponding strings.
      */
     public static String replacePlaceholders( String s, Map<Integer, PHData> phmap )

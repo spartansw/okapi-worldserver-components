@@ -75,6 +75,13 @@
                   <pattern>net.sf.okapi</pattern>
                   <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
                 </relocation>
+                <relocation> <!-- Comon code needs to be relocated also to prevent from overloading the previous version. -->
+		  <pattern>com.spartansoftwareinc</pattern>
+		  <shadedPattern>${project.version}.com.spartansoftwareinc</shadedPattern>
+		  <excludes>
+		    <exclude>com.spartansoftwareinc.ws.okapi.filters.xliff.*</exclude>
+		  </excludes>		   
+                </relocation>
                 <relocation>
                   <pattern>com.ibm.icu</pattern>
                   <shadedPattern>okapi_ws_components.com.ibm.icu</shadedPattern>

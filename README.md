@@ -68,7 +68,7 @@ even 9.x), due to the stability of the WSSDK.  You will need to update the
 compiling against.
 
 All Okapi releases since M24 require Java 7 or later, so these components must 
-be deployed to a WorldServer instance running Java 7 or later.
+be deployed to a WorldServer instance running Java 7 or later. (Upcoming M36, which is in development at the time of this writing, will requires Java 7.)
 
 Building
 --------

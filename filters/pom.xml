@@ -19,6 +19,7 @@
     <module>base</module>
     <module>idml</module>
     <module>json</module>
+    <module>markdown</module>
     <module>openxml</module>
     <module>po</module>
     <module>xliff</module>

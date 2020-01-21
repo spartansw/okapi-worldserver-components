@@ -99,6 +99,13 @@
                   <pattern>net.sf.okapi</pattern>
                   <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
                 </relocation>
+                <relocation> <!-- Comon code needs to be relocated also to prevent from overloading the previous version. -->
+		  <pattern>com.spartansoftwareinc</pattern>
+		  <shadedPattern>${project.version}.com.spartansoftwareinc</shadedPattern>
+		  <excludes>
+		    <exclude>com.spartansoftwareinc.ws.okapi.mt.mshub.*</exclude>
+		  </excludes>		   
+                </relocation>
                 <relocation>
                   <pattern>org.apache.commons</pattern>
                   <shadedPattern>okapi_ws_components.org.apache.commons</shadedPattern>
