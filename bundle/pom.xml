@@ -25,6 +25,16 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>com.spartansoftwareinc.ws.okapi.mt.googleautoml</groupId>
+      <artifactId>okapi-ws-mt-googleautoml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.spartansoftwareinc.ws.mt.googlev3</groupId>
+      <artifactId>okapi-ws-mt-google-v3</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.mt.mshub</groupId>
       <artifactId>okapi-ws-mt-mshub</artifactId>
       <version>${project.version}</version>
