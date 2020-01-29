@@ -5,11 +5,17 @@ import java.util.regex.Pattern;
 
 /**
  * Code Masker with customizable regex for code detection.
+ * This uses &lt;div ws_id="nn"&gt; instead of &lt;span ws_id="nn"&gt;
  */
 public class CustomCodesMasker extends CodesMasker {
     private static final Pattern WS_PLACEHOLDER = Pattern.compile("\\{([0-9]+)\\}");
     private Pattern MS_MASKED_CODE_MARKUP;
 
+    /**
+     * Constructor that uses the specified regex to find the &lt;div&gt; elements
+     * inserted by us. The regex must match with &lt;div ws_id="nn"&gt;.
+     * @param regex
+     */
     public CustomCodesMasker(String regex) {
         this.MS_MASKED_CODE_MARKUP = Pattern.compile(regex);
     }

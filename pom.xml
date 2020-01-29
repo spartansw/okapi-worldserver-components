@@ -182,6 +182,28 @@
           <noqualifier>com.idiominc.*</noqualifier>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>regex-property</id>
+            <goals>
+              <goal>regex-property</goal>
+            </goals>
+            <configuration>
+              <name>shade_prefix</name>
+              <value>${project.version}</value>
+              <regex>^([0-9]+)\.([0-9]+)(-SNAPSHOT)?$</regex>
+              <replacement>okapi_ws_compopnents_$1_$2</replacement>
+              <failIfNoMatch>true</failIfNoMatch>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
     </plugins>
   </build>
 
