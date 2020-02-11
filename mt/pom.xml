@@ -20,5 +20,6 @@
     <module>google</module>
     <module>googleautoml</module>
     <module>mshub</module>
+    <module>googlev3</module>
   </modules>
 </project>

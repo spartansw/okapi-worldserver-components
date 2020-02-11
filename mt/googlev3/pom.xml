@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <url>http://maven.apache.org</url>
+  <modelVersion>4.0.0</modelVersion>
+
+ <parent>
+  <groupId>com.spartansoftwareinc.ws.okapi.mt</groupId>
+  <artifactId>okapi-ws-mt</artifactId>
+  <version>1.9-SNAPSHOT</version>
+ </parent>
+
+ <groupId>com.spartansoftwareinc.ws.mt.googlev3</groupId>
+ <artifactId>okapi-ws-mt-google-v3</artifactId>
+
+ <name>(Native, non-Okapi) Google v3 API MT Adapter for WorldServer</name>
+ <!-- Although this project exists in Okapi WorldServer Component repository, it is NOT BASED ON any Okapi
+      MT connector.  (The Google API v3 compatible connector does not exist in Okapi framework.) The module
+      is here to use the infrastructure such as UI base components,
+      place holder handling and locale mapping between Google and WorldServer.
+ -->
+
+ <properties>
+  <mainPackage>com.spartansoftwareinc.ws.mt.googlev3</mainPackage>
+  <git.basedir>${project.basedir}/../../</git.basedir>
+ </properties>
+
+ <dependencyManagement>
+  <dependencies>
+   <dependency>
+    <groupId>com.google.cloud</groupId>
+    <artifactId>libraries-bom</artifactId>
+    <version>3.0.0</version>
+    <type>pom</type>
+    <scope>import</scope>
+   </dependency>
+  </dependencies>
+ </dependencyManagement>
+
+ <dependencies>
+  <dependency>
+   <groupId>com.spartansoftwareinc.ws.okapi.mt.base</groupId>
+   <artifactId>okapi-ws-mt-base</artifactId>
+   <version>${project.version}</version>
+  </dependency>
+  <dependency>
+   <groupId>com.spartansoftwareinc.ws.okapi.mt.base</groupId>
+   <artifactId>okapi-ws-mt-base</artifactId>
+   <scope>test</scope>
+   <type>test-jar</type>
+   <version>${project.version}</version>
+  </dependency>
+  <dependency>
+   <groupId>com.google.cloud</groupId>
+   <artifactId>google-cloud-translate</artifactId>
+  </dependency>
+  <dependency>
+   <groupId>com.google.cloud</groupId>
+   <artifactId>google-cloud-storage</artifactId>
+   <version>1.101.0</version>
+  </dependency>
+  <dependency>
+   <groupId>com.fasterxml.jackson.core</groupId>
+   <artifactId>jackson-annotations</artifactId>
+   <version>2.9.4</version>
+  </dependency>
+  <dependency>
+   <groupId>com.fasterxml.jackson.core</groupId>
+   <artifactId>jackson-databind</artifactId>
+   <version>2.9.8</version>
+   <scope>compile</scope>
+  </dependency>
+ </dependencies>
+
+ <build>
+  <pluginManagement>
+   <plugins>
+    <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+    <plugin>
+     <groupId>org.eclipse.m2e</groupId>
+     <artifactId>lifecycle-mapping</artifactId>
+     <version>1.0.0</version>
+     <configuration>
+      <lifecycleMappingMetadata>
+       <pluginExecutions>
+        <pluginExecution>
+         <pluginExecutionFilter>
+          <groupId>net.mgorski.quicktag</groupId>
+          <artifactId>quicktag</artifactId>
+          <versionRange>[1.0.0,)</versionRange>
+          <goals>
+           <goal>quicktag</goal>
+          </goals>
+         </pluginExecutionFilter>
+         <action>
+          <ignore />
+         </action>
+        </pluginExecution>
+       </pluginExecutions>
+      </lifecycleMappingMetadata>
+     </configuration>
+    </plugin>
+   </plugins>
+  </pluginManagement>
+  <plugins>
+   <plugin>
+    <groupId>net.mgorski.quicktag</groupId>
+    <artifactId>quicktag</artifactId>
+    <version>2.1.5</version>
+   </plugin>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-shade-plugin</artifactId>
+    <version>3.1.0</version>
+    <configuration>
+     <createDependencyReducedPom>false</createDependencyReducedPom>
+    </configuration>
+    <executions>
+     <execution>
+      <phase>package</phase>
+      <goals>
+       <goal>shade</goal>
+      </goals>
+      <configuration>
+       <transformers>
+        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+        </transformer>
+       </transformers>
+       <shadedArtifactAttached>true</shadedArtifactAttached>
+       <shadedClassifierName>deployable</shadedClassifierName>
+       <relocations>
+        <relocation>
+         <pattern>com.spartansoftwareinc.ws.okapi</pattern>
+         <shadedPattern>${shade_prefix}.com.spartansoftwareinc.ws.okapi</shadedPattern>
+	 <!-- This would be needed if the adapter were placed under okapi subpackage.
+	 <excludes>
+	   <exclude>com.spartansoftwreinc.ws.mt.googlev3.*</exclude>
+	 </excludes>	   
+	 -->
+        </relocation>
+        <relocation>
+	  <!-- The Google MT v3 Adapter does not use Okapi but the base components
+	       have references to Okapi, so it is included in the JAR.
+	       To prevent these Okapi classes overriding other component's Okapi
+	       classes, we still need to relocate them. -->
+          <pattern>net.sf.okapi</pattern>
+          <shadedPattern>${okapi.version}.net.sf.okapi</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>org.apache.commons</pattern>
+         <shadedPattern>${shade_prefix}.org.apache.commons</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>com.ibm.icu</pattern>
+         <shadedPattern>${shade_prefix}.com.ibm.icu</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>org.slf4j</pattern>
+         <shadedPattern>${shade_prefix}.org.slf4j</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>ch.qos.logback</pattern>
+         <shadedPattern>${shade_prefix}.ch.qos.logback</shadedPattern>
+        </relocation>
+        <relocation>
+          <pattern>com.mihnita</pattern>
+         <shadedPattern>${shade_prefix}.com.mihnita</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>org.apache.http</pattern>
+         <shadedPattern>${shade_prefix}.org.apache.http</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>org.fusesource</pattern>
+         <shadedPattern>${shade_prefix}.org.fusesource</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>org.checkerframework</pattern>
+         <shadedPattern>${shade_prefix}.org.checkerframework</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>org.codehaus</pattern>
+         <shadedPattern>${shade_prefix}.org.codehaus</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>android</pattern>
+         <shadedPattern>${shade_prefix}.android</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>io.perfmark</pattern>
+         <shadedPattern>${shade_prefix}.io.perfmark</shadedPattern>
+        </relocation>
+        <relocation>
+          <pattern>io.opencensus</pattern>
+         <shadedPattern>${shade_prefix}.io.opencensus</shadedPattern>
+        </relocation>
+        <relocation>
+          <pattern>org.conscrypt</pattern>
+         <shadedPattern>${shade_prefix}.org.conscrypt</shadedPattern>
+        </relocation>
+        <relocation>
+          <pattern>org.threeten</pattern>
+         <shadedPattern>${shade_prefix}.org.threeten</shadedPattern>
+        </relocation>
+        <relocation>
+          <pattern>com.fasterxml</pattern>
+         <shadedPattern>${shade_prefix}.com.fasterxml</shadedPattern>
+        </relocation>
+        <relocation>
+         <pattern>org.json</pattern>
+         <shadedPattern>${shade_prefix}.org.json</shadedPattern>
+        </relocation>
+       </relocations>
+      </configuration>
+     </execution>
+    </executions>
+   </plugin>
+  </plugins>
+ </build>
+</project>

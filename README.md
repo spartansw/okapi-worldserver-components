@@ -15,7 +15,9 @@ Currently, this repository contains:
    * XLIFF
    * YAML
 * MT Adapters, including
-   * Google MT
+   * Google MT (v2 API)
+   * Google AutoML Translation Service Adapter
+   * Google Cloud Translation (v3 API); This supports glossaries and AutoML generated language models.
    * Microsoft Translator Hub
 * Automatic Actions, including
    * An automatic action to improve MT quality of HTML and XML content, when used with the Microsoft Translator Hub
@@ -29,6 +31,8 @@ that adhere to the Okapi `IFilter` interface, making it easy to add
 additional components.  Our intention is that over time, the set of
 available components will grow to fill gaps in the WorldServer filter and
 MT Adapter using open source code from Okapi.
+
+Note: Google Cloud Translation (v3 API) is a native implementation and does not use an Okapi MT connector.
 
 Using the Code
 ==============
@@ -45,14 +49,14 @@ and group IDs:
 
 * Artifact ID: `com.idiominc.wssdk`
 * Group ID: `wssdk-server`
-* Version: We use the WS Build version, which for us is currently `10.4.3.195`. 
+* Version: We use the WS Build version, which for us is currently `11.4.0.5`. 
 
 To install your copy of wssdk-server.jar to your local maven repository, you
 can run this command from within your WSSDK distribution:
 
     mvn install:install-file -DgroupId=com.idiominc.wssdk \
                  -DartifactId=wssdk-server \
-                 -Dversion=10.4.3.195 \
+                 -Dversion=11.4.0.5 \
                  -Dpackaging=jar \
                  -Dfile=lib/server/wssdk-server.jar 
 
@@ -61,14 +65,13 @@ for convenience.
 
 WSSDK Compatibility and Java Versions
 -------------------------------------
-This code was developed and tested against the WSSDK 10.4 SDK, however it
-should be expected to work on most 10.x versions of WorldServer (and possibly
-even 9.x), due to the stability of the WSSDK.  You will need to update the
-`ws.version` property in the root `pom.xml` to match the version you are
+This code was developed and tested against the WSSDK 11.4 SDK, however it
+should be expected to work on most 11.x versions of WorldServer, due to the stability of the WSSDK.  
+You will need to update the `ws.version` property in the root `pom.xml` to match the version you are
 compiling against.
 
-All Okapi releases since M24 require Java 7 or later, so these components must 
-be deployed to a WorldServer instance running Java 7 or later.
+All Okapi releases since M36 require Java 8 or later, so these components must 
+be deployed to a WorldServer instance running Java 8 or later.
 
 Building
 --------
@@ -89,24 +92,26 @@ long as it contains a `desc.xml` file, as these do.)
 
 To deploy an individual components, upload any of:
 
-* `filters/idml/target/okapi-ws-filters-idml-[release]-deployable.jar`
-* `filters/json/target/okapi-ws-filters-json-[release]-deployable.jar`
-* `filters/openxml/target/okapi-ws-filters-openxml-[release]-deployable.jar`
-* `filters/po/target/okapi-ws-filters-po-[release]-deployable.jar`
-* `filters/xliff/target/okapi-ws-filters-xliff-[release]-deployable.jar`
-* `filters/yaml/target/okapi-ws-filters-yaml-[release]-deployable.jar`
-* `mt/google/target/okapi-ws-mt-google-[release]-deployable.jar`
-* `mt/mshub/target/okapi-ws-mt-mshub-[release]-deployable.jar`
-* `autoactions/mshub/target/okapi-ws-autoactions-mshub-[release]-deployable.jar`
-* `autoactions/xliff/target/okapi-ws-autoactions-xliff-[release]-deployable.jar`
+* `filters/idml/target/okapi-ws-filters-idml-`*release*`-deployable.jar`
+* `filters/json/target/okapi-ws-filters-json-`*release*`-deployable.jar`
+* `filters/openxml/target/okapi-ws-filters-openxml-`*release*`-deployable.jar`
+* `filters/po/target/okapi-ws-filters-po-`*release*`-deployable.jar`
+* `filters/xliff/target/okapi-ws-filters-xliff-`*release*`-deployable.jar`
+* `filters/yaml/target/okapi-ws-filters-yaml-`*release*`-deployable.jar`
+* `mt/google/target/okapi-ws-mt-google-`*release*`-deployable.jar`
+* `mt/googleautoml/target/okapi-ws-mt-googleautoml-`*release*`-deployable.jar`
+* `mt/googlev3/target/okapi-ws-mt-google-v3-`*release*`-deployable.jar`
+* `mt/mshub/target/okapi-ws-mt-mshub-`*release*`-deployable.jar`
+* `autoactions/mshub/target/okapi-ws-autoactions-mshub-`*release*`-deployable.jar`
+* `autoactions/xliff/target/okapi-ws-autoactions-xliff-`*release*`-deployable.jar`
 
 To deploy all filters at once, upload:
 
-* `filters/bundle/target/okapi-ws-filters-bundle-[release].jar`
+* `filters/bundle/target/okapi-ws-filters-bundle-`*release*`.jar`
 
 To deploy all components (all filters + MT Adapters + AAs), upload:
 
-* `bundle/target/okapi-ws-components-bundle-[release].jar`
+* `bundle/target/okapi-ws-components-bundle-`*release*`.jar`
 
 These jars include all dependencies, including the necessary Okapi components.
 
@@ -118,7 +123,7 @@ defaults, with some options exposed through the WorldServer UI.  Over time,
 we would like to improve this to expose the full configurability of the
 Okapi filters to WorldServer users.
 
-The MT Adapters offer no real configuration beyond the credentials to use.
+Some MT Adapters offer no real configuration beyond the credentials to use.
 These are exposed through the the normal WorldServer MT Adapter configuration
 interface.
 
@@ -139,7 +144,7 @@ Contributions from the community are welcome.  Issues and pull requests should
 be opened through GitHub.  Discussion can be directed to one of the two Okapi
 discussion lists:
 
-* [okapitools](https://groups.yahoo.com/neo/groups/okapitools/conversations/messages), for user discussions
+* [okapi-users](https://groups.google.com/forum/#!forum/okapi-users), for user discussions
 * [okapi-devel](https://groups.google.com/forum/#!forum/okapi-devel), for developer discussions
 
 Additional documentation can be found on the

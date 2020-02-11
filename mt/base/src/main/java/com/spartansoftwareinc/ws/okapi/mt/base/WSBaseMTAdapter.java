@@ -141,7 +141,7 @@ public abstract class WSBaseMTAdapter extends WSMTAdapterComponent {
     }
 
     public WSVersion getMinimumWorldServerVersion() {
-        return new WSVersion(9, 0, 0);
+        return new WSVersion(11, 0, 0);
     }
 
     public void process(BaseConnector mtConnector, WSMTRequest[] requests, boolean includeCodes) {
