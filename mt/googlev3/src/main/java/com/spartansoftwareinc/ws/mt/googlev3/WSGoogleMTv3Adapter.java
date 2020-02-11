@@ -110,11 +110,11 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
         }
 
         WSComponentConfiguration configuration = getCurrentConfiguration();
-        LOG.debug("configuration=" + configuration);
         if (configuration == null) {
             LOG.debug("configuration == null. Creating a new instance and returning it.");
             return new WSGoogleMTv3AdapterConfigurationData();
         } else if (configuration.getConfigurationData() != null) {
+            LOG.debug("configuration=" + configuration.getName());
             return (WSGoogleMTv3AdapterConfigurationData) configuration.getConfigurationData();
         } else {
             LOG.error("configuration != null but configuration.getConfigurationData() = null. "
@@ -192,9 +192,10 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
             for (WSMTRequest wsMTReq: mtReqs) {
                 String srcText = wsMTReq.getSource();
                 if (handlePlaceholders) {
-                                    srcText = masker.mask(srcText);
+                    LOG.debug("Original text before mask(): " + srcText);
+                    srcText = masker.mask(srcText);
                 };
-                TranslateTextRequest googleMTReq = googleMTReqTemplate.addContents(srcText).build();
+                TranslateTextRequest googleMTReq = googleMTReqTemplate.clone().addContents(srcText).build();
                 LOG.debug("Source lang: " + googleMTReq.getSourceLanguageCode()
                       + ", Target lang: " + googleMTReq.getTargetLanguageCode());
                 LOG.debug("Translating: " + srcText);
@@ -208,6 +209,7 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
                 for (Translation translation : trs) {
                     String translatedText = translation.getTranslatedText();
                     if (handlePlaceholders) {
+                        LOG.debug("Raw translation from Google: " + translatedText);
                         translatedText = masker.unmask(translatedText);
                     };
                     WSMTResult r = new WSMTResult(srcText, translatedText, getConfigurationData().getMatchScore());

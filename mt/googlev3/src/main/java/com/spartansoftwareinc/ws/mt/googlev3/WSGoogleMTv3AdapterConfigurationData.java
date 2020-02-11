@@ -16,6 +16,10 @@ public class WSGoogleMTv3AdapterConfigurationData extends WSBaseMTAdapterConfigu
          +            "\"glossaryId\":\"xx_to_yy_glossary_id\"}"
          + "}";
 
+    public WSGoogleMTv3AdapterConfigurationData() {
+        this.setUseCustomScoring(true);
+    }
+
     /**
      * Method to obtain the AIS path to a google credential JSON file that works with the project.
      * @return
