@@ -8,7 +8,7 @@
  <parent>
   <groupId>com.spartansoftwareinc.ws.okapi.mt</groupId>
   <artifactId>okapi-ws-mt</artifactId>
-  <version>1.9</version>
+  <version>1.10-SNAPSHOT</version>
  </parent>
 
  <groupId>com.spartansoftwareinc.ws.mt.googlev3</groupId>
