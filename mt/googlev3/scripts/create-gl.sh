@@ -54,18 +54,18 @@ EOF
 resfilepath=/tmp/create-gl-$$-response.txt
 
 curl -X POST \
- -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
+ -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
  -H "Content-Type: application/json; charset=utf-8" \
  -d @${jsonpath} \
  https://translation.googleapis.com/v3/projects/${project_id}/locations/${location}/glossaries | tee ${resfilepath}
 
-jobname=$(sed -n 's/^ *"name": "\([^"]*\)", *$/\1/p' < ${resfilepath})
+jobname=$(sed -n 's/^ *"name": "\([^"]*\)", *$/\1/p' < ${resfilepath} | head -1)
 
 cat <<EOF
 If you see "state": "RUNNING", the submission was successful and the glossary is being created.
 To check the status of the glossary creation, run the following command:
 
-    curl -X GET -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) https://translation.googleapis.com/v3/${jobname}
+    curl -X GET -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" https://translation.googleapis.com/v3/${jobname}
 EOF
 
 rm "${jsonpath}" "${resfilepath}"
