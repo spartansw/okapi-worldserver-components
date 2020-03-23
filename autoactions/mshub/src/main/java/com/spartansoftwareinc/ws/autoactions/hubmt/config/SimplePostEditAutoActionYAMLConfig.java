@@ -1,6 +1,7 @@
 package com.spartansoftwareinc.ws.autoactions.hubmt.config;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,14 +19,15 @@ public class SimplePostEditAutoActionYAMLConfig {
         return actions;
     }
 
-    public void setActions(Map<String, List<Map<String, String>>> actions) {
+    public void setActions(Map<String, List<Map<String, Object>>> actions) {
         this.actions = new HashMap<>();
         for (String language : actions.keySet()) {
-            final List<Map<String, String>> actionSetList = actions.get(language);
+            final List<Map<String, Object>> actionSetList = actions.get(language);
             final List<Action> actionsList = new ArrayList<>();
             this.actions.put(language, actionsList);
-            for (Map<String, String> action : actionSetList) {
-                actionsList.add(new Action(action.get("search"), action.get("replace")));
+            for (Map<String, Object> action : actionSetList) {
+                actionsList.add(new Action((String) action.get("search"), (String) action.get("replace"),
+                    (Boolean) action.get("allowFurtherReplacements")));
             }
         }
     }
@@ -37,12 +39,14 @@ public class SimplePostEditAutoActionYAMLConfig {
     public static class Action {
         private String search;
         private String replace;
+        private Boolean allowFurtherReplacements;
 
         private Pattern patternCompiled = null;
 
-        public Action(String search, String replace) {
+        public Action(String search, String replace, Boolean allowFurtherReplacements) {
             this.search = search;
             this.replace = replace;
+            this.allowFurtherReplacements = allowFurtherReplacements;
         }
 
         public Pattern getPatternCompiled() {
@@ -66,6 +70,14 @@ public class SimplePostEditAutoActionYAMLConfig {
 
         public void setReplace(String replace) {
             this.replace = replace;
+        }
+
+        public Boolean getAllowFurtherReplacements() {
+            return allowFurtherReplacements == null || allowFurtherReplacements;
+        }
+
+        public void setAllowFurtherReplacements(Boolean allowFurtherReplacements) {
+            this.allowFurtherReplacements = allowFurtherReplacements;
         }
     }
 }
