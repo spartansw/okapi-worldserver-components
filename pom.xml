@@ -19,7 +19,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <ws.version>11.4.0.56</ws.version>
+    <ws.version>11.5.0.68</ws.version>
     <okapi.version>0.37</okapi.version>
     <mainPackage>${project.groupId}</mainPackage>
     <git.basedir>${project.basedir}</git.basedir>
@@ -152,7 +152,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.0.201403182114</version>
+        <version>0.8.5</version>
         <configuration>
           <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
           <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
@@ -203,7 +203,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
     </plugins>
   </build>
 
