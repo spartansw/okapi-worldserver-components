@@ -191,6 +191,11 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
         try (TranslationServiceClient client = TranslationServiceClient.create(settings)) {
             for (WSMTRequest wsMTReq: mtReqs) {
                 String srcText = wsMTReq.getSource();
+                // ignore empty strings, or MT engine returns error, INVALID_ARGUMENT: Empty request.
+                if (srcText.trim().isEmpty()) {
+                    continue;
+                }
+
                 if (handlePlaceholders) {
                     LOG.debug("Original text before mask(): " + srcText);
                     srcText = masker.mask(srcText);
