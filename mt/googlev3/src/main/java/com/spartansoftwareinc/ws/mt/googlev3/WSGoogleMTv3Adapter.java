@@ -216,6 +216,9 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
                     if (handlePlaceholders) {
                         LOG.debug("Raw translation from Google: " + translatedText);
                         translatedText = masker.unmask(translatedText);
+                        // Google MT converts special characters to character entity references if the mime type is
+                        // text/html. They need to be converted back to real characters.
+                        translatedText = replaceHtmlEntityRefs(translatedText);
                     };
                     WSMTResult r = new WSMTResult(srcText, translatedText, getConfigurationData().getMatchScore());
                     LOG.debug("Translation#" + i + ": " + r.getTranslation());
@@ -330,6 +333,15 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
         } else {
             return tag;
         }
+    }
+
+    private String replaceHtmlEntityRefs(String translation) {
+        String replaced = translation.replace("&#39;", "'");
+        replaced = replaced.replace("&quot;", "\"");
+        replaced = replaced.replace("&gt;", ">");
+        replaced = replaced.replace("&lt;", "<");
+        replaced = replaced.replace("&amp;", "&");
+        return replaced;
     }
 
 }
