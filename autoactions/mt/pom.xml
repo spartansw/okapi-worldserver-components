@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.autoactions</groupId>
     <artifactId>okapi-ws-autoactions</artifactId>
-    <version>1.11</version>
+    <version>1.12-SNAPSHOT</version>
   </parent>
 
   <groupId>com.spartansoftwareinc.ws.autoactions.mt</groupId>
