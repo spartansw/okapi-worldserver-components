@@ -29,7 +29,7 @@
    <dependency>
     <groupId>com.google.cloud</groupId>
     <artifactId>libraries-bom</artifactId>
-    <version>3.0.0</version>
+    <version>16.3.0</version>
     <type>pom</type>
     <scope>import</scope>
    </dependency>
@@ -52,11 +52,6 @@
   <dependency>
    <groupId>com.google.cloud</groupId>
    <artifactId>google-cloud-translate</artifactId>
-  </dependency>
-  <dependency>
-   <groupId>com.google.cloud</groupId>
-   <artifactId>google-cloud-storage</artifactId>
-   <version>1.101.0</version>
   </dependency>
   <dependency>
    <groupId>com.fasterxml.jackson.core</groupId>
@@ -135,7 +130,7 @@
 	 <!-- This would be needed if the adapter were placed under okapi subpackage.
 	 <excludes>
 	   <exclude>com.spartansoftwreinc.ws.mt.googlev3.*</exclude>
-	 </excludes>	   
+	 </excludes>
 	 -->
         </relocation>
         <relocation>
