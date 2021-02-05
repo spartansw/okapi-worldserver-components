@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
@@ -34,7 +33,6 @@ import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.linguistic.WSLanguagePair;
 import com.idiominc.wssdk.linguistic.WSLinguisticManager;
 import com.idiominc.wssdk.mt.WSMTResult;
-import com.spartansoftwareinc.ws.okapi.mt.base.CodesMasker;
 import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapter;
 
 import net.sf.okapi.common.LocaleId;
@@ -57,7 +55,6 @@ import net.sf.okapi.lib.translation.BaseConnector;
  */
 public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
     private static final Logger LOG = Logger.getLogger(WSGoogleMTv3Adapter.class);
-    //static { LOG.setLevel(Level.DEBUG);}
 
     private static final String ADAPTER_NAME = "Google Cloud Translation (v3 API)";
     private static final String ADAPTER_DESCRIPTION = "MT adapter for Google Cloud v3 API";
@@ -65,8 +62,6 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
 
     private static final String DEFAULT_CREDENTIAL_AIS_PATH
          = "/Spartan/Customization/google-translate-v3-credential.json";
-
-    private CodesMasker masker = new CodesMasker();
 
     @Override
     public String getName() {
@@ -139,8 +134,6 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
 
         String srcLangTag = convertWSLangToGoogleLangTag(sourceLang);
         String tgtLangTag = convertWSLangToGoogleLangTag(targetLang);
-        LOG.debug("sourceLang = " + sourceLang.getDisplayString() + "=>" + srcLangTag +
-            ", targetLang = " + targetLang.getDisplayString() + "=>" + tgtLangTag);
 
         ModelGlossaryMap modelGlossaryMapObj = new ModelGlossaryMap();
         modelGlossaryMapObj.loadMap(getConfigurationData().getModelGlossaryMap());
@@ -154,17 +147,13 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
             modelId = entry.modelId;
             glossaryId = entry.glossaryId;
         }
-        LOG.debug("Using modelId=\"" + modelId + "\", glossaryId=\"" + glossaryId + "\"");
 
         TranslateTextRequest.Builder googleMTReqTemplate = TranslateTextRequest.newBuilder();
         googleMTReqTemplate.setParent(parent.toString())
-                           .setSourceLanguageCode(srcLangTag)
-                           .setTargetLanguageCode(tgtLangTag);
-        if (getConfigurationData().getIncludeCodes()) {
-            googleMTReqTemplate.setMimeType("text/html");
-        } else {
-            googleMTReqTemplate.setMimeType("text/plain");
-        }
+            .setSourceLanguageCode(srcLangTag)
+            .setTargetLanguageCode(tgtLangTag)
+            .setMimeType("text/plain");
+
         if (glossaryId!=null && !glossaryId.isEmpty()) {
             GlossaryName glossaryName = GlossaryName.of(getConfigurationData().getGoogleProjectNumOrId(),
                                                         getConfigurationData().getGoogleLocation(), glossaryId);
@@ -173,9 +162,6 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
             googleMTReqTemplate.setGlossaryConfig(glossaryConfig);
         }
 
-        // Not sure why model includes project and locations but that's what the google code sample at
-        // https://github.com/GoogleCloudPlatform/java-docs-samples/blob/master/translate/cloud-client/src/main/java/com/example/translate/TranslateTextWithGlossaryAndModel.java
-        // shows.
         if (modelId!=null && !modelId.isEmpty()) {
             StringBuilder modelPathBuilder = new StringBuilder();
             modelPathBuilder.append("projects/").append(getConfigurationData().getGoogleProjectNumOrId())
@@ -187,7 +173,6 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
         TranslationServiceSettings settings = createSettingsWithCredential(context);
         LOG.debug("client setting: " + settings.toString());
 
-        boolean handlePlaceholders = getConfigurationData().getIncludeCodes();
         try (TranslationServiceClient client = TranslationServiceClient.create(settings)) {
             for (WSMTRequest wsMTReq: mtReqs) {
                 String srcText = wsMTReq.getSource();
@@ -196,14 +181,9 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
                     continue;
                 }
 
-                if (handlePlaceholders) {
-                    LOG.debug("Original text before mask(): " + srcText);
-                    srcText = masker.mask(srcText);
-                };
                 TranslateTextRequest googleMTReq = googleMTReqTemplate.clone().addContents(srcText).build();
-                LOG.debug("Source lang: " + googleMTReq.getSourceLanguageCode()
-                      + ", Target lang: " + googleMTReq.getTargetLanguageCode());
-                LOG.debug("Translating: " + srcText);
+                LOG.debug("TranslateTextRequest: " + googleMTReq.toString());
+
                 TranslateTextResponse googleMTRes = client.translateText(googleMTReq);
                 int nTrans = googleMTRes.getTranslationsCount();
                 WSMTResult[] wsMTResults = new WSMTResult[nTrans];
@@ -213,15 +193,8 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
                                                              : googleMTRes.getGlossaryTranslationsList();
                 for (Translation translation : trs) {
                     String translatedText = translation.getTranslatedText();
-                    if (handlePlaceholders) {
-                        LOG.debug("Raw translation from Google: " + translatedText);
-                        translatedText = masker.unmask(translatedText);
-                        // Google MT converts special characters to character entity references if the mime type is
-                        // text/html. They need to be converted back to real characters.
-                        translatedText = replaceHtmlEntityRefs(translatedText);
-                    };
                     WSMTResult r = new WSMTResult(srcText, translatedText, getConfigurationData().getMatchScore());
-                    LOG.debug("Translation#" + i + ": " + r.getTranslation());
+                    LOG.debug("Translation #" + i + ": " + r.getTranslation());
                     wsMTResults[i++] = r;
                 }
                 wsMTReq.setResults(wsMTResults);
@@ -262,9 +235,8 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
                     pairs.add(new WSLanguagePair(srcWSLang, targetWSLang));
                 }
             }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(pairs.size() + " supported language pairs found:");
-            }
+
+            LOG.debug(pairs.size() + " supported language pairs found:");
             return pairs.toArray(new WSLanguagePair[0]);
         } catch (IOException e) {
             throw new WSRuntimeException(e);
@@ -282,7 +254,7 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
             absPath = getConfigurationData().getCredentialAbsolutePath();
         } else {
             aisPath = DEFAULT_CREDENTIAL_AIS_PATH;
-            LOG.error("getConfigurationData() returned null. Trying the default path " + aisPath);
+            LOG.warn("getConfigurationData() returned null. Trying the default path " + aisPath);
             absPath = null;
         }
 
@@ -333,15 +305,6 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
         } else {
             return tag;
         }
-    }
-
-    private String replaceHtmlEntityRefs(String translation) {
-        String replaced = translation.replace("&#39;", "'");
-        replaced = replaced.replace("&quot;", "\"");
-        replaced = replaced.replace("&gt;", ">");
-        replaced = replaced.replace("&lt;", "<");
-        replaced = replaced.replace("&amp;", "&");
-        return replaced;
     }
 
 }
