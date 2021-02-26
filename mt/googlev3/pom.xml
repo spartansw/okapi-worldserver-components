@@ -6,7 +6,7 @@
  <parent>
   <groupId>com.spartansoftwareinc.ws.okapi.mt</groupId>
   <artifactId>okapi-ws-mt</artifactId>
-  <version>1.12</version>
+  <version>1.13-SNAPSHOT</version>
  </parent>
 
  <groupId>com.spartansoftwareinc.ws.mt.googlev3</groupId>
