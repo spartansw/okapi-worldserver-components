@@ -5,7 +5,7 @@
     <parent>
       <artifactId>okapi-ws-filters</artifactId>
       <groupId>com.spartansoftwareinc.ws.okapi.filters</groupId>
-      <version>1.12-SNAPSHOT</version>
+      <version>1.12</version>
     </parent>
 
     <groupId>com.spartansoftwareinc.ws.okapi.filters.openxml</groupId>
