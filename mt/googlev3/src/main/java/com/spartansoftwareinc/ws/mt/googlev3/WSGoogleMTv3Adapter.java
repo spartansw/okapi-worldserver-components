@@ -3,8 +3,13 @@ package com.spartansoftwareinc.ws.mt.googlev3;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -181,26 +186,11 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
                     continue;
                 }
 
-                TranslateTextRequest googleMTReq = googleMTReqTemplate.clone().addContents(srcText).build();
-                LOG.debug("TranslateTextRequest: " + googleMTReq.toString());
-
-                TranslateTextResponse googleMTRes = client.translateText(googleMTReq);
-                int nTrans = googleMTRes.getTranslationsCount();
-                WSMTResult[] wsMTResults = new WSMTResult[nTrans];
-                int i = 0;
-
-                List<Translation> trs = (glossaryId == null) ? googleMTRes.getTranslationsList()
-                                                             : googleMTRes.getGlossaryTranslationsList();
-                for (Translation translation : trs) {
-                    String translatedText = translation.getTranslatedText();
-                    WSMTResult r = new WSMTResult(srcText, translatedText, getConfigurationData().getMatchScore());
-                    LOG.debug("Translation #" + i + ": " + r.getTranslation());
-                    wsMTResults[i++] = r;
-                }
+                WSMTResult[] wsMTResults = getTranslation(client, googleMTReqTemplate, srcText, glossaryId != null);
                 wsMTReq.setResults(wsMTResults);
             }
         } catch (IOException e) {
-                throw new WSRuntimeException(e);
+            throw new WSRuntimeException(e);
         }
     }
 
@@ -305,6 +295,75 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
         } else {
             return tag;
         }
+    }
+
+    private static final Pattern WS_PLACEHOLDER = Pattern.compile("\\{\\d+\\}");
+
+    private WSMTResult[] getTranslation(TranslationServiceClient client,
+        TranslateTextRequest.Builder googleMTReqTemplate, String srcText, boolean translateWithGlossary) {
+
+        String suffix = "";
+        TranslateTextResponse googleMTRes = callGoogle(client, googleMTReqTemplate, srcText);
+        if (supportsPlaceholders() && isPlaceholderCorrupted(srcText, googleMTRes, translateWithGlossary)) {
+            // remove placeholders and call Google again
+            String noPlaceholders = WS_PLACEHOLDER.matcher(srcText).replaceAll(" ");
+            googleMTRes = callGoogle(client, googleMTReqTemplate, noPlaceholders);
+            suffix = getPlaceholders(srcText).stream().collect(Collectors.joining());
+        }
+        final String finalSuffix = suffix;
+
+        List<Translation> trs = translateWithGlossary ? googleMTRes.getGlossaryTranslationsList()
+            : googleMTRes.getTranslationsList();
+
+        List<WSMTResult> mtResults = trs.stream()
+            .map(translation -> new WSMTResult(
+                    srcText, translation.getTranslatedText() + finalSuffix, getConfigurationData().getMatchScore()))
+            .collect(Collectors.toList());
+
+        return mtResults.toArray(new WSMTResult[0]);
+    }
+
+    private TranslateTextResponse callGoogle(
+        TranslationServiceClient client, TranslateTextRequest.Builder googleMTReqTemplate, String srcText) {
+        TranslateTextRequest googleMTReq = googleMTReqTemplate.clone().addContents(srcText).build();
+        TranslateTextResponse mtResponse = client.translateText(googleMTReq);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Source: " + srcText);
+            mtResponse.getTranslationsList().forEach(
+                translation -> LOG.debug("Target - glossary: " + translation.getTranslatedText()));
+            mtResponse.getGlossaryTranslationsList().forEach(
+                translation -> LOG.debug("Target - no glossary: " + translation.getTranslatedText()));
+        }
+
+        return mtResponse;
+    }
+
+    private boolean isPlaceholderCorrupted(String srcText, TranslateTextResponse mtResponse, boolean translateWithGlossary) {
+        List<Translation> trs = translateWithGlossary ? mtResponse.getGlossaryTranslationsList()
+            : mtResponse.getTranslationsList();
+
+        boolean result = false;
+        if (!trs.isEmpty()) {
+            // examin just first translation
+            Translation translation = trs.get(0);
+
+            Set<String> srcPlaceholders = new HashSet<>(getPlaceholders(srcText));
+            Set<String> tgtPlaceholders = new HashSet<>(getPlaceholders(translation.getTranslatedText()));
+            result = !srcPlaceholders.equals(tgtPlaceholders);
+        }
+
+        return result;
+    }
+
+    private List<String> getPlaceholders(String text) {
+        List<String> placeholders = new ArrayList<>();
+
+        Matcher matcher = WS_PLACEHOLDER.matcher(text);
+        while (matcher.find()) {
+            placeholders.add(matcher.group());
+        }
+
+        return placeholders;
     }
 
 }

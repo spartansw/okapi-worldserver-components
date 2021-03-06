@@ -5,9 +5,7 @@ import com.idiominc.wssdk.ais.WSAisManager;
 import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.component.mt.WSMTRequest;
 import com.idiominc.wssdk.linguistic.WSLanguage;
-import net.sf.okapi.common.IParameters;
 import net.sf.okapi.connectors.google.GoogleMTv2Connector;
-import net.sf.okapi.connectors.google.GoogleMTv2Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -41,14 +39,10 @@ public class WSGoogleMTAdapterTest {
     @Mock
     private GoogleMTv2Connector connector;
 
-    @Mock(extraInterfaces = {IParameters.class})
-    private GoogleMTv2Parameters parameters;
-
     @Test
     public void testSomeFilteredResponses() {
         WSGoogleMTAdapter mtAdapter = spy(new WSGoogleMTAdapter());
         doReturn(connector).when(mtAdapter).getMTConnector();
-        when(connector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(connector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Third segment"

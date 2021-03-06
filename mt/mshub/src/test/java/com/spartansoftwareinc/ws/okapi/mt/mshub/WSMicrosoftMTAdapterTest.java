@@ -5,10 +5,8 @@ import com.idiominc.wssdk.ais.WSAisManager;
 import com.idiominc.wssdk.ais.WSNode;
 import com.idiominc.wssdk.component.mt.WSMTRequest;
 import com.idiominc.wssdk.linguistic.WSLanguage;
-import net.sf.okapi.common.IParameters;
 import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.connectors.microsoft.MicrosoftMTConnector;
-import net.sf.okapi.connectors.microsoft.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -44,14 +42,10 @@ public class WSMicrosoftMTAdapterTest {
     @Mock
     private MicrosoftMTConnector mtConnector;
 
-    @Mock(extraInterfaces = {IParameters.class})
-    private Parameters parameters;
-
     @Test
     public void testSomeFilteredResponses() {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
-        when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Third segment"
@@ -72,7 +66,6 @@ public class WSMicrosoftMTAdapterTest {
         WSMTAdapterConfigurationData config = new WSMTAdapterConfigurationData();
         config.setIncludeCodes(true);
         doReturn(config).when(mtAdapter).getConfigurationData();
-        when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Third segment"
@@ -90,7 +83,6 @@ public class WSMicrosoftMTAdapterTest {
     public void testWSResultsAreSetOnWSRequest() {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
-        when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Second segment", "Third segment"
@@ -113,7 +105,6 @@ public class WSMicrosoftMTAdapterTest {
         WSMicrosoftMTAdapter mtAdapter = spy(new WSMicrosoftMTAdapter());
         mtAdapter.getConfigurationData().setIncludeCodes(true);
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
-        when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(Locale.ENGLISH);
         when(mtConnector.batchQueryText(anyList())).thenReturn(getBatchQueryResults(
                 "First segment", "Second segment", "Third segment"
@@ -140,7 +131,6 @@ public class WSMicrosoftMTAdapterTest {
         when(localeMapAisNode.getInputStream()).thenReturn(
                 new ByteArrayInputStream("es-CO=es-419".getBytes(StandardCharsets.UTF_8)));
         doReturn(mtConnector).when(mtAdapter).getMTConnector();
-        when(mtConnector.getParameters()).thenReturn(parameters);
         when(wsLanguage.getLocale()).thenReturn(new Locale("es", "CO"));
         LocaleId es419 = new LocaleId("es", "419");
         WSMTRequest[] requests = getWSMTRequestStabs("First segment", "Second segment", "Third segment");
