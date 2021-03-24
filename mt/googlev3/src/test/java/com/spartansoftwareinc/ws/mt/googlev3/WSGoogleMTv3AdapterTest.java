@@ -62,7 +62,22 @@ public class WSGoogleMTv3AdapterTest {
     }
 
     @Test
-    public void getTranslation_incorrect_placeholders() throws Exception {
+    public void getTranslation_placeholders_in_different_order() throws Exception {
+        String srcText = "a{1}bc{2}def{3}ghi";
+        String tgtText = "lk{2}hks{3}kkk{1}";
+        when(translation.getTranslatedText()).thenReturn(tgtText);
+
+        Method method = setupGetTranslationCall(true);
+        WSMTResult[] results = (WSMTResult[]) method.invoke(mtAdapter, client, googleMTReqTemplate, srcText, false);
+
+        assertEquals(1, results.length);
+        assertEquals(tgtText, results[0].getTranslation());
+
+        verify(client).translateText(googleMTReq);
+    }
+
+    @Test
+    public void getTranslation_corrupted_placeholders() throws Exception {
         String srcText = "a{1}bc{2}def{3}ghi";
         String firstTranslation = "lk{1}hks{2 }kkk{3}";
         String secondTranslation = "lk hks kkk";
@@ -90,6 +105,78 @@ public class WSGoogleMTv3AdapterTest {
         String srcText = "a{1}bc{2}def{3}ghi";
         String firstTranslation = "lk{1}hks{2}kkk";
         String secondTranslation = "lk hks kkk";
+        when(translation.getTranslatedText())
+            .thenReturn(firstTranslation)
+            .thenReturn(secondTranslation);
+
+        Method method = setupGetTranslationCall(true);
+        WSMTResult[] results = (WSMTResult[]) method.invoke(mtAdapter, client, googleMTReqTemplate, srcText, false);
+
+        assertEquals(1, results.length);
+        assertEquals(secondTranslation + "{1}{2}{3}", results[0].getTranslation());
+
+        verify(client, times(2)).translateText(googleMTReq);
+
+        verify(googleMTReqTemplate, times(2)).addContents(stringCaptor.capture());
+        List<String> params = stringCaptor.getAllValues();
+        assertEquals(2, params.size());
+        assertEquals(srcText, params.get(0));
+        assertEquals("a bc def ghi", params.get(1));
+    }
+
+    @Test
+    public void getTranslation_extra_placeholders() throws Exception {
+        String srcText = "a{1}bc{2}def{3}ghi";
+        String firstTranslation = "lk{1}hks{2}kk{3}kk{2}";
+        String secondTranslation = "lk hks kk kk";
+        when(translation.getTranslatedText())
+            .thenReturn(firstTranslation)
+            .thenReturn(secondTranslation);
+
+        Method method = setupGetTranslationCall(true);
+        WSMTResult[] results = (WSMTResult[]) method.invoke(mtAdapter, client, googleMTReqTemplate, srcText, false);
+
+        assertEquals(1, results.length);
+        assertEquals(secondTranslation + "{1}{2}{3}", results[0].getTranslation());
+
+        verify(client, times(2)).translateText(googleMTReq);
+
+        verify(googleMTReqTemplate, times(2)).addContents(stringCaptor.capture());
+        List<String> params = stringCaptor.getAllValues();
+        assertEquals(2, params.size());
+        assertEquals(srcText, params.get(0));
+        assertEquals("a bc def ghi", params.get(1));
+    }
+
+    @Test
+    public void getTranslation_wrong_placeholders() throws Exception {
+        String srcText = "a{1}bc{2}def{3}ghi";
+        String firstTranslation = "lk{1}hks{2}kk{4}kk";
+        String secondTranslation = "lk hks kk kk";
+        when(translation.getTranslatedText())
+            .thenReturn(firstTranslation)
+            .thenReturn(secondTranslation);
+
+        Method method = setupGetTranslationCall(true);
+        WSMTResult[] results = (WSMTResult[]) method.invoke(mtAdapter, client, googleMTReqTemplate, srcText, false);
+
+        assertEquals(1, results.length);
+        assertEquals(secondTranslation + "{1}{2}{3}", results[0].getTranslation());
+
+        verify(client, times(2)).translateText(googleMTReq);
+
+        verify(googleMTReqTemplate, times(2)).addContents(stringCaptor.capture());
+        List<String> params = stringCaptor.getAllValues();
+        assertEquals(2, params.size());
+        assertEquals(srcText, params.get(0));
+        assertEquals("a bc def ghi", params.get(1));
+    }
+
+    @Test
+    public void getTranslation_duplicated_placeholders() throws Exception {
+        String srcText = "a{1}bc{2}def{3}ghi";
+        String firstTranslation = "lk{1}hks{2}kk{2}kk";
+        String secondTranslation = "lk hks kk kk";
         when(translation.getTranslatedText())
             .thenReturn(firstTranslation)
             .thenReturn(secondTranslation);
