@@ -347,9 +347,12 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
             // examin just first translation
             Translation translation = trs.get(0);
 
-            Set<String> srcPlaceholders = new HashSet<>(getPlaceholders(srcText));
-            Set<String> tgtPlaceholders = new HashSet<>(getPlaceholders(translation.getTranslatedText()));
-            result = !srcPlaceholders.equals(tgtPlaceholders);
+            List<String> srcPlaceholders = getPlaceholders(srcText);
+            List<String> tgtPlaceholders = getPlaceholders(translation.getTranslatedText());
+            Set<String> srcPlaceholdersSet = new HashSet<>(srcPlaceholders);
+            Set<String> tgtPlaceholdersSet = new HashSet<>(tgtPlaceholders);
+
+            result = !(srcPlaceholders.size() == tgtPlaceholders.size() && srcPlaceholdersSet.equals(tgtPlaceholdersSet));
         }
 
         return result;
