@@ -1,10 +1,18 @@
 actions:
-  # Ensure that the space to the left of a colon, semi-colon, question mark, and exclamation mark is a non breaking space
   French (France):
+    # Ignore URLs
+    - search: 'https?\:\/\/[^\s\h\v\u2009\u200B]*'
+      allowFurtherReplacements: false
+
+      # Ensure that the space to the left of a colon, semi-colon, question mark, and exclamation mark is a non breaking space
     - search: '(?:[\s\h\v\u2009\u200B]|\uDB40\uDC20)?([:;?!])'
       replace: "\u00A0$1"
 
-  # Same as above, but just with colons
   French (Canada):
+    # Ignore URLs
+    - search: 'https?\:\/\/[^\s\h\v\u2009\u200B]*'
+      allowFurtherReplacements: false
+
+    # Same as above, but just with colons
     - search: '(?:[\s\h\v\u2009\u200B]|\uDB40\uDC20)?([:])'
       replace: "\u00A0$1"

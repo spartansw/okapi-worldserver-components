@@ -99,6 +99,14 @@ public class SegmentFixMTWhitespaceRemovalV2Test {
             "{1}Beginning and end{2}.");
     }
 
+    @Test
+    public void testURLs() throws Exception {
+        fixTargetThenAssertMatchFixed("https://www.youtube.com/watch?v=abc212_AVC", "https://www.youtube"
+            + ".com/watch?v=abc212_AVC", "https://www.youtube.com/watch?v=abc212_AVC");
+        fixTargetThenAssertMatchFixed("The URL is {1}https://www.youtube.com/watch?v=abc212_AVC{2}.","The URL is "
+            + "{1} https://www.youtube.com/watch?v=abc212_AVC {2}.","The URL is {1}https://www.youtube"
+            + ".com/watch?v=abc212_AVC{2}.");
+    }
 
     /**
      * @param source         Original string
