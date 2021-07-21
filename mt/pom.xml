@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.okapi</groupId>
     <artifactId>okapi-ws-components</artifactId>
-    <version>1.10</version>
+    <version>1.10-ws11.7-SNAPSHOT</version>
   </parent>
 
   <groupId>com.spartansoftwareinc.ws.okapi.mt</groupId>
@@ -20,6 +20,5 @@
     <module>google</module>
     <module>googleautoml</module>
     <module>mshub</module>
-    <module>googlev3</module>
   </modules>
 </project>

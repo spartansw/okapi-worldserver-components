@@ -5,7 +5,7 @@
 
   <groupId>com.spartansoftwareinc.ws.okapi</groupId>
   <artifactId>okapi-ws-components</artifactId>
-  <version>1.10</version>
+  <version>1.10-ws11.7-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -14,22 +14,18 @@
   <scm>
     <connection>scm:git:https://github.com/spartansw/okapi-worldserver-components.git</connection>
     <url>https://github.com/spartansw/okapi-worldserver-components</url>
-    <tag>okapi-ws-components-1.10</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <ws.version>11.4.0.56</ws.version>
+    <ws.version>10.4.3.195</ws.version>
     <okapi.version>0.37</okapi.version>
     <mainPackage>${project.groupId}</mainPackage>
     <git.basedir>${project.basedir}</git.basedir>
   </properties>
 
   <repositories>
-    <repository>
-      <id>nexus</id>
-      <url>https://ec2.spartansoftwareinc.com/nexus/repository/maven-public/</url>
-    </repository>
     <repository>
       <id>okapi-snapshot</id>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
@@ -148,8 +144,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.2</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
 
@@ -186,28 +182,6 @@
           <noqualifier>com.idiominc.*</noqualifier>
         </configuration>
       </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.7</version>
-        <executions>
-          <execution>
-            <id>regex-property</id>
-            <goals>
-              <goal>regex-property</goal>
-            </goals>
-            <configuration>
-              <name>shade_prefix</name>
-              <value>${project.version}</value>
-              <regex>^([0-9]+)\.([0-9]+)(-SNAPSHOT)?$</regex>
-              <replacement>okapi_ws_compopnents_$1_$2</replacement>
-              <failIfNoMatch>true</failIfNoMatch>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      
     </plugins>
   </build>
 

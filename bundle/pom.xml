@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.okapi</groupId>
     <artifactId>okapi-ws-components</artifactId>
-    <version>1.10</version>
+    <version>1.10-ws11.7-SNAPSHOT</version>
   </parent>
 
   <groupId>com.spartansoftwareinc.ws.okapi</groupId>
@@ -22,16 +22,6 @@
     <dependency>
       <groupId>com.spartansoftwareinc.ws.okapi.mt.google</groupId>
       <artifactId>okapi-ws-mt-google</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.spartansoftwareinc.ws.okapi.mt.googleautoml</groupId>
-      <artifactId>okapi-ws-mt-googleautoml</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.spartansoftwareinc.ws.mt.googlev3</groupId>
-      <artifactId>okapi-ws-mt-google-v3</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
