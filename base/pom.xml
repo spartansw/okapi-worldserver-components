@@ -6,7 +6,7 @@
   <parent>
     <groupId>com.spartansoftwareinc.ws.okapi</groupId>
     <artifactId>okapi-ws-components</artifactId>
-    <version>1.10-ws11.7</version>
+    <version>1.10.1-ws11.7-SNAPSHOT</version>
   </parent>
 
   <artifactId>okapi-ws-base</artifactId>
