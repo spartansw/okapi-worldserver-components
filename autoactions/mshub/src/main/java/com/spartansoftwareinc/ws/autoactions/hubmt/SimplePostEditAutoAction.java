@@ -106,8 +106,12 @@ public class SimplePostEditAutoAction extends WSTaskAutomaticAction {
             List<SimplePostEditAutoActionYAMLConfig.Action> actions = config.getActionsForLanguage(targetLanguage);
 
             // Only perform this operation if Actions are specified
-            if (actions.size() > 0) {
-
+            if (actions == null) {
+                String configPath = configFileLocation.isEmpty() ? DEFAULT_CONFIG_WS_LOCATION : configFileLocation;
+                String message = "Locale " + targetLanguage + " not specified in " + configPath + ". Skipping...";
+                LOG.warn(message);
+                resultMessage = message;
+            } else if (actions.size() > 0) {
                 // Grab the previous step's source and target translations
                 textSegmentsIterator = assetTask.getAssetTranslation().textSegmentIterator();
 
