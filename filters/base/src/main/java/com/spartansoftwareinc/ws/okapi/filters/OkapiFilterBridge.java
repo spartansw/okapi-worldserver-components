@@ -146,7 +146,7 @@ public class OkapiFilterBridge {
 
         for (WSTextSegment wsTextSegment : wsTextSegments) {
             String wsContent = wsTextSegment.getContent();
-            WSTextSegmentPlaceholder[] wsPlaceholders = wsTextSegment.getTargetPlaceholders();
+            WSTextSegmentPlaceholder[] wsPlaceholders = wsTextSegment.getSourcePlaceholders();
             int placeholderCounter = 0;
             char[] wsContentChars = wsContent.toCharArray();
             for (int i = 0; i < wsContentChars.length; i++) {
@@ -154,6 +154,11 @@ public class OkapiFilterBridge {
                 if (contentChar == '{') {
                     String placeholder = getWSPlaceholder(i, wsContent);
                     if (!placeholder.isEmpty()) {
+                        if (placeholderCounter >= wsPlaceholders.length) {
+                            throw new RuntimeException(String.format("Tried to grab placeholder index %d (count "
+                                            + "starts at 0) when there are only %d placeholders",
+                                    placeholderCounter, wsPlaceholders.length));
+                        }
                         WSTextSegmentPlaceholder ph = wsPlaceholders[placeholderCounter++];
                         Code code = getMatchingOkapiCode(codes, ph);
                         require(code != null, String.format(MISSING_CODE_MSG, ph.toString(), ph.getText(), ph.getId()));
