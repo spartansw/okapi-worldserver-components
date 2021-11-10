@@ -5,11 +5,10 @@ import com.idiominc.wssdk.component.WSComponentConfigurationUI;
 import com.spartansoftwareinc.ws.okapi.mt.base.CustomCodesMasker;
 import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapter;
 
-import net.sf.okapi.connectors.googleautoml.GoogleAutoMLTranslationConnector;
 import net.sf.okapi.lib.translation.BaseConnector;
 
 public class WSGoogleAutoMLAdapter extends WSBaseMTAdapter {
-    private GoogleAutoMLTranslationConnector connector;
+    private GoogleHtmlAutoMLTranslationConnector connector;
 
     public WSGoogleAutoMLAdapter() {
         setCodesMasker(new CustomCodesMasker("<\\s*div\\s+ws_id\\s*=\\s*\"(\\d+)\"\\s*>(\\s*<\\s*/\\s*div>)?"));
@@ -47,10 +46,11 @@ public class WSGoogleAutoMLAdapter extends WSBaseMTAdapter {
     @Override
     protected BaseConnector getMTConnector() {
         if (connector == null) {
-            connector = new GoogleAutoMLTranslationConnector();
+            connector = new GoogleHtmlAutoMLTranslationConnector();
             WSGoogleAutoMLAdapterConfigurationData configData = getConfigurationData();
             connector.getParameters().setCredentialFilePath(configData.getCredentialAbsolutePath());
             connector.getParameters().setModelMap(configData.getModelMap());
+            connector.getParameters().setMimeType(GoogleHtmlAutoMLTranslationParameters.MimeType.HTML);
         }
         return connector;
     }
