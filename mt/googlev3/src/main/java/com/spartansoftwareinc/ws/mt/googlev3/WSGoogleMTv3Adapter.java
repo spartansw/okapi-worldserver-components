@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 import com.google.api.gax.core.FixedCredentialsProvider;
+import com.google.api.gax.rpc.TransportChannelProvider;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.translate.v3.GetSupportedLanguagesRequest;
 import com.google.cloud.translate.v3.GlossaryName;
@@ -270,8 +271,12 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
             GoogleCredentials creds = GoogleCredentials
                 .fromStream(new FileInputStream(absPath))
                 .createScoped("https://www.googleapis.com/auth/cloud-platform");
+            TransportChannelProvider transportChannelProvider = conf.getUseGRPC() ?
+                    TranslationServiceSettings.defaultGrpcTransportProviderBuilder().build() :
+                    TranslationServiceSettings.defaultHttpJsonTransportProviderBuilder().build();
             return TranslationServiceSettings.newBuilder()
                 .setCredentialsProvider(FixedCredentialsProvider.create(creds))
+                .setTransportChannelProvider(transportChannelProvider)
                 .build();
         } catch (IOException e) {
             throw new WSRuntimeException(String.format("Google Translate credential file must be placed at %s in AIS",

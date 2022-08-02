@@ -3,12 +3,11 @@ package com.spartansoftwareinc.ws.mt.googlev3;
 import static com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationData.MATCH_SCORE;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.idiominc.wssdk.WSContext;
 import com.idiominc.wssdk.ais.WSAisException;
@@ -23,8 +22,7 @@ import com.spartansoftwareinc.ws.okapi.mt.base.WSBaseMTAdapterConfigurationUI;
 
 
 public class WSGoogleMTv3AdapterConfigurationUI extends WSBaseMTAdapterConfigurationUI {
-    private static final org.apache.log4j.Logger LOG = Logger.getLogger(WSGoogleMTv3AdapterConfigurationUI.class);
-    //static { LOG.setLevel(Level.DEBUG);}
+    private static final Logger LOG = LoggerFactory.getLogger(WSGoogleMTv3AdapterConfigurationUI.class);
 
     private static final String LABEL_CREDENTIAL_AIS_PATH = "Credential AIS Path";
     private static final String CREDENTIAL_AIS_PATH = "credentialAisPath";
@@ -33,6 +31,8 @@ public class WSGoogleMTv3AdapterConfigurationUI extends WSBaseMTAdapterConfigura
     private static final String INCLUDE_CODES = "includeCodes";
     private static final String GOOGLE_PROJECT_NUM_OR_ID = "googleProj";
     private static final String GOOGLE_LOCATION = "googleLoc";
+    private static final String LABEL_USE_GRPC = "Use GPRC";
+    private static final String USE_GRPC = "useGRPC";
 
     private static final int LONG_TEXT_FIELD_SIZE = 80;
     private static final int TEXT_AREA_ROWS = 20;
@@ -63,6 +63,7 @@ public class WSGoogleMTv3AdapterConfigurationUI extends WSBaseMTAdapterConfigura
             conf.getModelGlossaryMap())
             .setSize(TEXT_AREA_ROWS, TEXT_AREA_COLS));
         elements.add(new UICheckbox(LABEL_INCLUDE_CODES, INCLUDE_CODES, conf.getIncludeCodes()));
+        elements.add(new UICheckbox(LABEL_USE_GRPC, USE_GRPC, conf.getUseGRPC()));
 
         return elements;
     }
@@ -115,6 +116,7 @@ public class WSGoogleMTv3AdapterConfigurationUI extends WSBaseMTAdapterConfigura
         }
 
         boolean includeCodes = "on".equals(request.getParameter(INCLUDE_CODES));
+        boolean useGPRC = "on".equals(request.getParameter(USE_GRPC));
 
         if (errors == null) {
             if ( configData != null) {
@@ -128,6 +130,7 @@ public class WSGoogleMTv3AdapterConfigurationUI extends WSBaseMTAdapterConfigura
                 conf.setModelGlossaryMap(modelGlossaryMapJson);
                 conf.setMatchScore(matchScore);
                 conf.setIncludeCodes(includeCodes);
+                conf.setUseGRPC(useGPRC);
             } else {
                 LOG.error("Could not set the adapter specific configuration because configData was null");
             }

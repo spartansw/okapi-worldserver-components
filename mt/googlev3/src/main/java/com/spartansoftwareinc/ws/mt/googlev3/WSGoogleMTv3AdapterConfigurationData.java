@@ -16,6 +16,8 @@ public class WSGoogleMTv3AdapterConfigurationData extends WSBaseMTAdapterConfigu
          +            "\"glossaryId\":\"xx_to_yy_glossary_id\"}"
          + "}";
 
+    private boolean useGRPC = false;
+
     public WSGoogleMTv3AdapterConfigurationData() {
         this.setUseCustomScoring(true);
     }
@@ -93,5 +95,13 @@ public class WSGoogleMTv3AdapterConfigurationData extends WSBaseMTAdapterConfigu
 
     public void setModelGlossaryMap(String json) {
         this.modelGlossaryMap = json;
+    }
+
+    public boolean getUseGRPC() {
+        return useGRPC;
+    }
+
+    public void setUseGRPC(boolean useGRPC) {
+        this.useGRPC = useGRPC;
     }
 }
