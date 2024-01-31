@@ -1,11 +1,5 @@
 package com.spartansoftwareinc.ws.okapi.filters;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.idiominc.wssdk.asset.WSMarkupSegment;
 import com.idiominc.wssdk.asset.WSSegment;
 import com.idiominc.wssdk.asset.WSTextSegment;
@@ -14,17 +8,16 @@ import com.idiominc.wssdk.component.filter.WSFilter;
 import com.idiominc.wssdk.component.filter.WSSegmentReader;
 import com.idiominc.wssdk.component.filter.WSSegmentWriter;
 import com.spartansoftwareinc.ws.okapi.filters.model.SegmentInfoHolder;
-
 import net.sf.okapi.common.Event;
 import net.sf.okapi.common.LocaleId;
 import net.sf.okapi.common.filters.IFilter;
 import net.sf.okapi.common.filterwriter.IFilterWriter;
-import net.sf.okapi.common.resource.Code;
-import net.sf.okapi.common.resource.ITextUnit;
-import net.sf.okapi.common.resource.RawDocument;
-import net.sf.okapi.common.resource.Segment;
-import net.sf.okapi.common.resource.TextContainer;
-import net.sf.okapi.common.resource.TextFragment;
+import net.sf.okapi.common.resource.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OkapiFilterBridge {
     private static final String MISSING_CODE_MSG = "Missing matching Okapi code for placeholder '%s' => '%s', id '%d'";
@@ -42,6 +35,7 @@ public class OkapiFilterBridge {
                 Event event = filter.next();
                 if (event.isTextUnit()) {
                     ITextUnit textUnit = event.getTextUnit();
+                    postProcessTextContainer(textUnit.getSource());
                     if (textUnit.isTranslatable()) {
                         processTextUnit(wsSegmentWriter, textUnit, breakSentences);
                     }
@@ -60,6 +54,8 @@ public class OkapiFilterBridge {
                 Event event = filter.next();
                 if (event.isTextUnit()) {
                     ITextUnit textUnit = event.getTextUnit();
+                    postProcessTextContainer(textUnit.getSource());
+                    postProcessTextContainer(textUnit.getTarget(targetLocale));
                     if (textUnit.isTranslatable()) {
                         processTextUnit(segmentReader, targetLocale, textUnit);
                     }
@@ -69,6 +65,10 @@ public class OkapiFilterBridge {
         } finally {
             filter.close();
         }
+    }
+
+    protected void postProcessTextContainer(TextContainer source) {
+
     }
 
     private void processTextUnit(WSSegmentWriter wsSegmentWriter, ITextUnit textUnit, boolean breakSentences) {
@@ -112,17 +112,17 @@ public class OkapiFilterBridge {
     private TextContainer parseTarget(ITextUnit textUnit, WSSegmentReader segmentReader) {
         TextContainer textContainer = textUnit.getSource().clone();
 
-        WSSegment wsSegment = segmentReader.read();
-        List<WSTextSegment> wsTextSegments = new ArrayList<>();
-        for (; wsSegment instanceof WSTextSegment; wsSegment = segmentReader.read()) {
-            wsTextSegments.add((WSTextSegment)wsSegment);
-        }
         for (Segment okapiSegment : textContainer.getSegments()) {
+            WSSegment wsSegment = segmentReader.read();
+            List<WSTextSegment> wsTextSegments = new ArrayList<>();
+            for (; wsSegment instanceof WSTextSegment; wsSegment = segmentReader.read()) {
+                wsTextSegments.add((WSTextSegment) wsSegment);
+            }
             processWSSegment(okapiSegment, wsTextSegments);
+            require(wsSegment instanceof WSMarkupSegment, String.format(MARKUP_SEG_VALIDATION_ERR_MSG,
+                    wsSegment.getClass().toString(), wsSegment.getContent()));
         }
 
-        require(wsSegment instanceof WSMarkupSegment, String.format(MARKUP_SEG_VALIDATION_ERR_MSG,
-                wsSegment.getClass().toString(), wsSegment.getContent()));
         return textContainer;
     }
 
