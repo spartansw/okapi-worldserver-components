@@ -29,6 +29,7 @@ import com.idiominc.wssdk.component.autoaction.WSActionResult;
 import com.idiominc.wssdk.component.autoaction.WSTaskAutomaticAction;
 import com.idiominc.wssdk.workflow.WSTask;
 import com.spartansoftwareinc.ws.autoactions.hubmt.config.SimplePostEditAutoActionYAMLConfig;
+import com.spartansoftwareinc.ws.autoactions.hubmt.util.Intervals;
 
 /**
  * <p>An Auto Action that does configurable pattern matching and replacement on Target Segments.</p>
@@ -48,8 +49,8 @@ public class SimplePostEditAutoAction extends WSTaskAutomaticAction {
 
     @Override
     public String getDescription() {
-        return "Updates the target segments using REGEX pattern matching." +
-            "\nConfig location: " + DEFAULT_CONFIG_WS_LOCATION;
+        return "Updates the target segments using REGEX pattern matching." + "\nConfig location: "
+            + DEFAULT_CONFIG_WS_LOCATION;
     }
 
     @Override
@@ -174,15 +175,28 @@ public class SimplePostEditAutoAction extends WSTaskAutomaticAction {
     String updateString(String input, List<SimplePostEditAutoActionYAMLConfig.Action> actions) {
 
         String newTarget = input;
+        final Intervals noLongerReplace = new Intervals();
         for (SimplePostEditAutoActionYAMLConfig.Action action : actions) {
             final Matcher matcher = action.getPatternCompiled().matcher(newTarget);
             final String replacement = action.getReplace();
 
-            final boolean found = matcher.find();
+            final StringBuffer builtTarget = new StringBuffer();
+            while (matcher.find()) {
+                final boolean canReplace = !noLongerReplace.containsInterval(matcher.start(), matcher.end());
+                boolean replaced = false;
 
-            if (found) {
-                newTarget = matcher.replaceAll(replacement);
+                if (replacement != null && canReplace) {
+                    matcher.appendReplacement(builtTarget, replacement);
+                    replaced = true;
+                }
+
+                if (!action.getAllowFurtherReplacements()) {
+                    final int endPosition = replaced ?  builtTarget.length() : matcher.end();
+                    noLongerReplace.addInterval(matcher.start(), endPosition);
+                }
             }
+            matcher.appendTail(builtTarget);
+            newTarget = builtTarget.toString();
         }
         return newTarget;
     }
