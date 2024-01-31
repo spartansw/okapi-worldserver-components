@@ -31,7 +31,8 @@ public class SimplePostEditAutoActionYAMLConfig {
     }
 
     public List<Action> getActionsForLanguage(String language) {
-        return actions.get(language);
+        final List<Action> actions = this.actions.get(language);
+        return actions != null ? actions : new ArrayList<Action>();
     }
 
     public static class Action {
