@@ -10,7 +10,7 @@ import net.sf.okapi.connectors.microsoft.MicrosoftMTConnector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;

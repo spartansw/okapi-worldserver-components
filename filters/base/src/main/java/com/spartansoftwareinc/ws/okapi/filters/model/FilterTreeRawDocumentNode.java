@@ -23,6 +23,9 @@ public class FilterTreeRawDocumentNode extends FilterTreeNode {
     }
 
     public FilterTreeRawDocumentNode(RawDocument rawDocument, IFilter filterApplied) {
+        System.setProperty("jdk.xml.xpathExprGrpLimit", "0");
+        System.setProperty("jdk.xml.xpathExprOpLimit", "0");
+        System.setProperty("jdk.xml.xpathTotalOpLimit", "0");
         setRawDocument(rawDocument);
         setFilterApplied(filterApplied);
         translationOutput = null;

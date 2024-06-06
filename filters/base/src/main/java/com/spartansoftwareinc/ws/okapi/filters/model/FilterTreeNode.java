@@ -16,7 +16,6 @@ import net.sf.okapi.common.filterwriter.IFilterWriter;
 import net.sf.okapi.common.resource.ITextUnit;
 import net.sf.okapi.common.resource.RawDocument;
 import net.sf.okapi.common.resource.TextContainer;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
@@ -268,7 +267,7 @@ public abstract class FilterTreeNode {
     }
 
     public OutputStream getTranslationOutput() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     /**

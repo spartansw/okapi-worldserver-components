@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import com.idiominc.wssdk.linguistic.WSLanguage;
 import com.idiominc.wssdk.linguistic.WSLanguagePair;
