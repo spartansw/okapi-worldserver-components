@@ -224,6 +224,12 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
                     WSLanguage targetWSLang = convertGoogleLangToWSLang(lingmgr, targetLang);
                     if (targetWSLang == null) continue;
                     pairs.add(new WSLanguagePair(srcWSLang, targetWSLang));
+                    if (targetLang.getLanguageCode().equals("no")) {
+                        WSLanguage nb = lingmgr.getLanguage(Locale.forLanguageTag("nb-NO"));
+                        if (nb != null) {
+                            pairs.add(new WSLanguagePair(srcWSLang, nb));
+                        }
+                    }
                 }
             }
 
@@ -295,7 +301,10 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
         String tag = localeId.toBCP47();
 
         // Google only recognizes 2-letter ISO code without country code except zh-TW and zh-CN.
-        if (!tag.startsWith("zh") && tag.length()!=2) {
+        // Norwegian (Bokmal) is covered by macrolanguage "no".
+        if (tag.equals("nb-NO")) {
+            return "no";
+        } else if (!tag.startsWith("zh") && tag.length()!=2) {
             return tag.substring(0,2);
         } else {
             return tag;

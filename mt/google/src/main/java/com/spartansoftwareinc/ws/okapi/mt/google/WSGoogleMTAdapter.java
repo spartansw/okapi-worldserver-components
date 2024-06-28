@@ -93,12 +93,18 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
             WSLanguage lang = findLanguage(availableLangs, locale);
             if (lang != null) {
                 langs.add(lang);
+                if (locale.getLanguage().equals("no")) {
+                    WSLanguage nb = wsContext.getLinguisticManager().getLanguage(Locale.forLanguageTag("nb-NO"));
+                    if (nb != null) {
+                        langs.add(nb);
+                    }
+                }
             }
         }
         return composeLanguagePairs(langs.toArray(new WSLanguage[langs.size()]));
     }
     private WSLanguage findLanguage(WSLanguage[] available, LocaleId locale) {
-        String lang = convertLanguageCode(locale.getLanguage());
+        String lang = locale.getLanguage();
         String region = locale.getRegion();
         for (WSLanguage wslang : available) {
             Locale l = wslang.getLocale();
@@ -117,11 +123,4 @@ public class WSGoogleMTAdapter extends WSBaseMTAdapter {
         return null;
     }
 
-    private String convertLanguageCode(String lang) {
-        // Handle java.util.Locale#getLanguage special case for Indonesian
-        if (lang.equals("id")) {
-            lang = "in";
-        }
-        return lang;
-    }
 }
