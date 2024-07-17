@@ -210,9 +210,13 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
             GetSupportedLanguagesRequest request =
                 GetSupportedLanguagesRequest.newBuilder().setParent(parent.toString()).build();
             SupportedLanguages response = client.getSupportedLanguages(request);
-            List<SupportedLanguage> googleLangs = response.getLanguagesList();
+            List<SupportedLanguage> googleLangs = new ArrayList<>(response.getLanguagesList());
             LOG.debug("Google supports " + googleLangs.size() + " languages.");
             List<WSLanguagePair> pairs = new ArrayList<>();
+            googleLangs.stream().filter(srcLang -> srcLang.getLanguageCode().equals("no")).findAny().ifPresent(srcNo -> {
+                LOG.debug("Norwegian (no) found in source lang list. Adding Norwegian Bokmal (nb-NO).");
+                googleLangs.add(SupportedLanguage.newBuilder(srcNo).setLanguageCode("nb-NO").build());
+            });
             for (SupportedLanguage srcLang: googleLangs) {
                 if (!srcLang.getSupportSource()) continue;
 
@@ -224,12 +228,6 @@ public class WSGoogleMTv3Adapter extends WSBaseMTAdapter {
                     WSLanguage targetWSLang = convertGoogleLangToWSLang(lingmgr, targetLang);
                     if (targetWSLang == null) continue;
                     pairs.add(new WSLanguagePair(srcWSLang, targetWSLang));
-                    if (targetLang.getLanguageCode().equals("no")) {
-                        WSLanguage nb = lingmgr.getLanguage(Locale.forLanguageTag("nb-NO"));
-                        if (nb != null) {
-                            pairs.add(new WSLanguagePair(srcWSLang, nb));
-                        }
-                    }
                 }
             }
 
